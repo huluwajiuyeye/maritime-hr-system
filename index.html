@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>山东省海事局人力资源分析系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .modal {
+            display: none;
+        }
+        .modal.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 头部 -->
+    <div class="bg-blue-900 text-white p-6">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-3xl font-bold mb-2">海事局人事管理系统</h1>
+            <p class="text-blue-100">Maritime Safety Administration Human Resource Management System</p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-6">
+        <!-- 统计卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">总人数</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalCount">5</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">部门数量</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="deptCount">5</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">持证人员</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="certCount">4</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">在职人员</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="activeCount">5</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 搜索和筛选区域 -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-4">
+                <div class="relative">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="搜索姓名、工号、部门、职位..."
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>
+                
+                <select id="deptFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">所有部门</option>
+                </select>
+                
+                <select id="posFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">所有职位</option>
+                </select>
+                
+                <select id="ageFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">年龄范围</option>
+                    <option value="25-30">25-30岁</option>
+                    <option value="31-35">31-35岁</option>
+                    <option value="36-40">36-40岁</option>
+                    <option value="41-45">41-45岁</option>
+                    <option value="46-50">46-50岁</option>
+                </select>
+                
+                <select id="workYearFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">工作年限</option>
+                    <option value="0-2">0-2年</option>
+                    <option value="3-5">3-5年</option>
+                    <option value="6-10">6-10年</option>
+                    <option value="11-15">11-15年</option>
+                    <option value="16+">16年以上</option>
+                </select>
+                
+                <button onclick="showAddModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                    ➕ 添加员工
+                </button>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="flex space-x-2">
+                    <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg flex-1">
+                        📥 CSV
+                    </button>
+                    <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg flex-1">
+                        📊 Excel
+                    </button>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button onclick="showPromotionAnalysis()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                        📈 晋升分析
+                    </button>
+                    <button onclick="showBulkActions()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">
+                        🎯 批量操作
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 员工列表 -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()" class="mr-2">
+                                员工信息
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">部门职位</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">年龄</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">工作年限</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">绩效评分</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">晋升潜力</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">联系方式</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">状态</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTable" class="bg-white divide-y divide-gray-200">
+                        <!-- 员工数据将由JavaScript动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加员工模态框 -->
+    <div id="addModal" class="modal fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="hideAddModal()"></div>
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full z-50 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">添加新员工</h3>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                            <input type="text" id="newName" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">工号</label>
+                            <input type="text" id="newEmpId" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">性别</label>
+                            <select id="newGender" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                            <input type="number" id="newAge" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
+                            <input type="number" id="newSalary" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">部门</label>
+                            <input type="text" id="newDept" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">职位</label>
+                            <input type="text" id="newPosition" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">电话</label>
+                            <input type="text" id="newPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                            <input type="email" id="newEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="hideAddModal()" class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">取消</button>
+                    <button onclick="addEmployee()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">💾 保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 晋升分析模态框 -->
+    <div id="promotionModal" class="modal fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="hidePromotionModal()"></div>
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full z-50 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">晋升分析报告</h3>
+                    <button onclick="hidePromotionModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-6 py-6" id="promotionAnalysisContent">
+                    <!-- 晋升分析内容将由JavaScript动态填充 -->
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="exportPromotionReport()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">📊 导出报告</button>
+                    <button onclick="hidePromotionModal()" class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 批量操作模态框 -->
+    <div id="bulkModal" class="modal fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="hideBulkModal()"></div>
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full z-50">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">批量操作 (<span id="selectedCount">0</span> 人已选择)</h3>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="bulkUpdatePerformance()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">批量更新绩效</button>
+                        <button onclick="bulkUpdatePotential()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">批量设置晋升潜力</button>
+                        <button onclick="bulkExport()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">导出选中员工</button>
+                        <button onclick="generatePromotionList()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">生成晋升名单</button>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+                    <button onclick="hideBulkModal()" class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查看员工详情模态框 -->
+    <div id="viewModal" class="modal fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="hideViewModal()"></div>
+            <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full z-50 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-gray-900">员工详细信息</h3>
+                    <button onclick="hideViewModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-6 py-6" id="employeeDetails">
+                    <!-- 员工详情将由JavaScript动态填充 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑员工模态框 -->
+    <div id="editModal" class="modal fixed inset-0 z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75" onclick="hideEditModal()"></div>
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full z-50 max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">编辑员工信息</h3>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                            <input type="text" id="editName" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">工号</label>
+                            <input type="text" id="editEmpId" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">性别</label>
+                            <select id="editGender" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                            <input type="number" id="editAge" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
+                            <input type="number" id="editSalary" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">部门</label>
+                            <input type="text" id="editDept" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">职位</label>
+                            <input type="text" id="editPosition" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">电话</label>
+                            <input type="text" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                            <input type="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">执照类型</label>
+                            <input type="text" id="editLicenseType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">执照到期日</label>
+                            <input type="text" id="editLicenseExpiry" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
+                        <select id="editStatus" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <option value="在职">在职</option>
+                            <option value="离职">离职</option>
+                            <option value="休假">休假</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+                    <button onclick="hideEditModal()" class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">取消</button>
+                    <button onclick="saveEditEmployee()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">💾 保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 员工数据
+        let employees = [
+            {
+                id: 1, name: '张伟', employeeId: 'MSA001', gender: '男', age: 35,
+                department: '船舶监督处', position: '高级船舶检查官', 
+                hireDate: '2015-03-15',
+                phone: '13800138001', email: 'zhangwei@msa.gov.cn',
+                address: '北京市海淀区复兴路甲11号',
+                licenseType: '甲类船长', licenseExpiry: '2026-12-31', 
+                certificates: ['船舶检查员证书', '国际船舶安全检查员证书', 'PSC检查员证书'],
+                salary: 8500, status: '在职',
+                performance: 88, promotionPotential: '高', education: '本科', certCount: 3, lastPromotion: '2020-06-15'
+            },
+            {
+                id: 2, name: '李红', employeeId: 'MSA002', gender: '女', age: 28,
+                department: '航海保障处', position: '航标管理员',
+                hireDate: '2019-07-01',
+                phone: '13800138002', email: 'lihong@msa.gov.cn',
+                address: '北京市朝阳区建国门外大街1号',
+                licenseType: '乙类大副', licenseExpiry: '2025-06-30', 
+                certificates: ['航标技术员证书', '雷达操作员证书'],
+                salary: 6800, status: '在职',
+                performance: 92, promotionPotential: '高', education: '硕士', certCount: 2, lastPromotion: '2022-01-10'
+            },
+            {
+                id: 3, name: '王强', employeeId: 'MSA003', gender: '男', age: 42,
+                department: '港口监督处', position: '港口安全监督员',
+                hireDate: '2010-08-20',
+                phone: '13800138003', email: 'wangqiang@msa.gov.cn',
+                address: '北京市西城区西直门南大街1号',
+                licenseType: '甲类轮机长', licenseExpiry: '2024-11-15', 
+                certificates: ['港口安全检查员证书', 'PSC检查员证书', '危险品检查员证书', '船舶保安员证书'],
+                salary: 9200, status: '在职',
+                performance: 85, promotionPotential: '中', education: '本科', certCount: 4, lastPromotion: '2018-03-20'
+            },
+            {
+                id: 4, name: '陈明', employeeId: 'MSA004', gender: '男', age: 31,
+                department: '水上交通管理处', position: 'VTS操作员',
+                hireDate: '2018-01-10',
+                phone: '13800138004', email: 'chenming@msa.gov.cn',
+                address: '北京市丰台区南三环西路16号',
+                licenseType: '乙类二副', licenseExpiry: '2025-09-20', 
+                certificates: ['VTS操作员证书', '雷达操作员证书', '通信员证书'],
+                salary: 7200, status: '在职',
+                performance: 90, promotionPotential: '高', education: '本科', certCount: 3, lastPromotion: '2021-12-01'
+            },
+            {
+                id: 5, name: '刘娜', employeeId: 'MSA005', gender: '女', age: 26,
+                department: '综合办公室', position: '行政专员',
+                hireDate: '2021-05-15',
+                phone: '13800138005', email: 'liuna@msa.gov.cn',
+                address: '北京市石景山区石景山路20号',
+                licenseType: '无', licenseExpiry: '无', 
+                certificates: ['行政管理资格证'],
+                salary: 5500, status: '在职',
+                performance: 78, promotionPotential: '中', education: '本科', certCount: 1, lastPromotion: null
+            }
+        ];
+
+        let filteredEmployees = [...employees];
+
+        // 初始化页面
+        function initPage() {
+            renderEmployeeTable();
+            updateFilters();
+            updateStats();
+        }
+
+        // 获取晋升潜力颜色
+        function getPotentialColor(potential) {
+            switch(potential) {
+                case '高': return 'bg-red-100 text-red-800';
+                case '中': return 'bg-yellow-100 text-yellow-800';
+                case '低': return 'bg-gray-100 text-gray-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // 计算工作年限
+        function calculateWorkYears(hireDate) {
+            if (!hireDate) return '未知';
+            const hire = new Date(hireDate);
+            const now = new Date();
+            const years = Math.floor((now - hire) / (1000 * 60 * 60 * 24 * 365.25));
+            return years;
+        }
+
+        // 渲染员工表格
+        function renderEmployeeTable() {
+            const tbody = document.getElementById('employeeTable');
+            tbody.innerHTML = '';
+            
+            filteredEmployees.forEach(emp => {
+                const workYears = calculateWorkYears(emp.hireDate);
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="employee-checkbox mr-3" value="${emp.id}">
+                            <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+                                ${emp.name.charAt(0)}
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${emp.name}</div>
+                                <div class="text-sm text-gray-500">${emp.employeeId}</div>
+                                <div class="text-sm text-gray-500">${emp.gender} | ${emp.education || '未知'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${emp.department}</div>
+                        <div class="text-sm text-gray-500">${emp.position}</div>
+                        <div class="text-sm text-gray-500">入职: ${emp.hireDate || '未知'}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${emp.age}岁</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${workYears}年</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="text-sm text-gray-900 mr-2">${emp.performance || 0}</div>
+                            <div class="w-16 bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: ${emp.performance || 0}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPotentialColor(emp.promotionPotential)}">
+                            ${emp.promotionPotential || '待评估'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${emp.phone}</div>
+                        <div class="text-sm text-gray-500">${emp.email}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                            ${emp.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <div class="flex space-x-2">
+                            <button onclick="viewEmployee(${emp.id})" class="text-blue-600 hover:text-blue-900" title="查看详情">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="editEmployee(${emp.id})" class="text-indigo-600 hover:text-indigo-900" title="编辑信息">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <button onclick="deleteEmployee(${emp.id})" class="text-red-600 hover:text-red-900" title="删除员工">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 更新筛选选项
+        function updateFilters() {
+            const departments = [...new Set(employees.map(emp => emp.department))];
+            const positions = [...new Set(employees.map(emp => emp.position))];
+            
+            const deptFilter = document.getElementById('deptFilter');
+            const posFilter = document.getElementById('posFilter');
+            
+            deptFilter.innerHTML = '<option value="">所有部门</option>';
+            departments.forEach(dept => {
+                deptFilter.innerHTML += `<option value="${dept}">${dept}</option>`;
+            });
+            
+            posFilter.innerHTML = '<option value="">所有职位</option>';
+            positions.forEach(pos => {
+                posFilter.innerHTML += `<option value="${pos}">${pos}</option>`;
+            });
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            document.getElementById('totalCount').textContent = employees.length;
+            document.getElementById('deptCount').textContent = [...new Set(employees.map(emp => emp.department))].length;
+            document.getElementById('certCount').textContent = employees.filter(emp => emp.licenseType !== '无').length;
+            document.getElementById('activeCount').textContent = employees.filter(emp => emp.status === '在职').length;
+        }
+
+        // 搜索和筛选
+        function filterEmployees() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const dept = document.getElementById('deptFilter').value;
+            const pos = document.getElementById('posFilter').value;
+            const ageRange = document.getElementById('ageFilter').value;
+            const workYearRange = document.getElementById('workYearFilter').value;
+            
+            filteredEmployees = employees.filter(emp => {
+                const matchesSearch = emp.name.toLowerCase().includes(search) ||
+                                    emp.employeeId.toLowerCase().includes(search) ||
+                                    emp.department.toLowerCase().includes(search) ||
+                                    emp.position.toLowerCase().includes(search);
+                
+                const matchesDept = !dept || emp.department === dept;
+                const matchesPos = !pos || emp.position === pos;
+                
+                let matchesAge = true;
+                if (ageRange) {
+                    const [minAge, maxAge] = ageRange.split('-').map(Number);
+                    matchesAge = emp.age >= minAge && (maxAge ? emp.age <= maxAge : true);
+                }
+                
+                let matchesWorkYear = true;
+                if (workYearRange) {
+                    const workYears = calculateWorkYears(emp.hireDate);
+                    if (workYearRange === '16+') {
+                        matchesWorkYear = workYears >= 16;
+                    } else {
+                        const [minYear, maxYear] = workYearRange.split('-').map(Number);
+                        matchesWorkYear = workYears >= minYear && workYears <= maxYear;
+                    }
+                }
+                
+                return matchesSearch && matchesDept && matchesPos && matchesAge && matchesWorkYear;
+            });
+            
+            renderEmployeeTable();
+        }
+
+        // 全选/取消全选
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.employee-checkbox');
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateSelectedCount();
+        }
+
+        // 更新选中数量
+        function updateSelectedCount() {
+            const selectedCount = document.querySelectorAll('.employee-checkbox:checked').length;
+            const countElement = document.getElementById('selectedCount');
+            if (countElement) {
+                countElement.textContent = selectedCount;
+            }
+        }
+
+        // 显示晋升分析
+        function showPromotionAnalysis() {
+            generatePromotionAnalysis();
+            document.getElementById('promotionModal').classList.add('show');
+        }
+
+        // 隐藏晋升分析
+        function hidePromotionModal() {
+            document.getElementById('promotionModal').classList.remove('show');
+        }
+
+        // 生成晋升分析报告
+        function generatePromotionAnalysis() {
+            const highPotential = employees.filter(emp => emp.promotionPotential === '高' && emp.performance >= 85);
+            const readyForPromotion = employees.filter(emp => {
+                const workYears = calculateWorkYears(emp.hireDate);
+                const timeSinceLastPromotion = emp.lastPromotion ? 
+                    Math.floor((new Date() - new Date(emp.lastPromotion)) / (1000 * 60 * 60 * 24 * 365.25)) : workYears;
+                return emp.performance >= 80 && timeSinceLastPromotion >= 2 && emp.promotionPotential !== '低';
+            });
+
+            const analysisContent = `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-red-800">高潜力人员</h4>
+                            <p class="text-2xl font-bold text-red-600">${highPotential.length}人</p>
+                            <p class="text-sm text-red-600">绩效≥85，晋升潜力高</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-green-800">适合晋升</h4>
+                            <p class="text-2xl font-bold text-green-600">${readyForPromotion.length}人</p>
+                            <p class="text-sm text-green-600">综合评估适合晋升</p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-blue-800">平均绩效</h4>
+                            <p class="text-2xl font-bold text-blue-600">${(employees.reduce((sum, emp) => sum + emp.performance, 0) / employees.length).toFixed(1)}</p>
+                            <p class="text-sm text-blue-600">全员平均分数</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 mb-3">高潜力员工名单</h4>
+                            <div class="space-y-2 max-h-40 overflow-y-auto">
+                                ${highPotential.map(emp => `
+                                    <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                        <span>${emp.name} - ${emp.position}</span>
+                                        <span class="text-sm text-gray-500">${emp.performance}分</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 mb-3">建议晋升名单</h4>
+                            <div class="space-y-2 max-h-40 overflow-y-auto">
+                                ${readyForPromotion.map(emp => {
+                                    const timeSincePromotion = emp.lastPromotion ? 
+                                        Math.floor((new Date() - new Date(emp.lastPromotion)) / (1000 * 60 * 60 * 24 * 365.25)) : 
+                                        calculateWorkYears(emp.hireDate);
+                                    return `
+                                        <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
+                                            <div>
+                                                <div>${emp.name} - ${emp.position}</div>
+                                                <div class="text-xs text-gray-500">上次晋升: ${timeSincePromotion}年前</div>
+                                            </div>
+                                            <span class="text-sm text-gray-500">${emp.performance}分</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-lg font-medium text-gray-900 mb-3">部门晋升潜力分析</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${[...new Set(employees.map(emp => emp.department))].map(dept => {
+                                const deptEmps = employees.filter(emp => emp.department === dept);
+                                const avgPerformance = (deptEmps.reduce((sum, emp) => sum + emp.performance, 0) / deptEmps.length).toFixed(1);
+                                const highPotentialCount = deptEmps.filter(emp => emp.promotionPotential === '高').length;
+                                return `
+                                    <div class="border p-3 rounded-lg">
+                                        <h5 class="font-medium">${dept}</h5>
+                                        <div class="text-sm text-gray-600 mt-1">
+                                            <div>平均绩效: ${avgPerformance}分</div>
+                                            <div>高潜力人员: ${highPotentialCount}人</div>
+                                            <div>总人数: ${deptEmps.length}人</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('promotionAnalysisContent').innerHTML = analysisContent;
+        }
+
+        // 显示批量操作
+        function showBulkActions() {
+            updateSelectedCount();
+            document.getElementById('bulkModal').classList.add('show');
+        }
+
+        // 隐藏批量操作
+        function hideBulkModal() {
+            document.getElementById('bulkModal').classList.remove('show');
+        }
+
+        // 获取选中的员工
+        function getSelectedEmployees() {
+            const checkboxes = document.querySelectorAll('.employee-checkbox:checked');
+            return Array.from(checkboxes).map(cb => parseInt(cb.value));
+        }
+
+        // 批量更新绩效
+        function bulkUpdatePerformance() {
+            const selectedIds = getSelectedEmployees();
+            if (selectedIds.length === 0) {
+                alert('请先选择员工');
+                return;
+            }
+            
+            const newPerformance = prompt('请输入新的绩效分数 (0-100):');
+            if (newPerformance && !isNaN(newPerformance) && newPerformance >= 0 && newPerformance <= 100) {
+                selectedIds.forEach(id => {
+                    const empIndex = employees.findIndex(emp => emp.id === id);
+                    if (empIndex !== -1) {
+                        employees[empIndex].performance = parseInt(newPerformance);
+                    }
+                });
+                filterEmployees();
+                alert(`已更新 ${selectedIds.length} 名员工的绩效分数`);
+            }
+        }
+
+        // 批量设置晋升潜力
+        function bulkUpdatePotential() {
+            const selectedIds = getSelectedEmployees();
+            if (selectedIds.length === 0) {
+                alert('请先选择员工');
+                return;
+            }
+            
+            const newPotential = prompt('请输入晋升潜力 (高/中/低):');
+            if (['高', '中', '低'].includes(newPotential)) {
+                selectedIds.forEach(id => {
+                    const empIndex = employees.findIndex(emp => emp.id === id);
+                    if (empIndex !== -1) {
+                        employees[empIndex].promotionPotential = newPotential;
+                    }
+                });
+                filterEmployees();
+                alert(`已更新 ${selectedIds.length} 名员工的晋升潜力`);
+            }
+        }
+
+        // 导出选中员工
+        function bulkExport() {
+            const selectedIds = getSelectedEmployees();
+            if (selectedIds.length === 0) {
+                alert('请先选择员工');
+                return;
+            }
+            
+            const selectedEmployees = employees.filter(emp => selectedIds.includes(emp.id));
+            const originalFiltered = filteredEmployees;
+            filteredEmployees = selectedEmployees;
+            exportToCSV();
+            filteredEmployees = originalFiltered;
+        }
+
+        // 生成晋升名单
+        function generatePromotionList() {
+            const selectedIds = getSelectedEmployees();
+            if (selectedIds.length === 0) {
+                alert('请先选择员工');
+                return;
+            }
+            
+            const selectedEmployees = employees.filter(emp => selectedIds.includes(emp.id));
+            const promotionList = selectedEmployees.map(emp => ({
+                姓名: emp.name,
+                工号: emp.employeeId,
+                部门: emp.department,
+                现职位: emp.position,
+                绩效分数: emp.performance,
+                晋升潜力: emp.promotionPotential,
+                工作年限: calculateWorkYears(emp.hireDate) + '年',
+                推荐理由: emp.performance >= 85 ? '绩效优异' : emp.promotionPotential === '高' ? '晋升潜力高' : '综合表现良好'
+            }));
+            
+            const csvContent = [
+                Object.keys(promotionList[0]),
+                ...promotionList.map(emp => Object.values(emp))
+            ].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+            
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `晋升推荐名单_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`已生成 ${selectedEmployees.length} 名员工的晋升推荐名单`);
+        }
+
+        // 导出晋升报告
+        function exportPromotionReport() {
+            generatePromotionAnalysis();
+            alert('晋升分析报告功能开发中，当前显示的分析数据可通过截图保存');
+        }
+
+        // 显示添加员工模态框
+        function showAddModal() {
+            document.getElementById('addModal').classList.add('show');
+        }
+
+        // 隐藏添加员工模态框
+        function hideAddModal() {
+            document.getElementById('addModal').classList.remove('show');
+            // 清空表单
+            ['newName', 'newEmpId', 'newAge', 'newSalary', 'newDept', 'newPosition', 'newPhone', 'newEmail'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        // 添加员工
+        function addEmployee() {
+            const newEmp = {
+                id: Math.max(...employees.map(emp => emp.id)) + 1,
+                name: document.getElementById('newName').value,
+                employeeId: document.getElementById('newEmpId').value,
+                gender: document.getElementById('newGender').value,
+                age: parseInt(document.getElementById('newAge').value),
+                department: document.getElementById('newDept').value,
+                position: document.getElementById('newPosition').value,
+                phone: document.getElementById('newPhone').value,
+                email: document.getElementById('newEmail').value,
+                licenseType: '待更新',
+                licenseExpiry: '待更新',
+                salary: parseInt(document.getElementById('newSalary').value),
+                status: '在职'
+            };
+            
+            if (newEmp.name && newEmp.employeeId) {
+                employees.push(newEmp);
+                filteredEmployees = [...employees];
+                renderEmployeeTable();
+                updateFilters();
+                updateStats();
+                hideAddModal();
+                alert('员工添加成功！');
+            } else {
+                alert('请填写姓名和工号！');
+            }
+        }
+
+        // 删除员工
+        function deleteEmployee(id) {
+            if (confirm('确定要删除这名员工吗？')) {
+                employees = employees.filter(emp => emp.id !== id);
+                filteredEmployees = [...employees];
+                renderEmployeeTable();
+                updateStats();
+            }
+        }
+
+        // 查看员工详情
+        function viewEmployee(id) {
+            const employee = employees.find(emp => emp.id === id);
+            if (!employee) return;
+            
+            const detailsContent = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">基本信息</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-sm font-medium text-gray-500">姓名:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.name}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">工号:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.employeeId}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">性别:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.gender}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">年龄:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.age}岁</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">学历:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.education || '未知'}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">薪资:</span>
+                                <span class="ml-2 text-sm text-gray-900">¥${employee.salary}</span></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">工作信息</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-sm font-medium text-gray-500">部门:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.department}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">职位:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.position}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">入职日期:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.hireDate || '未知'}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">工作年限:</span>
+                                <span class="ml-2 text-sm text-gray-900">${calculateWorkYears(employee.hireDate)}年</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">状态:</span>
+                                <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">${employee.status}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">绩效评分:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.performance || 0}分</span></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">联系信息</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-sm font-medium text-gray-500">电话:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.phone}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">邮箱:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.email}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">地址:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.address || '未填写'}</span></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">专业资质</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-sm font-medium text-gray-500">执照类型:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.licenseType}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">执照到期日:</span>
+                                <span class="ml-2 text-sm text-gray-900">${employee.licenseExpiry}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">晋升潜力:</span>
+                                <span class="ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPotentialColor(employee.promotionPotential)}">${employee.promotionPotential || '待评估'}</span></div>
+                            <div><span class="text-sm font-medium text-gray-500">证书:</span>
+                                <div class="mt-1 flex flex-wrap gap-1">
+                                    ${employee.certificates && employee.certificates.length > 0 ? 
+                                        employee.certificates.map(cert => 
+                                            `<span class="inline-flex px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">${cert}</span>`
+                                        ).join('') : 
+                                        '<span class="text-sm text-gray-400">暂无证书</span>'
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('employeeDetails').innerHTML = detailsContent;
+            document.getElementById('viewModal').classList.add('show');
+        }
+
+        // 隐藏查看模态框
+        function hideViewModal() {
+            document.getElementById('viewModal').classList.remove('show');
+        }
+
+        // 编辑员工
+        let editingEmployeeId = null;
+        
+        function editEmployee(id) {
+            const employee = employees.find(emp => emp.id === id);
+            if (!employee) return;
+            
+            editingEmployeeId = id;
+            
+            // 填充编辑表单
+            document.getElementById('editName').value = employee.name;
+            document.getElementById('editEmpId').value = employee.employeeId;
+            document.getElementById('editGender').value = employee.gender;
+            document.getElementById('editAge').value = employee.age;
+            document.getElementById('editSalary').value = employee.salary;
+            document.getElementById('editDept').value = employee.department;
+            document.getElementById('editPosition').value = employee.position;
+            document.getElementById('editPhone').value = employee.phone;
+            document.getElementById('editEmail').value = employee.email;
+            document.getElementById('editLicenseType').value = employee.licenseType;
+            document.getElementById('editLicenseExpiry').value = employee.licenseExpiry;
+            document.getElementById('editStatus').value = employee.status;
+            
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        // 隐藏编辑模态框
+        function hideEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+            editingEmployeeId = null;
+        }
+
+        // 保存编辑的员工
+        function saveEditEmployee() {
+            if (!editingEmployeeId) return;
+            
+            const empIndex = employees.findIndex(emp => emp.id === editingEmployeeId);
+            if (empIndex === -1) return;
+            
+            // 更新员工信息
+            employees[empIndex] = {
+                ...employees[empIndex],
+                name: document.getElementById('editName').value,
+                employeeId: document.getElementById('editEmpId').value,
+                gender: document.getElementById('editGender').value,
+                age: parseInt(document.getElementById('editAge').value),
+                salary: parseInt(document.getElementById('editSalary').value),
+                department: document.getElementById('editDept').value,
+                position: document.getElementById('editPosition').value,
+                phone: document.getElementById('editPhone').value,
+                email: document.getElementById('editEmail').value,
+                licenseType: document.getElementById('editLicenseType').value,
+                licenseExpiry: document.getElementById('editLicenseExpiry').value,
+                status: document.getElementById('editStatus').value
+            };
+            
+            filteredEmployees = [...employees];
+            renderEmployeeTable();
+            updateFilters();
+            updateStats();
+            hideEditModal();
+            alert('员工信息更新成功！');
+        }
+
+        // 导出CSV
+        function exportToCSV() {
+            const headers = ['姓名', '工号', '性别', '年龄', '部门', '职位', '电话', '邮箱', '执照类型', '执照到期日', '薪资', '状态'];
+            const csvData = filteredEmployees.map(emp => [
+                emp.name, emp.employeeId, emp.gender, emp.age, emp.department, 
+                emp.position, emp.phone, emp.email, emp.licenseType, 
+                emp.licenseExpiry, emp.salary, emp.status
+            ]);
+            
+            const csvContent = [headers, ...csvData]
+                .map(row => row.map(field => `"${field}"`).join(','))
+                .join('\\n');
+            
+            const blob = new Blob(['\\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `海事局员工信息_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 导出Excel
+        function exportToExcel() {
+            alert('Excel导出功能需要更高级的库支持，建议使用CSV格式导出后用Excel打开');
+        }
+
+        // 事件监听
+        document.getElementById('searchInput').addEventListener('input', filterEmployees);
+        document.getElementById('deptFilter').addEventListener('change', filterEmployees);
+        document.getElementById('posFilter').addEventListener('change', filterEmployees);
+        document.getElementById('ageFilter').addEventListener('change', filterEmployees);
+        document.getElementById('workYearFilter').addEventListener('change', filterEmployees);
+
+        // 监听复选框变化
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('employee-checkbox')) {
+                updateSelectedCount();
+            }
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
