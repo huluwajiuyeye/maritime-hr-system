@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>山东省海事局人力资源分析系统</title>
+    <title>海事局人事管理系统</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .modal {
@@ -125,12 +125,25 @@
                     </button>
                 </div>
                 
+                <div class="flex justify-between items-center">
+                <div class="flex space-x-2">
+                    <button onclick="exportToCSV()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg flex-1">
+                        📥 CSV
+                    </button>
+                    <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg flex-1">
+                        📊 Excel
+                    </button>
+                </div>
+                
                 <div class="flex space-x-2">
                     <button onclick="showPromotionAnalysis()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
                         📈 晋升分析
                     </button>
                     <button onclick="showBulkActions()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">
                         🎯 批量操作
+                    </button>
+                    <button onclick="resetToDefaultData()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                        🔄 重置数据
                     </button>
                 </div>
             </div>
@@ -328,8 +341,14 @@
                             <input type="number" id="editAge" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
-                            <input type="number" id="editSalary" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">学历</label>
+                            <select id="editEducation" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="高中">高中</option>
+                                <option value="大专">大专</option>
+                                <option value="本科">本科</option>
+                                <option value="硕士">硕士</option>
+                                <option value="博士">博士</option>
+                            </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -344,6 +363,31 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">入职日期</label>
+                            <input type="date" id="editHireDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
+                            <input type="number" id="editSalary" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">绩效评分 (0-100)</label>
+                            <input type="number" id="editPerformance" min="0" max="100" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">晋升潜力</label>
+                            <select id="editPromotionPotential" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                <option value="高">高</option>
+                                <option value="中">中</option>
+                                <option value="低">低</option>
+                                <option value="待评估">待评估</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">电话</label>
                             <input type="text" id="editPhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                         </div>
@@ -352,6 +396,10 @@
                             <input type="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">地址</label>
+                        <input type="text" id="editAddress" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">执照类型</label>
@@ -359,8 +407,12 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">执照到期日</label>
-                            <input type="text" id="editLicenseExpiry" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                            <input type="text" id="editLicenseExpiry" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="格式：2025-12-31 或 无">
                         </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">证书 (用逗号分隔多个证书)</label>
+                        <textarea id="editCertificates" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg" placeholder="例如：船舶检查员证书,国际船舶安全检查员证书,PSC检查员证书"></textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">状态</label>
@@ -380,8 +432,44 @@
     </div>
 
     <script>
-        // 员工数据
-        let employees = [
+        // 数据持久化相关函数
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('maritime_hr_employees', JSON.stringify(employees));
+                console.log('数据已保存到本地存储');
+            } catch (error) {
+                console.error('保存数据失败:', error);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('maritime_hr_employees');
+                if (savedData) {
+                    const parsedData = JSON.parse(savedData);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        employees = parsedData;
+                        console.log('从本地存储加载了', employees.length, '条员工数据');
+                        return true;
+                    }
+                }
+                console.log('未找到本地存储数据，使用默认数据');
+                return false;
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                return false;
+            }
+        }
+
+        function resetToDefaultData() {
+            if (confirm('确定要重置所有数据为初始状态吗？这将清除所有您添加和修改的员工信息！')) {
+                localStorage.removeItem('maritime_hr_employees');
+                location.reload(); // 重新加载页面以使用默认数据
+            }
+        }
+
+        // 员工数据 - 默认数据
+        let defaultEmployees = [
             {
                 id: 1, name: '张伟', employeeId: 'MSA001', gender: '男', age: 35,
                 department: '船舶监督处', position: '高级船舶检查官', 
@@ -438,6 +526,14 @@
                 performance: 78, promotionPotential: '中', education: '本科', certCount: 1, lastPromotion: null
             }
         ];
+
+        // 初始化员工数据
+        let employees = [];
+
+        // 页面加载时尝试从localStorage加载数据
+        if (!loadFromLocalStorage()) {
+            employees = [...defaultEmployees]; // 使用默认数据
+        }
 
         let filteredEmployees = [...employees];
 
@@ -766,6 +862,7 @@
                         employees[empIndex].performance = parseInt(newPerformance);
                     }
                 });
+                saveToLocalStorage(); // 保存数据
                 filterEmployees();
                 alert(`已更新 ${selectedIds.length} 名员工的绩效分数`);
             }
@@ -787,6 +884,7 @@
                         employees[empIndex].promotionPotential = newPotential;
                     }
                 });
+                saveToLocalStorage(); // 保存数据
                 filterEmployees();
                 alert(`已更新 ${selectedIds.length} 名员工的晋升潜力`);
             }
@@ -879,12 +977,21 @@
                 licenseType: '待更新',
                 licenseExpiry: '待更新',
                 salary: parseInt(document.getElementById('newSalary').value),
-                status: '在职'
+                status: '在职',
+                hireDate: new Date().toISOString().split('T')[0],
+                address: '',
+                certificates: [],
+                performance: 0,
+                promotionPotential: '待评估',
+                education: '本科',
+                certCount: 0,
+                lastPromotion: null
             };
             
             if (newEmp.name && newEmp.employeeId) {
                 employees.push(newEmp);
                 filteredEmployees = [...employees];
+                saveToLocalStorage(); // 保存数据
                 renderEmployeeTable();
                 updateFilters();
                 updateStats();
@@ -900,6 +1007,7 @@
             if (confirm('确定要删除这名员工吗？')) {
                 employees = employees.filter(emp => emp.id !== id);
                 filteredEmployees = [...employees];
+                saveToLocalStorage(); // 保存数据
                 renderEmployeeTable();
                 updateStats();
             }
@@ -1007,13 +1115,19 @@
             document.getElementById('editEmpId').value = employee.employeeId;
             document.getElementById('editGender').value = employee.gender;
             document.getElementById('editAge').value = employee.age;
+            document.getElementById('editEducation').value = employee.education || '本科';
             document.getElementById('editSalary').value = employee.salary;
             document.getElementById('editDept').value = employee.department;
             document.getElementById('editPosition').value = employee.position;
+            document.getElementById('editHireDate').value = employee.hireDate || '';
+            document.getElementById('editPerformance').value = employee.performance || 0;
+            document.getElementById('editPromotionPotential').value = employee.promotionPotential || '待评估';
             document.getElementById('editPhone').value = employee.phone;
             document.getElementById('editEmail').value = employee.email;
+            document.getElementById('editAddress').value = employee.address || '';
             document.getElementById('editLicenseType').value = employee.licenseType;
             document.getElementById('editLicenseExpiry').value = employee.licenseExpiry;
+            document.getElementById('editCertificates').value = employee.certificates ? employee.certificates.join(',') : '';
             document.getElementById('editStatus').value = employee.status;
             
             document.getElementById('editModal').classList.add('show');
@@ -1032,6 +1146,10 @@
             const empIndex = employees.findIndex(emp => emp.id === editingEmployeeId);
             if (empIndex === -1) return;
             
+            // 处理证书字段
+            const certificatesInput = document.getElementById('editCertificates').value;
+            const certificates = certificatesInput ? certificatesInput.split(',').map(cert => cert.trim()).filter(cert => cert !== '') : [];
+            
             // 更新员工信息
             employees[empIndex] = {
                 ...employees[empIndex],
@@ -1039,17 +1157,24 @@
                 employeeId: document.getElementById('editEmpId').value,
                 gender: document.getElementById('editGender').value,
                 age: parseInt(document.getElementById('editAge').value),
+                education: document.getElementById('editEducation').value,
                 salary: parseInt(document.getElementById('editSalary').value),
                 department: document.getElementById('editDept').value,
                 position: document.getElementById('editPosition').value,
+                hireDate: document.getElementById('editHireDate').value,
+                performance: parseInt(document.getElementById('editPerformance').value) || 0,
+                promotionPotential: document.getElementById('editPromotionPotential').value,
                 phone: document.getElementById('editPhone').value,
                 email: document.getElementById('editEmail').value,
+                address: document.getElementById('editAddress').value,
                 licenseType: document.getElementById('editLicenseType').value,
                 licenseExpiry: document.getElementById('editLicenseExpiry').value,
+                certificates: certificates,
                 status: document.getElementById('editStatus').value
             };
             
             filteredEmployees = [...employees];
+            saveToLocalStorage(); // 保存数据
             renderEmployeeTable();
             updateFilters();
             updateStats();
