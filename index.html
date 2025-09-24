@@ -673,9 +673,14 @@
                         
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label for="newAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
-                                <input type="number" id="newAge" min="18" max="65"
+                                <label for="newBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
+                                <input type="date" id="newBirthDate" onchange="calculateAge('new')"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="newAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                                <input type="number" id="newAge" readonly
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
                             </div>
                             <div>
                                 <label for="newEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
@@ -686,6 +691,8 @@
                                     <option value="研究生及以上">研究生及以上</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label for="newSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
                                 <input type="number" id="newSalary" min="0" step="100"
@@ -725,9 +732,14 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="newHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职日期</label>
-                                <input type="date" id="newHireDate" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label for="newDutyTime" class="block text-sm font-medium text-gray-700 mb-1">值班时间</label>
+                                <select id="newDutyTime" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="白班">白班 (08:00-16:00)</option>
+                                    <option value="夜班">夜班 (16:00-24:00)</option>
+                                    <option value="深夜班">深夜班 (00:00-08:00)</option>
+                                    <option value="全天">全天值班</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -870,9 +882,14 @@
                         
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label for="editAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
-                                <input type="number" id="editAge" min="18" max="65"
+                                <label for="editBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
+                                <input type="date" id="editBirthDate" onchange="calculateAge('edit')"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="editAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                                <input type="number" id="editAge" readonly
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
                             </div>
                             <div>
                                 <label for="editEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
@@ -883,6 +900,8 @@
                                     <option value="研究生及以上">研究生及以上</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label for="editSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
                                 <input type="number" id="editSalary" min="0" step="100"
@@ -922,9 +941,14 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="editHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职日期</label>
-                                <input type="date" id="editHireDate" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <label for="editDutyTime" class="block text-sm font-medium text-gray-700 mb-1">值班时间</label>
+                                <select id="editDutyTime" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="白班">白班 (08:00-16:00)</option>
+                                    <option value="夜班">夜班 (16:00-24:00)</option>
+                                    <option value="深夜班">深夜班 (00:00-08:00)</option>
+                                    <option value="全天">全天值班</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1271,6 +1295,40 @@
         /*********************
          * 工具函数
          *********************/
+        
+        // 计算年龄函数
+        function calculateAge(prefix) {
+            const birthDateInput = document.getElementById(prefix + 'BirthDate');
+            const ageInput = document.getElementById(prefix + 'Age');
+            
+            if (birthDateInput.value && ageInput) {
+                const birthDate = new Date(birthDateInput.value);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                ageInput.value = age;
+            }
+        }
+
+        // 根据出生日期计算年龄
+        function calculateAgeFromBirthDate(birthDate) {
+            if (!birthDate) return null;
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
         
         // 防抖函数
         function debounce(fn, delay = 300) {
