@@ -47,7 +47,7 @@
         
         /* 登录页面居中修复 */
         #loginPage, #registerPage {
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
@@ -55,7 +55,7 @@
             box-sizing: border-box;
         }
         #loginPage.active, #registerPage.active {
-            display: flex;
+            display: flex !important;
         }
         
         /* 头部固定优化 */
@@ -1317,18 +1317,26 @@
             // 隐藏所有页面
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                // 确保完全隐藏
+                page.style.display = 'none';
             });
             
             // 显示目标页面
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.add('active');
+                // 根据页面类型设置正确的display
+                if (pageId === 'loginPage' || pageId === 'registerPage') {
+                    targetPage.style.display = 'flex';
+                } else {
+                    targetPage.style.display = 'block';
+                }
                 
                 // 立即滚动到页面顶部
                 window.scrollTo({
                     top: 0,
                     left: 0,
-                    behavior: 'instant' // 立即跳转，避免延迟
+                    behavior: 'instant'
                 });
                 
                 // 确保滚动位置重置
