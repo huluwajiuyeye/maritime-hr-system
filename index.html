@@ -439,7 +439,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-4">
                         <div class="relative lg:col-span-2">
                             <input type="text" id="searchInput" 
-                                   placeholder="搜索姓名、工号、单位..."
+                                   placeholder="搜索姓名、单位..."
                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                    aria-label="搜索员工信息">
                             <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -468,15 +468,6 @@
                             <option value="海事处">海事处</option>
                             <option value="机关">机关</option>
                             <option value="在岗位">在岗位</option>
-                        </select>
-                        
-                        <select id="dutyTimeFilter" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">值班时间</option>
-                            <option value="0-50">0-50小时</option>
-                            <option value="51-100">51-100小时</option>
-                            <option value="101-150">101-150小时</option>
-                            <option value="151+">151小时以上</option>
                         </select>
                         
                         <select id="certificateFilter" 
@@ -552,7 +543,7 @@
                                     </th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">单位职务</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工作状态</th>
-                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">值班时间</th>
+                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">VTS履历</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">证书情况</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">联系方式</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
@@ -692,7 +683,7 @@
                             <div class="flex flex-col items-center">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">照片</label>
                                 <div class="photo-upload">
-                                    <img id="newPhotoPreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMTJDMTQgMTIgMTYgMTAgMTYgOEMxNiA2IDE0IDQgMTIgNEMxMCA0IDggNiA4IDhDOCAxMCAxMCAxMiAxMiAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTIwIDIwVjE2QzIwIDEyIDEyIDEyIDEyIDEyUzQgMTIgNCAMTZWMjBIMjBaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo8L3N2Zz4K" class="photo-preview" alt="照片预览">
+                                    <img id="newPhotoPreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMTJDMTQgMTIgMTYgMTAgMTYgOEMxNiA2IDE0IDQgMTIgNEMxMCA0IDggNiA4IDhDOCAxMCAxMCAxMiAxMiAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTIwIDIwVjE2QzIwIDEyIDEyIDEyIDEyIDEyUzQgMTIgNCAxNlYyMEgyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+Cjwvc3ZnPgo=" class="photo-preview" alt="照片预览">
                                     <input type="file" id="newPhoto" accept="image/*" onchange="previewPhoto('new')">
                                 </div>
                                 <button type="button" onclick="clearPhoto('new')" class="mt-2 text-sm text-red-600 hover:text-red-800">清除照片</button>
@@ -703,11 +694,6 @@
                                 <div>
                                     <label for="newName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
                                     <input type="text" id="newName" required
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-                                <div>
-                                    <label for="newEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
-                                    <input type="text" id="newEmpId" required
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                                 <div>
@@ -747,11 +733,6 @@
                                     <input type="text" id="newMajor"
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
-                                <div>
-                                    <label for="newSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
-                                    <input type="number" id="newSalary" min="0" step="100"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
                             </div>
                         </div>
                         
@@ -760,81 +741,6 @@
                             <textarea id="newMaritimeExperience" rows="3" 
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                       placeholder="请描述涉海工作经历、船舶服务经历等"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 工作信息 -->
-                    <div class="border-b pb-4">
-                        <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="newUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
-                                <input type="text" id="newUnit" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="newRole" class="block text-sm font-medium text-gray-700 mb-1">身份</label>
-                                <select id="newRole" onchange="handleRoleChange('new')"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="值班长">值班长</option>
-                                    <option value="值班员">值班员</option>
-                                    <option value="见习">见习</option>
-                                    <option value="协管">协管</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="newWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
-                                <select id="newWorkStatus" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="VTS在岗">VTS在岗</option>
-                                    <option value="海事处">海事处</option>
-                                    <option value="机关">机关</option>
-                                    <option value="在岗位">在岗位</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="newDutyTime" class="block text-sm font-medium text-gray-700 mb-1">值班时间</label>
-                                <select id="newDutyTime" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="白班">白班 (08:00-16:00)</option>
-                                    <option value="夜班">夜班 (16:00-24:00)</option>
-                                    <option value="深夜班">深夜班 (00:00-08:00)</option>
-                                    <option value="全天">全天值班</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="newHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
-                                <input type="date" id="newHireDate"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <!-- VTS履历 -->
-                        <div class="mt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
-                                <button type="button" onclick="addVTSHistory('new')" 
-                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
-                                    添加履历
-                                </button>
-                            </div>
-                            <div id="newVTSHistoryContainer" class="space-y-2">
-                                <!-- VTS履历项将动态添加 -->
-                            </div>
-                        </div>
-                        
-                        <!-- 培训记录 -->
-                        <div class="mt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
-                                <button type="button" onclick="addTrainingRecord('new')" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    添加培训
-                                </button>
-                            </div>
-                            <div id="newTrainingContainer" class="space-y-2">
-                                <!-- 培训记录将动态添加 -->
-                            </div>
                         </div>
                     </div>
 
@@ -877,6 +783,71 @@
                             <div class="flex items-center">
                                 <input type="checkbox" id="newCertElectrician" class="mr-2">
                                 <label for="newCertElectrician" class="text-sm text-gray-700">电机员</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作信息 -->
+                    <div class="border-b pb-4">
+                        <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="newUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
+                                <input type="text" id="newUnit" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="newRole" class="block text-sm font-medium text-gray-700 mb-1">身份</label>
+                                <select id="newRole" onchange="handleRoleChange('new')"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="值班长">值班长</option>
+                                    <option value="值班员">值班员</option>
+                                    <option value="见习">见习</option>
+                                    <option value="协管">协管</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="newWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
+                                <select id="newWorkStatus" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="VTS在岗">VTS在岗</option>
+                                    <option value="海事处">海事处</option>
+                                    <option value="机关">机关</option>
+                                    <option value="在岗位">在岗位</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="newHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
+                                <input type="date" id="newHireDate"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <!-- VTS履历 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
+                                <button type="button" onclick="addVTSHistory('new')" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                    添加履历
+                                </button>
+                            </div>
+                            <div id="newVTSHistoryContainer" class="space-y-2">
+                                <!-- VTS履历项将动态添加 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 培训记录 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
+                                <button type="button" onclick="addTrainingRecord('new')" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    添加培训
+                                </button>
+                            </div>
+                            <div id="newTrainingContainer" class="space-y-2">
+                                <!-- 培训记录将动态添加 -->
                             </div>
                         </div>
                     </div>
@@ -980,11 +951,6 @@
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
                                 <div>
-                                    <label for="editEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
-                                    <input type="text" id="editEmpId" required
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
-                                <div>
                                     <label for="editGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
                                     <select id="editGender" 
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -1021,11 +987,6 @@
                                     <input type="text" id="editMajor"
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 </div>
-                                <div>
-                                    <label for="editSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
-                                    <input type="number" id="editSalary" min="0" step="100"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                </div>
                             </div>
                         </div>
                         
@@ -1034,81 +995,6 @@
                             <textarea id="editMaritimeExperience" rows="3" 
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                       placeholder="请描述涉海工作经历、船舶服务经历等"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- 工作信息 -->
-                    <div class="border-b pb-4">
-                        <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="editUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
-                                <input type="text" id="editUnit" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="editRole" class="block text-sm font-medium text-gray-700 mb-1">身份</label>
-                                <select id="editRole" onchange="handleRoleChange('edit')"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="值班长">值班长</option>
-                                    <option value="值班员">值班员</option>
-                                    <option value="见习">见习</option>
-                                    <option value="协管">协管</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="editWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
-                                <select id="editWorkStatus" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="VTS在岗">VTS在岗</option>
-                                    <option value="海事处">海事处</option>
-                                    <option value="机关">机关</option>
-                                    <option value="在岗位">在岗位</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="editDutyTime" class="block text-sm font-medium text-gray-700 mb-1">值班时间</label>
-                                <select id="editDutyTime" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="白班">白班 (08:00-16:00)</option>
-                                    <option value="夜班">夜班 (16:00-24:00)</option>
-                                    <option value="深夜班">深夜班 (00:00-08:00)</option>
-                                    <option value="全天">全天值班</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="editHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
-                                <input type="date" id="editHireDate"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                        </div>
-                        
-                        <!-- VTS履历 -->
-                        <div class="mt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
-                                <button type="button" onclick="addVTSHistory('edit')" 
-                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
-                                    添加履历
-                                </button>
-                            </div>
-                            <div id="editVTSHistoryContainer" class="space-y-2">
-                                <!-- VTS履历项将动态添加 -->
-                            </div>
-                        </div>
-                        
-                        <!-- 培训记录 -->
-                        <div class="mt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
-                                <button type="button" onclick="addTrainingRecord('edit')" 
-                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
-                                    添加培训
-                                </button>
-                            </div>
-                            <div id="editTrainingContainer" class="space-y-2">
-                                <!-- 培训记录将动态添加 -->
-                            </div>
                         </div>
                     </div>
 
@@ -1151,6 +1037,71 @@
                             <div class="flex items-center">
                                 <input type="checkbox" id="editCertElectrician" class="mr-2">
                                 <label for="editCertElectrician" class="text-sm text-gray-700">电机员</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作信息 -->
+                    <div class="border-b pb-4">
+                        <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label for="editUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
+                                <input type="text" id="editUnit" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="editRole" class="block text-sm font-medium text-gray-700 mb-1">身份</label>
+                                <select id="editRole" onchange="handleRoleChange('edit')"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="值班长">值班长</option>
+                                    <option value="值班员">值班员</option>
+                                    <option value="见习">见习</option>
+                                    <option value="协管">协管</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="editWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
+                                <select id="editWorkStatus" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="VTS在岗">VTS在岗</option>
+                                    <option value="海事处">海事处</option>
+                                    <option value="机关">机关</option>
+                                    <option value="在岗位">在岗位</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="editHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
+                                <input type="date" id="editHireDate"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <!-- VTS履历 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
+                                <button type="button" onclick="addVTSHistory('edit')" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                    添加履历
+                                </button>
+                            </div>
+                            <div id="editVTSHistoryContainer" class="space-y-2">
+                                <!-- VTS履历项将动态添加 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 培训记录 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
+                                <button type="button" onclick="addTrainingRecord('edit')" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    添加培训
+                                </button>
+                            </div>
+                            <div id="editTrainingContainer" class="space-y-2">
+                                <!-- 培训记录将动态添加 -->
                             </div>
                         </div>
                     </div>
@@ -1325,16 +1276,16 @@
         let employeesByOrganization = {
             '省厅': [
                 {
-                    id: 1, name: '王局长', employeeId: 'SD001', gender: '男', birthDate: '1976-03-15',
-                    unit: '山东海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '全天',
+                    id: 1, name: '王局长', gender: '男', birthDate: '1976-03-15',
+                    unit: '山东海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800001111', email: 'wang@sd.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '研究生及以上', 
                     university: '大连海事大学', major: '航海技术', maritimeExperience: '20年海事管理经验，曾任船长8年',
-                    salary: 12000, hireDate: '2010-03-15', photo: '',
+                    hireDate: '2010-03-15', photo: '',
                     vtsHistory: [
-                        {startDate: '2010-03-15', endDate: '2015-06-30', position: '值班员', location: '青岛VTS中心'},
-                        {startDate: '2015-07-01', endDate: '2020-12-31', position: '值班长', location: '烟台VTS分中心'},
-                        {startDate: '2021-01-01', endDate: '', position: '值班长', location: '山东海事局VTS中心'}
+                        {startDate: '2010-03-15', endDate: '2015-06-30', position: '值班员', location: '青岛分局'},
+                        {startDate: '2015-07-01', endDate: '2020-12-31', position: '值班长', location: '烟台分局'},
+                        {startDate: '2021-01-01', endDate: '', position: '值班长', location: '山东海事局'}
                     ],
                     trainingRecords: [
                         {startDate: '2020-05-10', endDate: '2020-05-20', course: 'VTS高级管理培训', institution: '交通部海事局'},
@@ -1345,15 +1296,15 @@
                     performance: '2023年荣获"优秀VTS管理者"称号，主导VTS系统升级项目，发表《现代VTS管理技术研究》论文，获得山东省科技进步三等奖。'
                 },
                 {
-                    id: 2, name: '李副局长', employeeId: 'SD002', gender: '男', birthDate: '1979-06-20',
-                    unit: '山东海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '白班',
+                    id: 2, name: '李副局长', gender: '男', birthDate: '1979-06-20',
+                    unit: '山东海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800001112', email: 'li@sd.vts.msa.gov.cn',
                     certificates: ['船长', '轮机长'], education: '研究生及以上',
                     university: '上海海事大学', major: '轮机工程', maritimeExperience: '18年海事工作经历，船舶服务12年',
-                    salary: 11500, hireDate: '2012-08-01', photo: '',
+                    hireDate: '2012-08-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2012-08-01', endDate: '2018-12-31', position: '值班员', location: '威海VTS分中心'},
-                        {startDate: '2019-01-01', endDate: '', position: '值班长', location: '山东海事局VTS中心'}
+                        {startDate: '2012-08-01', endDate: '2018-12-31', position: '值班员', location: '威海分局'},
+                        {startDate: '2019-01-01', endDate: '', position: '值班长', location: '山东海事局'}
                     ],
                     trainingRecords: [
                         {startDate: '2021-09-01', endDate: '2021-09-10', course: '港口交通管理培训', institution: '中国海事局培训中心'}
@@ -1365,16 +1316,16 @@
             ],
             '青岛分局': [
                 {
-                    id: 3, name: '张伟', employeeId: 'QD001', gender: '男', birthDate: '1989-03-15',
-                    unit: '青岛海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '夜班',
+                    id: 3, name: '张伟', gender: '男', birthDate: '1989-03-15',
+                    unit: '青岛海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800138001', email: 'zhangwei@qd.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '本科', 
                     university: '青岛科技大学', major: '海洋技术', maritimeExperience: '10年VTS工作经验，5年船舶值班经历',
-                    salary: 9500, hireDate: '2014-07-01', photo: '',
+                    hireDate: '2014-07-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2014-07-01', endDate: '2018-06-30', position: '见习', location: '青岛海事局VTS中心'},
-                        {startDate: '2018-07-01', endDate: '2021-12-31', position: '值班员', location: '青岛海事局VTS中心'},
-                        {startDate: '2022-01-01', endDate: '', position: '值班长', location: '青岛海事局VTS中心'}
+                        {startDate: '2014-07-01', endDate: '2018-06-30', position: '见习', location: '青岛海事局'},
+                        {startDate: '2018-07-01', endDate: '2021-12-31', position: '值班员', location: '青岛海事局'},
+                        {startDate: '2022-01-01', endDate: '', position: '值班长', location: '青岛海事局'}
                     ],
                     trainingRecords: [
                         {startDate: '2020-04-15', endDate: '2020-04-25', course: 'VTS操作员培训', institution: '青岛海事局'}
@@ -1384,15 +1335,15 @@
                     performance: '青岛港区值班长，经验丰富。2023年青岛分局技能比武一等奖，多次获得月度优秀员工。'
                 },
                 {
-                    id: 4, name: '李红', employeeId: 'QD002', gender: '女', birthDate: '1996-07-01',
-                    unit: '青岛海事局VTS中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
+                    id: 4, name: '李红', gender: '女', birthDate: '1996-07-01',
+                    unit: '青岛海事局', role: '值班员', workStatus: 'VTS在岗',
                     phone: '13800138002', email: 'lihong@qd.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
                     university: '中国海洋大学', major: '港口航道与海岸工程', maritimeExperience: '6年海事工作经验',
-                    salary: 7800, hireDate: '2018-03-01', photo: '',
+                    hireDate: '2018-03-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2018-03-01', endDate: '2020-02-29', position: '见习', location: '青岛海事局VTS中心'},
-                        {startDate: '2020-03-01', endDate: '', position: '值班员', location: '青岛海事局VTS中心'}
+                        {startDate: '2018-03-01', endDate: '2020-02-29', position: '见习', location: '青岛海事局'},
+                        {startDate: '2020-03-01', endDate: '', position: '值班员', location: '青岛海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-18', '2024-01-25', '2024-02-08'],
@@ -1402,15 +1353,15 @@
             ],
             '烟台分局': [
                 {
-                    id: 5, name: '王强', employeeId: 'YT001', gender: '男', birthDate: '1982-08-20',
-                    unit: '烟台海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '全天',
+                    id: 5, name: '王强', gender: '男', birthDate: '1982-08-20',
+                    unit: '烟台海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800138003', email: 'wangqiang@yt.vts.msa.gov.cn',
                     certificates: ['船长', '轮机长', '大副'], education: '研究生及以上',
                     university: '大连海事大学', major: '交通运输工程', maritimeExperience: '15年海事工作，10年船舶服务经历',
-                    salary: 10200, hireDate: '2009-06-01', photo: '',
+                    hireDate: '2009-06-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2009-06-01', endDate: '2015-05-31', position: '值班员', location: '烟台海事局VTS分中心'},
-                        {startDate: '2015-06-01', endDate: '', position: '值班长', location: '烟台海事局VTS分中心'}
+                        {startDate: '2009-06-01', endDate: '2015-05-31', position: '值班员', location: '烟台海事局'},
+                        {startDate: '2015-06-01', endDate: '', position: '值班长', location: '烟台海事局'}
                     ],
                     trainingRecords: [
                         {startDate: '2019-10-01', endDate: '2019-10-15', course: 'VTS技术升级培训', institution: '交通部培训中心'}
@@ -1420,15 +1371,15 @@
                     performance: '烟台港区技术专家，主导多项VTS技术改进项目，获得省级科技进步奖，发表技术论文5篇。'
                 },
                 {
-                    id: 6, name: '刘明', employeeId: 'YT002', gender: '男', birthDate: '1994-05-10',
-                    unit: '烟台海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '深夜班',
+                    id: 6, name: '刘明', gender: '男', birthDate: '1994-05-10',
+                    unit: '烟台海事局', role: '值班员', workStatus: 'VTS在岗',
                     phone: '13800138004', email: 'liuming@yt.vts.msa.gov.cn',
                     certificates: ['二副', '三副'], education: '本科',
                     university: '烟台大学', major: '船舶与海洋工程', maritimeExperience: '4年VTS工作经验',
-                    salary: 7500, hireDate: '2020-09-01', photo: '',
+                    hireDate: '2020-09-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2020-09-01', endDate: '2022-08-31', position: '见习', location: '烟台海事局VTS分中心'},
-                        {startDate: '2022-09-01', endDate: '', position: '值班员', location: '烟台海事局VTS分中心'}
+                        {startDate: '2020-09-01', endDate: '2022-08-31', position: '见习', location: '烟台海事局'},
+                        {startDate: '2022-09-01', endDate: '', position: '值班员', location: '烟台海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-14', '2024-01-28', '2024-02-12'],
@@ -1438,15 +1389,15 @@
             ],
             '威海分局': [
                 {
-                    id: 7, name: '陈明', employeeId: 'WH001', gender: '男', birthDate: '1986-04-15',
-                    unit: '威海海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '白班',
+                    id: 7, name: '陈明', gender: '男', birthDate: '1986-04-15',
+                    unit: '威海海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800138005', email: 'chenming@wh.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '本科',
                     university: '威海海洋职业学院', major: '航海技术', maritimeExperience: '12年海事工作经验',
-                    salary: 9200, hireDate: '2012-05-01', photo: '',
+                    hireDate: '2012-05-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2012-05-01', endDate: '2017-04-30', position: '值班员', location: '威海海事局VTS分中心'},
-                        {startDate: '2017-05-01', endDate: '', position: '值班长', location: '威海海事局VTS分中心'}
+                        {startDate: '2012-05-01', endDate: '2017-04-30', position: '值班员', location: '威海海事局'},
+                        {startDate: '2017-05-01', endDate: '', position: '值班长', location: '威海海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-16', '2024-01-30', '2024-02-14'],
@@ -1456,15 +1407,15 @@
             ],
             '日照分局': [
                 {
-                    id: 8, name: '孙丽', employeeId: 'RZ001', gender: '女', birthDate: '1992-09-10',
-                    unit: '日照海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '夜班',
+                    id: 8, name: '孙丽', gender: '女', birthDate: '1992-09-10',
+                    unit: '日照海事局', role: '值班员', workStatus: 'VTS在岗',
                     phone: '13800138006', email: 'sunli@rz.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
                     university: '山东交通学院', major: '海事管理', maritimeExperience: '7年VTS工作经验',
-                    salary: 7800, hireDate: '2017-06-01', photo: '',
+                    hireDate: '2017-06-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2017-06-01', endDate: '2019-05-31', position: '见习', location: '日照海事局VTS分中心'},
-                        {startDate: '2019-06-01', endDate: '', position: '值班员', location: '日照海事局VTS分中心'}
+                        {startDate: '2017-06-01', endDate: '2019-05-31', position: '见习', location: '日照海事局'},
+                        {startDate: '2019-06-01', endDate: '', position: '值班员', location: '日照海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-13', '2024-01-27', '2024-02-11'],
@@ -1474,15 +1425,15 @@
             ],
             '东营分局': [
                 {
-                    id: 9, name: '赵勇', employeeId: 'DY001', gender: '男', birthDate: '1995-03-20',
-                    unit: '东营海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
+                    id: 9, name: '赵勇', gender: '男', birthDate: '1995-03-20',
+                    unit: '东营海事局', role: '值班员', workStatus: 'VTS在岗',
                     phone: '13800138007', email: 'zhaoyong@dy.vts.msa.gov.cn',
                     certificates: ['二副', '三副'], education: '本科',
                     university: '中国石油大学（华东）', major: '海洋工程', maritimeExperience: '3年VTS工作经验',
-                    salary: 7200, hireDate: '2021-07-01', photo: '',
+                    hireDate: '2021-07-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2021-07-01', endDate: '2023-06-30', position: '见习', location: '东营海事局VTS分中心'},
-                        {startDate: '2023-07-01', endDate: '', position: '值班员', location: '东营海事局VTS分中心'}
+                        {startDate: '2021-07-01', endDate: '2023-06-30', position: '见习', location: '东营海事局'},
+                        {startDate: '2023-07-01', endDate: '', position: '值班员', location: '东营海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-19', '2024-02-03'],
@@ -1492,15 +1443,15 @@
             ],
             '潍坊分局': [
                 {
-                    id: 10, name: '马超', employeeId: 'WF001', gender: '男', birthDate: '1988-07-12',
-                    unit: '潍坊海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '夜班',
+                    id: 10, name: '马超', gender: '男', birthDate: '1988-07-12',
+                    unit: '潍坊海事局', role: '值班长', workStatus: 'VTS在岗',
                     phone: '13800138008', email: 'machao@wf.vts.msa.gov.cn',
                     certificates: ['船长', '大副', '轮机长'], education: '本科',
                     university: '山东理工大学', major: '交通运输', maritimeExperience: '13年海事工作经验',
-                    salary: 9800, hireDate: '2011-04-01', photo: '',
+                    hireDate: '2011-04-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2011-04-01', endDate: '2016-03-31', position: '值班员', location: '潍坊海事局VTS分中心'},
-                        {startDate: '2016-04-01', endDate: '', position: '值班长', location: '潍坊海事局VTS分中心'}
+                        {startDate: '2011-04-01', endDate: '2016-03-31', position: '值班员', location: '潍坊海事局'},
+                        {startDate: '2016-04-01', endDate: '', position: '值班长', location: '潍坊海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-11', '2024-01-24', '2024-02-07'],
@@ -1510,15 +1461,15 @@
             ],
             '董家口分局': [
                 {
-                    id: 11, name: '杨帆', employeeId: 'DJK001', gender: '男', birthDate: '1991-11-05',
-                    unit: '董家口海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
+                    id: 11, name: '杨帆', gender: '男', birthDate: '1991-11-05',
+                    unit: '董家口海事局', role: '值班员', workStatus: 'VTS在岗',
                     phone: '13800138009', email: 'yangfan@djk.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
                     university: '青岛理工大学', major: '港口航道与海岸工程', maritimeExperience: '6年VTS工作经验',
-                    salary: 8200, hireDate: '2018-10-01', photo: '',
+                    hireDate: '2018-10-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2018-10-01', endDate: '2020-09-30', position: '见习', location: '董家口海事局VTS分中心'},
-                        {startDate: '2020-10-01', endDate: '', position: '值班员', location: '董家口海事局VTS分中心'}
+                        {startDate: '2018-10-01', endDate: '2020-09-30', position: '见习', location: '董家口海事局'},
+                        {startDate: '2020-10-01', endDate: '', position: '值班员', location: '董家口海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-17', '2024-01-31', '2024-02-15'],
@@ -1528,14 +1479,14 @@
             ],
             '滨州分局': [
                 {
-                    id: 12, name: '周静', employeeId: 'BZ001', gender: '女', birthDate: '1997-08-15',
-                    unit: '滨州海事局VTS分中心', role: '见习', workStatus: '在岗位', dutyTime: '白班',
+                    id: 12, name: '周静', gender: '女', birthDate: '1997-08-15',
+                    unit: '滨州海事局', role: '见习', workStatus: '在岗位',
                     phone: '13800138010', email: 'zhoujing@bz.vts.msa.gov.cn',
                     certificates: [], education: '大专',
                     university: '滨州职业学院', major: '港口与航道工程', maritimeExperience: '2年实习经验',
-                    salary: 4500, hireDate: '2022-08-01', photo: '',
+                    hireDate: '2022-08-01', photo: '',
                     vtsHistory: [
-                        {startDate: '2022-08-01', endDate: '', position: '见习', location: '滨州海事局VTS分中心'}
+                        {startDate: '2022-08-01', endDate: '', position: '见习', location: '滨州海事局'}
                     ],
                     trainingRecords: [],
                     dutyHistory: ['2024-01-21', '2024-02-04'],
@@ -1656,7 +1607,7 @@
                         <label class="block text-xs font-medium text-gray-600 mb-1">工作地点</label>
                         <input type="text" name="${prefix}VTSLocation[]" 
                                class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                               placeholder="如：青岛VTS中心">
+                               placeholder="如：青岛海事局">
                     </div>
                 </div>
             `;
@@ -2079,6 +2030,7 @@
             pageEmployees.forEach(emp => {
                 const dutyHours = emp.dutyHours || calculateDutyHours(emp.dutyHistory);
                 const certCount = emp.certificates ? emp.certificates.length : 0;
+                const vtsHistoryCount = emp.vtsHistory ? emp.vtsHistory.length : 0;
                 
                 const row = document.createElement('tr');
                 row.className = 'hover:bg-gray-50 transition-colors';
@@ -2124,7 +2076,6 @@
                             ${photoDisplay}
                             <div class="ml-2 md:ml-4">
                                 <div class="text-sm font-medium text-gray-900">${emp.name}</div>
-                                <div class="text-xs md:text-sm text-gray-500">${emp.employeeId}</div>
                                 <div class="text-xs text-gray-500">${emp.gender} | ${emp.birthDate ? calculateAgeFromBirthDate(emp.birthDate) : 'N/A'}岁 | ${emp.education}</div>
                                 ${emp.university ? `<div class="text-xs text-gray-400">${emp.university}</div>` : ''}
                             </div>
@@ -2135,7 +2086,6 @@
                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(emp.role)}">
                             ${emp.role}
                         </span>
-                        <div class="text-xs text-gray-500 mt-1">值班: ${emp.dutyTime || '未设置'}</div>
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(emp.workStatus)}">
@@ -2143,11 +2093,11 @@
                         </span>
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
-                        <div class="text-xs md:text-sm text-gray-900">${dutyHours}小时</div>
-                        <div class="text-xs text-gray-500">${emp.dutyHistory ? emp.dutyHistory.length : 0}次值班</div>
+                        <div class="text-xs md:text-sm text-gray-900">${vtsHistoryCount}条履历</div>
+                        <div class="text-xs text-gray-500">${dutyHours}小时值班</div>
                         <button onclick="showDutyHistory(${emp.id})" 
                                 class="text-blue-600 hover:text-blue-900 text-xs focus:outline-none focus:underline"
-                                aria-label="查看 ${emp.name} 的值班详情">
+                                aria-label="查看 ${emp.name} 的履历详情">
                             查看详情
                         </button>
                     </td>
@@ -2296,13 +2246,11 @@
             const unit = document.getElementById('unitFilter')?.value || '';
             const role = document.getElementById('roleFilter')?.value || '';
             const status = document.getElementById('statusFilter')?.value || '';
-            const dutyTimeRange = document.getElementById('dutyTimeFilter')?.value || '';
             const certificateFilter = document.getElementById('certificateFilter')?.value || '';
             const education = document.getElementById('educationFilter')?.value || '';
             
             filteredEmployees = employees.filter(emp => {
                 const matchesSearch = emp.name.toLowerCase().includes(search) ||
-                                    emp.employeeId.toLowerCase().includes(search) ||
                                     emp.unit.toLowerCase().includes(search) ||
                                     (emp.phone && emp.phone.includes(search)) ||
                                     (emp.email && emp.email.toLowerCase().includes(search)) ||
@@ -2314,20 +2262,6 @@
                 const matchesRole = !role || emp.role === role;
                 const matchesStatus = !status || emp.workStatus === status;
                 const matchesEducation = !education || emp.education === education;
-                
-                let matchesDutyTime = true;
-                if (dutyTimeRange) {
-                    const dutyHours = emp.dutyHours || 0;
-                    if (dutyTimeRange === '0-50') {
-                        matchesDutyTime = dutyHours >= 0 && dutyHours <= 50;
-                    } else if (dutyTimeRange === '51-100') {
-                        matchesDutyTime = dutyHours >= 51 && dutyHours <= 100;
-                    } else if (dutyTimeRange === '101-150') {
-                        matchesDutyTime = dutyHours >= 101 && dutyHours <= 150;
-                    } else if (dutyTimeRange === '151+') {
-                        matchesDutyTime = dutyHours >= 151;
-                    }
-                }
                 
                 let matchesCertificate = true;
                 if (certificateFilter) {
@@ -2341,7 +2275,7 @@
                     }
                 }
                 
-                return matchesSearch && matchesUnit && matchesRole && matchesStatus && matchesEducation && matchesDutyTime && matchesCertificate;
+                return matchesSearch && matchesUnit && matchesRole && matchesStatus && matchesEducation && matchesCertificate;
             });
             
             currentPage = 1;
@@ -2402,7 +2336,6 @@
                         <div class="text-center mb-6">
                             ${photoDisplay}
                             <h3 class="mt-4 text-xl font-bold text-gray-900">${employee.name}</h3>
-                            <p class="text-gray-600">${employee.employeeId}</p>
                             <span class="inline-flex px-3 py-1 mt-2 text-sm font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
                         </div>
                         
@@ -2434,10 +2367,6 @@
                                     <span class="text-sm text-gray-900">${employee.major || '未知'}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-sm font-medium text-gray-500">薪资:</span>
-                                    <span class="text-sm text-gray-900">¥${employee.salary || 0}</span>
-                                </div>
-                                <div class="flex justify-between">
                                     <span class="text-sm font-medium text-gray-500">入职时间:</span>
                                     <span class="text-sm text-gray-900">${employee.hireDate || '未知'}</span>
                                 </div>
@@ -2467,10 +2396,6 @@
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(employee.workStatus)}">${employee.workStatus}</span>
                                     </div>
                                 </div>
-                                <div>
-                                    <span class="text-sm font-medium text-gray-500">值班时间:</span>
-                                    <div class="text-sm text-gray-900 mt-1">${employee.dutyTime || '未设置'}</div>
-                                </div>
                             </div>
                         </div>
 
@@ -2479,6 +2404,19 @@
                             <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">涉海经历</h4>
                             <div class="bg-blue-50 p-4 rounded-lg">
                                 <p class="text-sm text-blue-800">${employee.maritimeExperience || '暂无涉海经历记录'}</p>
+                            </div>
+                        </div>
+
+                        <!-- 证书情况 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">证书情况</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${employee.certificates && employee.certificates.length > 0 ? 
+                                    employee.certificates.map(cert => 
+                                        `<span class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">${cert}</span>`
+                                    ).join('') : 
+                                    '<div class="text-sm text-gray-400 italic">暂无证书信息</div>'
+                                }
                             </div>
                         </div>
 
@@ -2515,19 +2453,6 @@
                                     class="w-full bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 text-white px-4 py-2 rounded-lg text-sm transition-colors">
                                 查看详细值班历史
                             </button>
-                        </div>
-
-                        <!-- 证书情况 -->
-                        <div>
-                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">证书情况</h4>
-                            <div class="flex flex-wrap gap-2">
-                                ${employee.certificates && employee.certificates.length > 0 ? 
-                                    employee.certificates.map(cert => 
-                                        `<span class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">${cert}</span>`
-                                    ).join('') : 
-                                    '<div class="text-sm text-gray-400 italic">暂无证书信息</div>'
-                                }
-                            </div>
                         </div>
 
                         <!-- 联系信息 -->
@@ -2586,14 +2511,12 @@
             
             // 填充基本信息
             document.getElementById('editName').value = employee.name;
-            document.getElementById('editEmpId').value = employee.employeeId;
             document.getElementById('editGender').value = employee.gender;
             document.getElementById('editBirthDate').value = employee.birthDate || '';
             document.getElementById('editAge').value = employee.birthDate ? calculateAgeFromBirthDate(employee.birthDate) : '';
             document.getElementById('editEducation').value = employee.education || '本科';
             document.getElementById('editUniversity').value = employee.university || '';
             document.getElementById('editMajor').value = employee.major || '';
-            document.getElementById('editSalary').value = employee.salary;
             document.getElementById('editMaritimeExperience').value = employee.maritimeExperience || '';
             
             // 设置照片
@@ -2603,11 +2526,30 @@
                 clearPhoto('edit');
             }
             
+            // 填充证书信息
+            const certCheckboxes = [
+                { id: 'editCertCaptain', name: '船长' },
+                { id: 'editCertChiefOfficer', name: '大副' },
+                { id: 'editCertSecondOfficer', name: '二副' },
+                { id: 'editCertThirdOfficer', name: '三副' },
+                { id: 'editCertChiefEngineer', name: '轮机长' },
+                { id: 'editCertFirstEngineer', name: '大管轮' },
+                { id: 'editCertSecondEngineer', name: '二管轮' },
+                { id: 'editCertThirdEngineer', name: '三管轮' },
+                { id: 'editCertElectrician', name: '电机员' }
+            ];
+            
+            certCheckboxes.forEach(cert => {
+                const checkbox = document.getElementById(cert.id);
+                if (checkbox) {
+                    checkbox.checked = employee.certificates && employee.certificates.includes(cert.name);
+                }
+            });
+            
             // 填充工作信息
             document.getElementById('editUnit').value = employee.unit;
             document.getElementById('editRole').value = employee.role;
             document.getElementById('editWorkStatus').value = employee.workStatus || 'VTS在岗';
-            document.getElementById('editDutyTime').value = employee.dutyTime || '白班';
             document.getElementById('editHireDate').value = employee.hireDate || '';
             
             // 填充VTS履历
@@ -2640,26 +2582,6 @@
                 });
             }
             
-            // 填充证书信息
-            const certCheckboxes = [
-                { id: 'editCertCaptain', name: '船长' },
-                { id: 'editCertChiefOfficer', name: '大副' },
-                { id: 'editCertSecondOfficer', name: '二副' },
-                { id: 'editCertThirdOfficer', name: '三副' },
-                { id: 'editCertChiefEngineer', name: '轮机长' },
-                { id: 'editCertFirstEngineer', name: '大管轮' },
-                { id: 'editCertSecondEngineer', name: '二管轮' },
-                { id: 'editCertThirdEngineer', name: '三管轮' },
-                { id: 'editCertElectrician', name: '电机员' }
-            ];
-            
-            certCheckboxes.forEach(cert => {
-                const checkbox = document.getElementById(cert.id);
-                if (checkbox) {
-                    checkbox.checked = employee.certificates && employee.certificates.includes(cert.name);
-                }
-            });
-            
             // 填充联系信息
             document.getElementById('editPhone').value = employee.phone;
             document.getElementById('editEmail').value = employee.email;
@@ -2686,16 +2608,9 @@
             if (empIndex === -1) return;
             
             const name = document.getElementById('editName').value.trim();
-            const employeeId = document.getElementById('editEmpId').value.trim();
             
-            if (!name || !employeeId) {
-                showToast('请填写姓名和工号！', 'error');
-                return;
-            }
-
-            const existingEmployee = employees.find(emp => emp.employeeId === employeeId && emp.id !== editingEmployeeId);
-            if (existingEmployee) {
-                showToast('工号已存在，请使用其他工号！', 'error');
+            if (!name) {
+                showToast('请填写姓名！', 'error');
                 return;
             }
 
@@ -2772,20 +2687,17 @@
             employees[empIndex] = {
                 ...employees[empIndex],
                 name: name,
-                employeeId: employeeId,
                 gender: document.getElementById('editGender').value,
                 birthDate: document.getElementById('editBirthDate').value,
                 education: document.getElementById('editEducation').value,
                 university: document.getElementById('editUniversity').value.trim(),
                 major: document.getElementById('editMajor').value.trim(),
                 maritimeExperience: document.getElementById('editMaritimeExperience').value.trim(),
-                salary: parseInt(document.getElementById('editSalary').value) || 5000,
                 hireDate: document.getElementById('editHireDate').value,
                 photo: photo,
                 unit: document.getElementById('editUnit').value.trim(),
                 role: document.getElementById('editRole').value,
                 workStatus: document.getElementById('editWorkStatus').value,
-                dutyTime: document.getElementById('editDutyTime').value,
                 vtsHistory: vtsHistory,
                 trainingRecords: trainingRecords,
                 certificates: certificates,
@@ -2839,7 +2751,7 @@
             const dutyHistoryContent = `
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-lg font-medium">${employee.name} 的值班历史</h4>
+                        <h4 class="text-lg font-medium">${employee.name} 的履历详情</h4>
                         ${isAdmin ? `<button onclick="addNewDutyRecord(${id})" 
                                              class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 text-white px-3 py-2 rounded-lg text-sm transition-colors">
                             添加值班记录
@@ -2865,6 +2777,30 @@
                         </div>
                     </div>
                     
+                    <!-- VTS履历部分 -->
+                    <div>
+                        <h5 class="font-medium text-gray-900 mb-3">VTS履历</h5>
+                        <div class="max-h-64 overflow-y-auto border rounded-lg">
+                            ${employee.vtsHistory && employee.vtsHistory.length > 0 ? 
+                                employee.vtsHistory.map((history, index) => `
+                                    <div class="p-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="font-medium text-gray-900">${history.position}</div>
+                                                <div class="text-sm text-gray-600">${history.location}</div>
+                                                <div class="text-sm text-gray-500">
+                                                    ${history.startDate} - ${history.endDate || '至今'}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('') :
+                                '<div class="p-8 text-center text-gray-500">暂无VTS履历记录</div>'
+                            }
+                        </div>
+                    </div>
+                    
+                    <!-- 值班记录部分 -->
                     <div>
                         <h5 class="font-medium text-gray-900 mb-3">值班记录</h5>
                         <div class="max-h-64 overflow-y-auto border rounded-lg">
@@ -2955,7 +2891,6 @@
             
             // 设置默认值
             document.getElementById('newUnit').value = getCurrentUserUnit();
-            document.getElementById('newDutyTime').value = '白班';
             document.getElementById('newWorkStatus').value = 'VTS在岗';
             
             // 清空证书复选框
@@ -2986,15 +2921,9 @@
 
         function addEmployee() {
             const name = document.getElementById('newName').value.trim();
-            const employeeId = document.getElementById('newEmpId').value.trim();
             
-            if (!name || !employeeId) {
-                showToast('请填写姓名和工号！', 'error');
-                return;
-            }
-
-            if (employees.find(emp => emp.employeeId === employeeId)) {
-                showToast('工号已存在，请使用其他工号！', 'error');
+            if (!name) {
+                showToast('请填写姓名！', 'error');
                 return;
             }
 
@@ -3072,13 +3001,11 @@
             const newEmp = {
                 id: Math.max(...employees.map(emp => emp.id), 0) + 1,
                 name: name,
-                employeeId: employeeId,
                 gender: document.getElementById('newGender').value,
                 birthDate: document.getElementById('newBirthDate').value,
                 unit: document.getElementById('newUnit').value.trim() || getCurrentUserUnit(),
                 role: document.getElementById('newRole').value,
                 workStatus: document.getElementById('newWorkStatus').value,
-                dutyTime: document.getElementById('newDutyTime').value,
                 phone: phone,
                 email: email,
                 certificates: certificates,
@@ -3086,7 +3013,6 @@
                 university: document.getElementById('newUniversity').value.trim(),
                 major: document.getElementById('newMajor').value.trim(),
                 maritimeExperience: document.getElementById('newMaritimeExperience').value.trim(),
-                salary: parseInt(document.getElementById('newSalary').value) || 5000,
                 hireDate: document.getElementById('newHireDate').value,
                 photo: photo,
                 vtsHistory: vtsHistory,
@@ -3111,20 +3037,20 @@
             }, 500);
         }
 
-        // 获取当前用户单位对应的VTS中心名称
+        // 获取当前用户单位名称（简化版，不含VTS中心/分中心）
         function getCurrentUserUnit() {
             if (!currentUser) return '';
             
             const unitMap = {
-                '省厅': '山东海事局VTS中心',
-                '烟台分局': '烟台海事局VTS分中心',
-                '青岛分局': '青岛海事局VTS中心',
-                '威海分局': '威海海事局VTS分中心',
-                '日照分局': '日照海事局VTS分中心',
-                '东营分局': '东营海事局VTS分中心',
-                '潍坊分局': '潍坊海事局VTS分中心',
-                '董家口分局': '董家口海事局VTS分中心',
-                '滨州分局': '滨州海事局VTS分中心'
+                '省厅': '山东海事局',
+                '烟台分局': '烟台海事局',
+                '青岛分局': '青岛海事局',
+                '威海分局': '威海海事局',
+                '日照分局': '日照海事局',
+                '东营分局': '东营海事局',
+                '潍坊分局': '潍坊海事局',
+                '董家口分局': '董家口海事局',
+                '滨州分局': '滨州海事局'
             };
             
             return unitMap[currentUser.organization] || '';
@@ -3138,15 +3064,15 @@
             
             employees.forEach(emp => {
                 const unitToOrgMap = {
-                    '山东海事局VTS中心': '省厅',
-                    '烟台海事局VTS分中心': '烟台分局',
-                    '青岛海事局VTS中心': '青岛分局',
-                    '威海海事局VTS分中心': '威海分局',
-                    '日照海事局VTS分中心': '日照分局',
-                    '东营海事局VTS分中心': '东营分局',
-                    '潍坊海事局VTS分中心': '潍坊分局',
-                    '董家口海事局VTS分中心': '董家口分局',
-                    '滨州海事局VTS分中心': '滨州分局'
+                    '山东海事局': '省厅',
+                    '烟台海事局': '烟台分局',
+                    '青岛海事局': '青岛分局',
+                    '威海海事局': '威海分局',
+                    '日照海事局': '日照分局',
+                    '东营海事局': '东营分局',
+                    '潍坊海事局': '潍坊分局',
+                    '董家口海事局': '董家口分局',
+                    '滨州海事局': '滨州分局'
                 };
                 
                 const org = unitToOrgMap[emp.unit];
@@ -3306,21 +3232,18 @@
         }
 
         function exportEmployeesToCSV(employeeData, filename) {
-            const headers = ['姓名', '工号', '性别', '年龄', '单位', '身份', '工作状态', '值班时间', '证书', '学历', '毕业院校', '专业', '薪资', '入职日期', '涉海经历', '电话', '邮箱', '工作绩效'];
+            const headers = ['姓名', '性别', '年龄', '单位', '身份', '工作状态', '证书', '学历', '毕业院校', '专业', '入职日期', '涉海经历', '电话', '邮箱', '工作绩效'];
             const csvData = employeeData.map(emp => [
                 emp.name, 
-                emp.employeeId, 
                 emp.gender, 
                 emp.birthDate ? calculateAgeFromBirthDate(emp.birthDate) : '', 
                 emp.unit, 
                 emp.role, 
                 emp.workStatus, 
-                emp.dutyHours || 0, 
                 emp.certificates ? emp.certificates.join(';') : '',
                 emp.education,
                 emp.university || '',
                 emp.major || '',
-                emp.salary || 0,
                 emp.hireDate || '',
                 emp.maritimeExperience || '',
                 emp.phone || '',
@@ -3883,7 +3806,7 @@
         function initEventListeners() {
             const filterElements = [
                 'searchInput', 'unitFilter', 'roleFilter', 'statusFilter', 
-                'dutyTimeFilter', 'certificateFilter', 'educationFilter'
+                'certificateFilter', 'educationFilter'
             ];
             
             filterElements.forEach(id => {
