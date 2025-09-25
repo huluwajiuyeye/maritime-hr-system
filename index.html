@@ -125,6 +125,41 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
+        /* 照片预览样式 */
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .photo-upload {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .photo-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* VTS履历样式 */
+        .vts-history-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f9fafb;
+        }
+        
+        .vts-history-item:hover {
+            background: #f3f4f6;
+        }
+        
         /* 响应式优化 */
         @media (max-width: 768px) {
             .responsive-table {
@@ -354,7 +389,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div class="ml-2 md:ml-4">
-                                <p class="text-xs md:text-sm font-medium text-gray-600">在岗人员</p>
+                                <p class="text-xs md:text-sm font-medium text-gray-600">VTS在岗</p>
                                 <p class="text-lg md:text-2xl font-semibold text-gray-900" id="onDutyCount">0</p>
                             </div>
                         </div>
@@ -422,15 +457,17 @@
                             <option value="">所有身份</option>
                             <option value="值班长">值班长</option>
                             <option value="值班员">值班员</option>
+                            <option value="见习">见习</option>
                             <option value="协管">协管</option>
-                            <option value="实习">实习</option>
                         </select>
                         
-                        <select id="onDutyFilter" 
+                        <select id="statusFilter" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="">在岗情况</option>
-                            <option value="有">在岗</option>
-                            <option value="无">不在岗</option>
+                            <option value="">工作状态</option>
+                            <option value="VTS在岗">VTS在岗</option>
+                            <option value="海事处">海事处</option>
+                            <option value="机关">机关</option>
+                            <option value="在岗位">在岗位</option>
                         </select>
                         
                         <select id="dutyTimeFilter" 
@@ -454,6 +491,7 @@
                             <option value="轮机长">轮机长</option>
                             <option value="大管轮">大管轮</option>
                             <option value="二管轮">二管轮</option>
+                            <option value="三管轮">三管轮</option>
                             <option value="电机员">电机员</option>
                         </select>
                         
@@ -513,7 +551,7 @@
                                         员工信息
                                     </th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">单位职务</th>
-                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">在岗状态</th>
+                                    <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">工作状态</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">值班时间</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">证书情况</th>
                                     <th class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">联系方式</th>
@@ -635,13 +673,12 @@
         </div>
     </div>
 
-    <!-- 以下模态框保持原样，但添加page-transition类 -->
     <!-- 添加员工模态框 -->
     <div id="addModal" class="modal fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="hideAddModal()" aria-hidden="true"></div>
             
-            <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto z-10 max-h-screen overflow-y-auto">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto z-10 max-h-screen overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 id="addModalTitle" class="text-lg font-medium text-gray-900">添加新员工</h3>
                 </div>
@@ -650,61 +687,86 @@
                     <!-- 基本信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">基本信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="newName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
-                                <input type="text" id="newName" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+                            <!-- 照片上传区域 -->
+                            <div class="flex flex-col items-center">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">照片</label>
+                                <div class="photo-upload">
+                                    <img id="newPhotoPreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMTJDMTQgMTIgMTYgMTAgMTYgOEMxNiA2IDE0IDQgMTIgNEMxMCA0IDggNiA4IDhDOCAxMCAxMCAxMiAxMiAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTIwIDIwVjE2QzIwIDEyIDEyIDEyIDEyIDEyUzQgMTIgNCAMTZWMjBIMjBaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo8L3N2Zz4K" class="photo-preview" alt="照片预览">
+                                    <input type="file" id="newPhoto" accept="image/*" onchange="previewPhoto('new')">
+                                </div>
+                                <button type="button" onclick="clearPhoto('new')" class="mt-2 text-sm text-red-600 hover:text-red-800">清除照片</button>
                             </div>
-                            <div>
-                                <label for="newEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
-                                <input type="text" id="newEmpId" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="newGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
-                                <select id="newGender" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
+                            
+                            <!-- 基本信息字段 -->
+                            <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="newName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
+                                    <input type="text" id="newName" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="newEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
+                                    <input type="text" id="newEmpId" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="newGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
+                                    <select id="newGender" 
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="newBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
+                                    <input type="date" id="newBirthDate" onchange="calculateAge('new')"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="newAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                                    <input type="number" id="newAge" readonly
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
+                                </div>
+                                <div>
+                                    <label for="newEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
+                                    <select id="newEducation" 
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="大专">大专</option>
+                                        <option value="本科">本科</option>
+                                        <option value="研究生及以上">研究生及以上</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="newUniversity" class="block text-sm font-medium text-gray-700 mb-1">毕业院校</label>
+                                    <input type="text" id="newUniversity"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="newMajor" class="block text-sm font-medium text-gray-700 mb-1">专业</label>
+                                    <input type="text" id="newMajor"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="newSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
+                                    <input type="number" id="newSalary" min="0" step="100"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                            <div>
-                                <label for="newBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
-                                <input type="date" id="newBirthDate" onchange="calculateAge('new')"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="newAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
-                                <input type="number" id="newAge" readonly
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
-                            </div>
-                            <div>
-                                <label for="newEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
-                                <select id="newEducation" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="大专">大专</option>
-                                    <option value="本科">本科</option>
-                                    <option value="研究生及以上">研究生及以上</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label for="newSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
-                                <input type="number" id="newSalary" min="0" step="100"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
+                        <div class="mt-4">
+                            <label for="newMaritimeExperience" class="block text-sm font-medium text-gray-700 mb-1">涉海经历</label>
+                            <textarea id="newMaritimeExperience" rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="请描述涉海工作经历、船舶服务经历等"></textarea>
                         </div>
                     </div>
 
                     <!-- 工作信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label for="newUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
                                 <input type="text" id="newUnit" 
@@ -716,19 +778,18 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <option value="值班长">值班长</option>
                                     <option value="值班员">值班员</option>
+                                    <option value="见习">见习</option>
                                     <option value="协管">协管</option>
-                                    <option value="实习">实习</option>
                                 </select>
                             </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label for="newOnDuty" class="block text-sm font-medium text-gray-700 mb-1">在岗情况</label>
-                                <select id="newOnDuty" 
+                                <label for="newWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
+                                <select id="newWorkStatus" 
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="有">有</option>
-                                    <option value="无">无</option>
+                                    <option value="VTS在岗">VTS在岗</option>
+                                    <option value="海事处">海事处</option>
+                                    <option value="机关">机关</option>
+                                    <option value="在岗位">在岗位</option>
                                 </select>
                             </div>
                             <div>
@@ -741,13 +802,46 @@
                                     <option value="全天">全天值班</option>
                                 </select>
                             </div>
+                            <div>
+                                <label for="newHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
+                                <input type="date" id="newHireDate"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <!-- VTS履历 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
+                                <button type="button" onclick="addVTSHistory('new')" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                    添加履历
+                                </button>
+                            </div>
+                            <div id="newVTSHistoryContainer" class="space-y-2">
+                                <!-- VTS履历项将动态添加 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 培训记录 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
+                                <button type="button" onclick="addTrainingRecord('new')" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    添加培训
+                                </button>
+                            </div>
+                            <div id="newTrainingContainer" class="space-y-2">
+                                <!-- 培训记录将动态添加 -->
+                            </div>
                         </div>
                     </div>
 
                     <!-- 证书信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">证书信息</h4>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
                             <div class="flex items-center">
                                 <input type="checkbox" id="newCertCaptain" class="mr-2">
                                 <label for="newCertCaptain" class="text-sm text-gray-700">船长</label>
@@ -777,6 +871,10 @@
                                 <label for="newCertSecondEngineer" class="text-sm text-gray-700">二管轮</label>
                             </div>
                             <div class="flex items-center">
+                                <input type="checkbox" id="newCertThirdEngineer" class="mr-2">
+                                <label for="newCertThirdEngineer" class="text-sm text-gray-700">三管轮</label>
+                            </div>
+                            <div class="flex items-center">
                                 <input type="checkbox" id="newCertElectrician" class="mr-2">
                                 <label for="newCertElectrician" class="text-sm text-gray-700">电机员</label>
                             </div>
@@ -784,7 +882,7 @@
                     </div>
 
                     <!-- 联系信息 -->
-                    <div>
+                    <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">联系信息</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -798,11 +896,16 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                         </div>
-                        
-                        <div class="mt-4">
-                            <label for="newRemark" class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                            <textarea id="newRemark" rows="3" 
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <!-- 工作绩效信息 -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-700 mb-3">工作绩效</h4>
+                        <div>
+                            <label for="newPerformance" class="block text-sm font-medium text-gray-700 mb-1">比武获奖、特殊工作经历、履约提案、课题论文等</label>
+                            <textarea id="newPerformance" rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="请详细描述工作绩效，包括比武获奖情况、特殊工作经历、履约提案、课题论文、荣誉表彰等"></textarea>
                         </div>
                     </div>
                 </form>
@@ -826,7 +929,7 @@
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="hideViewModal()" aria-hidden="true"></div>
             
-            <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto z-10">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto z-10">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h3 id="viewModalTitle" class="text-lg font-medium text-gray-900">员工详细信息</h3>
                     <button onclick="hideViewModal()" 
@@ -849,71 +952,95 @@
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="hideEditModal()" aria-hidden="true"></div>
             
-            <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto z-10 max-h-screen overflow-y-auto">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto z-10 max-h-screen overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 id="editModalTitle" class="text-lg font-medium text-gray-900">编辑员工信息</h3>
                 </div>
                 
                 <form id="editEmployeeForm" class="px-6 py-4 space-y-6">
-                    <!-- 编辑表单内容与添加表单类似，但使用edit前缀的ID -->
                     <!-- 基本信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">基本信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label for="editName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
-                                <input type="text" id="editName" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+                            <!-- 照片上传区域 -->
+                            <div class="flex flex-col items-center">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">照片</label>
+                                <div class="photo-upload">
+                                    <img id="editPhotoPreview" src="" class="photo-preview" alt="照片预览">
+                                    <input type="file" id="editPhoto" accept="image/*" onchange="previewPhoto('edit')">
+                                </div>
+                                <button type="button" onclick="clearPhoto('edit')" class="mt-2 text-sm text-red-600 hover:text-red-800">清除照片</button>
                             </div>
-                            <div>
-                                <label for="editEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
-                                <input type="text" id="editEmpId" required
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="editGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
-                                <select id="editGender" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
+                            
+                            <!-- 基本信息字段 -->
+                            <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="editName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
+                                    <input type="text" id="editName" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="editEmpId" class="block text-sm font-medium text-gray-700 mb-1">工号 *</label>
+                                    <input type="text" id="editEmpId" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="editGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
+                                    <select id="editGender" 
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="editBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
+                                    <input type="date" id="editBirthDate" onchange="calculateAge('edit')"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="editAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
+                                    <input type="number" id="editAge" readonly
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
+                                </div>
+                                <div>
+                                    <label for="editEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
+                                    <select id="editEducation" 
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="大专">大专</option>
+                                        <option value="本科">本科</option>
+                                        <option value="研究生及以上">研究生及以上</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="editUniversity" class="block text-sm font-medium text-gray-700 mb-1">毕业院校</label>
+                                    <input type="text" id="editUniversity"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="editMajor" class="block text-sm font-medium text-gray-700 mb-1">专业</label>
+                                    <input type="text" id="editMajor"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="editSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
+                                    <input type="number" id="editSalary" min="0" step="100"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-                            <div>
-                                <label for="editBirthDate" class="block text-sm font-medium text-gray-700 mb-1">出生日期</label>
-                                <input type="date" id="editBirthDate" onchange="calculateAge('edit')"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            <div>
-                                <label for="editAge" class="block text-sm font-medium text-gray-700 mb-1">年龄</label>
-                                <input type="number" id="editAge" readonly
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600">
-                            </div>
-                            <div>
-                                <label for="editEducation" class="block text-sm font-medium text-gray-700 mb-1">学历</label>
-                                <select id="editEducation" 
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="大专">大专</option>
-                                    <option value="本科">本科</option>
-                                    <option value="研究生及以上">研究生及以上</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                            <div>
-                                <label for="editSalary" class="block text-sm font-medium text-gray-700 mb-1">薪资</label>
-                                <input type="number" id="editSalary" min="0" step="100"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
+                        <div class="mt-4">
+                            <label for="editMaritimeExperience" class="block text-sm font-medium text-gray-700 mb-1">涉海经历</label>
+                            <textarea id="editMaritimeExperience" rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="请描述涉海工作经历、船舶服务经历等"></textarea>
                         </div>
                     </div>
 
                     <!-- 工作信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">工作信息</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label for="editUnit" class="block text-sm font-medium text-gray-700 mb-1">单位</label>
                                 <input type="text" id="editUnit" 
@@ -925,19 +1052,18 @@
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     <option value="值班长">值班长</option>
                                     <option value="值班员">值班员</option>
+                                    <option value="见习">见习</option>
                                     <option value="协管">协管</option>
-                                    <option value="实习">实习</option>
                                 </select>
                             </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label for="editOnDuty" class="block text-sm font-medium text-gray-700 mb-1">在岗情况</label>
-                                <select id="editOnDuty" 
+                                <label for="editWorkStatus" class="block text-sm font-medium text-gray-700 mb-1">工作状态</label>
+                                <select id="editWorkStatus" 
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="有">有</option>
-                                    <option value="无">无</option>
+                                    <option value="VTS在岗">VTS在岗</option>
+                                    <option value="海事处">海事处</option>
+                                    <option value="机关">机关</option>
+                                    <option value="在岗位">在岗位</option>
                                 </select>
                             </div>
                             <div>
@@ -950,13 +1076,46 @@
                                     <option value="全天">全天值班</option>
                                 </select>
                             </div>
+                            <div>
+                                <label for="editHireDate" class="block text-sm font-medium text-gray-700 mb-1">入职时间</label>
+                                <input type="date" id="editHireDate"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+                        
+                        <!-- VTS履历 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">VTS履历</label>
+                                <button type="button" onclick="addVTSHistory('edit')" 
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">
+                                    添加履历
+                                </button>
+                            </div>
+                            <div id="editVTSHistoryContainer" class="space-y-2">
+                                <!-- VTS履历项将动态添加 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 培训记录 -->
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">培训记录</label>
+                                <button type="button" onclick="addTrainingRecord('edit')" 
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                                    添加培训
+                                </button>
+                            </div>
+                            <div id="editTrainingContainer" class="space-y-2">
+                                <!-- 培训记录将动态添加 -->
+                            </div>
                         </div>
                     </div>
 
                     <!-- 证书信息 -->
                     <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">证书信息</h4>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
                             <div class="flex items-center">
                                 <input type="checkbox" id="editCertCaptain" class="mr-2">
                                 <label for="editCertCaptain" class="text-sm text-gray-700">船长</label>
@@ -986,6 +1145,10 @@
                                 <label for="editCertSecondEngineer" class="text-sm text-gray-700">二管轮</label>
                             </div>
                             <div class="flex items-center">
+                                <input type="checkbox" id="editCertThirdEngineer" class="mr-2">
+                                <label for="editCertThirdEngineer" class="text-sm text-gray-700">三管轮</label>
+                            </div>
+                            <div class="flex items-center">
                                 <input type="checkbox" id="editCertElectrician" class="mr-2">
                                 <label for="editCertElectrician" class="text-sm text-gray-700">电机员</label>
                             </div>
@@ -993,7 +1156,7 @@
                     </div>
 
                     <!-- 联系信息 -->
-                    <div>
+                    <div class="border-b pb-4">
                         <h4 class="text-md font-medium text-gray-700 mb-3">联系信息</h4>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
@@ -1007,11 +1170,16 @@
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                         </div>
-                        
-                        <div class="mt-4">
-                            <label for="editRemark" class="block text-sm font-medium text-gray-700 mb-1">备注</label>
-                            <textarea id="editRemark" rows="3" 
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                    </div>
+                    
+                    <!-- 工作绩效信息 -->
+                    <div>
+                        <h4 class="text-md font-medium text-gray-700 mb-3">工作绩效</h4>
+                        <div>
+                            <label for="editPerformance" class="block text-sm font-medium text-gray-700 mb-1">比武获奖、特殊工作经历、履约提案、课题论文等</label>
+                            <textarea id="editPerformance" rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="请详细描述工作绩效，包括比武获奖情况、特殊工作经历、履约提案、课题论文、荣誉表彰等"></textarea>
                         </div>
                     </div>
                 </form>
@@ -1071,7 +1239,7 @@
                         </button>
                         <button onclick="bulkChangeStatus()" 
                                 class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 text-white px-4 py-2 rounded-lg transition-colors">
-                            批量修改在岗状态
+                            批量修改工作状态
                         </button>
                         <button onclick="bulkExport()" 
                                 class="bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 text-white px-4 py-2 rounded-lg transition-colors">
@@ -1153,132 +1321,226 @@
             }
         ];
 
-        // 员工数据按单位分组
+        // 员工数据按单位分组（更新后的数据结构）
         let employeesByOrganization = {
             '省厅': [
                 {
                     id: 1, name: '王局长', employeeId: 'SD001', gender: '男', birthDate: '1976-03-15',
-                    unit: '山东海事局VTS中心', role: '值班长', onDuty: '有', dutyTime: '全天',
+                    unit: '山东海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '全天',
                     phone: '13800001111', email: 'wang@sd.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '研究生及以上', 
-                    salary: 12000,
+                    university: '大连海事大学', major: '航海技术', maritimeExperience: '20年海事管理经验，曾任船长8年',
+                    salary: 12000, hireDate: '2010-03-15', photo: '',
+                    vtsHistory: [
+                        {startDate: '2010-03-15', endDate: '2015-06-30', position: '值班员', location: '青岛VTS中心'},
+                        {startDate: '2015-07-01', endDate: '2020-12-31', position: '值班长', location: '烟台VTS分中心'},
+                        {startDate: '2021-01-01', endDate: '', position: '值班长', location: '山东海事局VTS中心'}
+                    ],
+                    trainingRecords: [
+                        {startDate: '2020-05-10', endDate: '2020-05-20', course: 'VTS高级管理培训', institution: '交通部海事局'},
+                        {startDate: '2022-03-15', endDate: '2022-03-25', course: 'ECDIS系统培训', institution: '大连海事大学'}
+                    ],
                     dutyHistory: ['2024-01-15', '2024-01-20', '2024-02-01', '2024-02-15'],
-                    dutyHours: 120, remark: '山东海事局资深管理人员'
+                    dutyHours: 120, 
+                    performance: '2023年荣获"优秀VTS管理者"称号，主导VTS系统升级项目，发表《现代VTS管理技术研究》论文，获得山东省科技进步三等奖。'
                 },
                 {
                     id: 2, name: '李副局长', employeeId: 'SD002', gender: '男', birthDate: '1979-06-20',
-                    unit: '山东海事局VTS中心', role: '值班长', onDuty: '有', dutyTime: '白班',
+                    unit: '山东海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '白班',
                     phone: '13800001112', email: 'li@sd.vts.msa.gov.cn',
                     certificates: ['船长', '轮机长'], education: '研究生及以上',
-                    salary: 11500,
+                    university: '上海海事大学', major: '轮机工程', maritimeExperience: '18年海事工作经历，船舶服务12年',
+                    salary: 11500, hireDate: '2012-08-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2012-08-01', endDate: '2018-12-31', position: '值班员', location: '威海VTS分中心'},
+                        {startDate: '2019-01-01', endDate: '', position: '值班长', location: '山东海事局VTS中心'}
+                    ],
+                    trainingRecords: [
+                        {startDate: '2021-09-01', endDate: '2021-09-10', course: '港口交通管理培训', institution: '中国海事局培训中心'}
+                    ],
                     dutyHistory: ['2024-01-12', '2024-01-25', '2024-02-10'],
-                    dutyHours: 88, remark: '负责全省VTS协调工作'
+                    dutyHours: 88, 
+                    performance: '负责全省VTS协调工作，2022年全国VTS技能比武二等奖，参与制定《山东省VTS管理规范》标准。'
                 }
             ],
             '青岛分局': [
                 {
                     id: 3, name: '张伟', employeeId: 'QD001', gender: '男', birthDate: '1989-03-15',
-                    unit: '青岛海事局VTS中心', role: '值班长', onDuty: '有', dutyTime: '夜班',
+                    unit: '青岛海事局VTS中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '夜班',
                     phone: '13800138001', email: 'zhangwei@qd.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '本科', 
-                    salary: 9500,
+                    university: '青岛科技大学', major: '海洋技术', maritimeExperience: '10年VTS工作经验，5年船舶值班经历',
+                    salary: 9500, hireDate: '2014-07-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2014-07-01', endDate: '2018-06-30', position: '见习', location: '青岛海事局VTS中心'},
+                        {startDate: '2018-07-01', endDate: '2021-12-31', position: '值班员', location: '青岛海事局VTS中心'},
+                        {startDate: '2022-01-01', endDate: '', position: '值班长', location: '青岛海事局VTS中心'}
+                    ],
+                    trainingRecords: [
+                        {startDate: '2020-04-15', endDate: '2020-04-25', course: 'VTS操作员培训', institution: '青岛海事局'}
+                    ],
                     dutyHistory: ['2024-01-15', '2024-01-20', '2024-02-01', '2024-02-15'],
-                    dutyHours: 96, remark: '青岛港区值班长，经验丰富'
+                    dutyHours: 96, 
+                    performance: '青岛港区值班长，经验丰富。2023年青岛分局技能比武一等奖，多次获得月度优秀员工。'
                 },
                 {
                     id: 4, name: '李红', employeeId: 'QD002', gender: '女', birthDate: '1996-07-01',
-                    unit: '青岛海事局VTS中心', role: '值班员', onDuty: '有', dutyTime: '白班',
+                    unit: '青岛海事局VTS中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
                     phone: '13800138002', email: 'lihong@qd.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
-                    salary: 7800,
+                    university: '中国海洋大学', major: '港口航道与海岸工程', maritimeExperience: '6年海事工作经验',
+                    salary: 7800, hireDate: '2018-03-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2018-03-01', endDate: '2020-02-29', position: '见习', location: '青岛海事局VTS中心'},
+                        {startDate: '2020-03-01', endDate: '', position: '值班员', location: '青岛海事局VTS中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-18', '2024-01-25', '2024-02-08'],
-                    dutyHours: 72, remark: '青岛港VTS操作员'
+                    dutyHours: 72, 
+                    performance: '青岛港VTS操作员，工作认真负责，连续两年获得优秀员工称号。'
                 }
             ],
             '烟台分局': [
                 {
                     id: 5, name: '王强', employeeId: 'YT001', gender: '男', birthDate: '1982-08-20',
-                    unit: '烟台海事局VTS分中心', role: '值班长', onDuty: '有', dutyTime: '全天',
+                    unit: '烟台海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '全天',
                     phone: '13800138003', email: 'wangqiang@yt.vts.msa.gov.cn',
                     certificates: ['船长', '轮机长', '大副'], education: '研究生及以上',
-                    salary: 10200,
+                    university: '大连海事大学', major: '交通运输工程', maritimeExperience: '15年海事工作，10年船舶服务经历',
+                    salary: 10200, hireDate: '2009-06-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2009-06-01', endDate: '2015-05-31', position: '值班员', location: '烟台海事局VTS分中心'},
+                        {startDate: '2015-06-01', endDate: '', position: '值班长', location: '烟台海事局VTS分中心'}
+                    ],
+                    trainingRecords: [
+                        {startDate: '2019-10-01', endDate: '2019-10-15', course: 'VTS技术升级培训', institution: '交通部培训中心'}
+                    ],
                     dutyHistory: ['2024-01-10', '2024-01-22', '2024-02-05', '2024-02-18'],
-                    dutyHours: 96, remark: '烟台港区技术专家'
+                    dutyHours: 96, 
+                    performance: '烟台港区技术专家，主导多项VTS技术改进项目，获得省级科技进步奖，发表技术论文5篇。'
                 },
                 {
                     id: 6, name: '刘明', employeeId: 'YT002', gender: '男', birthDate: '1994-05-10',
-                    unit: '烟台海事局VTS分中心', role: '值班员', onDuty: '有', dutyTime: '深夜班',
+                    unit: '烟台海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '深夜班',
                     phone: '13800138004', email: 'liuming@yt.vts.msa.gov.cn',
                     certificates: ['二副', '三副'], education: '本科',
-                    salary: 7500,
+                    university: '烟台大学', major: '船舶与海洋工程', maritimeExperience: '4年VTS工作经验',
+                    salary: 7500, hireDate: '2020-09-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2020-09-01', endDate: '2022-08-31', position: '见习', location: '烟台海事局VTS分中心'},
+                        {startDate: '2022-09-01', endDate: '', position: '值班员', location: '烟台海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-14', '2024-01-28', '2024-02-12'],
-                    dutyHours: 72, remark: '烟台港VTS新秀'
+                    dutyHours: 72, 
+                    performance: '烟台港VTS新秀，学习能力强，多次在培训中表现优异。'
                 }
             ],
             '威海分局': [
                 {
                     id: 7, name: '陈明', employeeId: 'WH001', gender: '男', birthDate: '1986-04-15',
-                    unit: '威海海事局VTS分中心', role: '值班长', onDuty: '有', dutyTime: '白班',
+                    unit: '威海海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '白班',
                     phone: '13800138005', email: 'chenming@wh.vts.msa.gov.cn',
                     certificates: ['船长', '大副'], education: '本科',
-                    salary: 9200,
+                    university: '威海海洋职业学院', major: '航海技术', maritimeExperience: '12年海事工作经验',
+                    salary: 9200, hireDate: '2012-05-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2012-05-01', endDate: '2017-04-30', position: '值班员', location: '威海海事局VTS分中心'},
+                        {startDate: '2017-05-01', endDate: '', position: '值班长', location: '威海海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-16', '2024-01-30', '2024-02-14'],
-                    dutyHours: 72, remark: '威海港区值班经验丰富'
+                    dutyHours: 72, 
+                    performance: '威海港区值班经验丰富，多次处理突发事件，获得上级表彰。'
                 }
             ],
             '日照分局': [
                 {
                     id: 8, name: '孙丽', employeeId: 'RZ001', gender: '女', birthDate: '1992-09-10',
-                    unit: '日照海事局VTS分中心', role: '值班员', onDuty: '有', dutyTime: '夜班',
+                    unit: '日照海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '夜班',
                     phone: '13800138006', email: 'sunli@rz.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
-                    salary: 7800,
+                    university: '山东交通学院', major: '海事管理', maritimeExperience: '7年VTS工作经验',
+                    salary: 7800, hireDate: '2017-06-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2017-06-01', endDate: '2019-05-31', position: '见习', location: '日照海事局VTS分中心'},
+                        {startDate: '2019-06-01', endDate: '', position: '值班员', location: '日照海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-13', '2024-01-27', '2024-02-11'],
-                    dutyHours: 72, remark: '日照港VTS操作熟练'
+                    dutyHours: 72, 
+                    performance: '日照港VTS操作熟练，工作细致认真，多次获得月度优秀员工。'
                 }
             ],
             '东营分局': [
                 {
                     id: 9, name: '赵勇', employeeId: 'DY001', gender: '男', birthDate: '1995-03-20',
-                    unit: '东营海事局VTS分中心', role: '值班员', onDuty: '有', dutyTime: '白班',
+                    unit: '东营海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
                     phone: '13800138007', email: 'zhaoyong@dy.vts.msa.gov.cn',
                     certificates: ['二副', '三副'], education: '本科',
-                    salary: 7200,
+                    university: '中国石油大学（华东）', major: '海洋工程', maritimeExperience: '3年VTS工作经验',
+                    salary: 7200, hireDate: '2021-07-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2021-07-01', endDate: '2023-06-30', position: '见习', location: '东营海事局VTS分中心'},
+                        {startDate: '2023-07-01', endDate: '', position: '值班员', location: '东营海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-19', '2024-02-03'],
-                    dutyHours: 48, remark: '东营港新进员工'
+                    dutyHours: 48, 
+                    performance: '东营港新进员工，积极上进，适应能力强。'
                 }
             ],
             '潍坊分局': [
                 {
                     id: 10, name: '马超', employeeId: 'WF001', gender: '男', birthDate: '1988-07-12',
-                    unit: '潍坊海事局VTS分中心', role: '值班长', onDuty: '有', dutyTime: '夜班',
+                    unit: '潍坊海事局VTS分中心', role: '值班长', workStatus: 'VTS在岗', dutyTime: '夜班',
                     phone: '13800138008', email: 'machao@wf.vts.msa.gov.cn',
                     certificates: ['船长', '大副', '轮机长'], education: '本科',
-                    salary: 9800,
+                    university: '山东理工大学', major: '交通运输', maritimeExperience: '13年海事工作经验',
+                    salary: 9800, hireDate: '2011-04-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2011-04-01', endDate: '2016-03-31', position: '值班员', location: '潍坊海事局VTS分中心'},
+                        {startDate: '2016-04-01', endDate: '', position: '值班长', location: '潍坊海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-11', '2024-01-24', '2024-02-07'],
-                    dutyHours: 72, remark: '潍坊港区技术骨干'
+                    dutyHours: 72, 
+                    performance: '潍坊港区技术骨干，多次参与重要设备维护和技术改进工作。'
                 }
             ],
             '董家口分局': [
                 {
                     id: 11, name: '杨帆', employeeId: 'DJK001', gender: '男', birthDate: '1991-11-05',
-                    unit: '董家口海事局VTS分中心', role: '值班员', onDuty: '有', dutyTime: '白班',
+                    unit: '董家口海事局VTS分中心', role: '值班员', workStatus: 'VTS在岗', dutyTime: '白班',
                     phone: '13800138009', email: 'yangfan@djk.vts.msa.gov.cn',
                     certificates: ['大副', '二副'], education: '本科',
-                    salary: 8200,
+                    university: '青岛理工大学', major: '港口航道与海岸工程', maritimeExperience: '6年VTS工作经验',
+                    salary: 8200, hireDate: '2018-10-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2018-10-01', endDate: '2020-09-30', position: '见习', location: '董家口海事局VTS分中心'},
+                        {startDate: '2020-10-01', endDate: '', position: '值班员', location: '董家口海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-17', '2024-01-31', '2024-02-15'],
-                    dutyHours: 72, remark: '董家口港新兴港区业务熟练'
+                    dutyHours: 72, 
+                    performance: '董家口港新兴港区业务熟练，适应能力强，多次协助处理复杂航行情况。'
                 }
             ],
             '滨州分局': [
                 {
                     id: 12, name: '周静', employeeId: 'BZ001', gender: '女', birthDate: '1997-08-15',
-                    unit: '滨州海事局VTS分中心', role: '实习', onDuty: '有', dutyTime: '白班',
+                    unit: '滨州海事局VTS分中心', role: '见习', workStatus: '在岗位', dutyTime: '白班',
                     phone: '13800138010', email: 'zhoujing@bz.vts.msa.gov.cn',
                     certificates: [], education: '大专',
-                    salary: 4500,
+                    university: '滨州职业学院', major: '港口与航道工程', maritimeExperience: '2年实习经验',
+                    salary: 4500, hireDate: '2022-08-01', photo: '',
+                    vtsHistory: [
+                        {startDate: '2022-08-01', endDate: '', position: '见习', location: '滨州海事局VTS分中心'}
+                    ],
+                    trainingRecords: [],
                     dutyHistory: ['2024-01-21', '2024-02-04'],
-                    dutyHours: 48, remark: '滨州港实习生，表现优秀'
+                    dutyHours: 48, 
+                    performance: '滨州港实习生，表现优秀，学习态度认真，深受同事好评。'
                 }
             ]
         };
@@ -1329,6 +1591,126 @@
             
             return age;
         }
+
+        // 照片预览函数
+        function previewPhoto(prefix) {
+            const input = document.getElementById(prefix + 'Photo');
+            const preview = document.getElementById(prefix + 'PhotoPreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 清除照片
+        function clearPhoto(prefix) {
+            const input = document.getElementById(prefix + 'Photo');
+            const preview = document.getElementById(prefix + 'PhotoPreview');
+            
+            input.value = '';
+            if (prefix === 'new') {
+                preview.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iNDAiIGZpbGw9IiNGM0Y0RjYiLz4KPHN2ZyB4PSIyNCIgeT0iMjQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTIgMTJDMTQgMTIgMTYgMTAgMTYgOEMxNiA2IDE0IDQgMTIgNEMxMCA0IDggNiA4IDhDOCAxMCAxMCAxMiAxMiAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTIwIDIwVjE2QzIwIDEyIDEyIDEyIDEyIDEyUzQgMTIgNCAxNlYyMEgyMFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+Cjwvc3ZnPgo=";
+            }
+        }
+
+        // 添加VTS履历
+        function addVTSHistory(prefix) {
+            const container = document.getElementById(prefix + 'VTSHistoryContainer');
+            const index = container.children.length;
+            
+            const historyItem = document.createElement('div');
+            historyItem.className = 'vts-history-item';
+            historyItem.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h5 class="font-medium text-gray-700">VTS履历 ${index + 1}</h5>
+                    <button type="button" onclick="removeVTSHistory(this)" 
+                            class="text-red-600 hover:text-red-800 text-sm">删除</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">开始时间</label>
+                        <input type="date" name="${prefix}VTSStartDate[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">结束时间</label>
+                        <input type="date" name="${prefix}VTSEndDate[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">职务</label>
+                        <select name="${prefix}VTSPosition[]" 
+                                class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                            <option value="见习">见习</option>
+                            <option value="值班员">值班员</option>
+                            <option value="值班长">值班长</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">工作地点</label>
+                        <input type="text" name="${prefix}VTSLocation[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                               placeholder="如：青岛VTS中心">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(historyItem);
+        }
+
+        // 删除VTS履历
+        function removeVTSHistory(button) {
+            const historyItem = button.closest('.vts-history-item');
+            historyItem.remove();
+        }
+
+        // 添加培训记录
+        function addTrainingRecord(prefix) {
+            const container = document.getElementById(prefix + 'TrainingContainer');
+            const index = container.children.length;
+            
+            const trainingItem = document.createElement('div');
+            trainingItem.className = 'vts-history-item';
+            trainingItem.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <h5 class="font-medium text-gray-700">培训记录 ${index + 1}</h5>
+                    <button type="button" onclick="removeVTSHistory(this)" 
+                            class="text-red-600 hover:text-red-800 text-sm">删除</button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">开始时间</label>
+                        <input type="date" name="${prefix}TrainingStartDate[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">结束时间</label>
+                        <input type="date" name="${prefix}TrainingEndDate[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">培训机构</label>
+                        <input type="text" name="${prefix}TrainingInstitution[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                               placeholder="如：交通部海事局">
+                    </div>
+                    <div class="sm:col-span-2 lg:col-span-3">
+                        <label class="block text-xs font-medium text-gray-600 mb-1">培训课程</label>
+                        <input type="text" name="${prefix}TrainingCourse[]" 
+                               class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                               placeholder="如：VTS高级操作培训">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(trainingItem);
+        }
         
         // 防抖函数
         function debounce(fn, delay = 300) {
@@ -1351,7 +1733,6 @@
 
         // 显示提示信息
         function showToast(message, type = 'info') {
-            // 创建简单的toast提示
             const toast = document.createElement('div');
             const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
             toast.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity`;
@@ -1369,35 +1750,29 @@
         }
 
         /*********************
-         * 页面切换函数（修复版）
+         * 页面切换函数
          *********************/
         function showPage(pageId) {
-            // 隐藏所有页面
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
-                // 确保完全隐藏
                 page.style.display = 'none';
             });
             
-            // 显示目标页面
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.add('active');
-                // 根据页面类型设置正确的display
                 if (pageId === 'loginPage' || pageId === 'registerPage') {
                     targetPage.style.display = 'flex';
                 } else {
                     targetPage.style.display = 'block';
                 }
                 
-                // 立即滚动到页面顶部
                 window.scrollTo({
                     top: 0,
                     left: 0,
                     behavior: 'instant'
                 });
                 
-                // 确保滚动位置重置
                 setTimeout(() => {
                     document.documentElement.scrollTop = 0;
                     document.body.scrollTop = 0;
@@ -1423,7 +1798,7 @@
         }
 
         /*********************
-         * 登录注册功能（修复版）
+         * 登录注册功能
          *********************/
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -1502,21 +1877,16 @@
             }
             
             showLoginForm();
-            
-            // 清空表单
             document.getElementById('registerForm').reset();
         });
 
         function login(user) {
-            // 显示加载状态
             showLoading();
             
-            // 更新用户信息显示
             document.getElementById('currentUserName').textContent = user.realName;
             document.getElementById('currentUserOrg').textContent = user.organization;
             document.getElementById('currentUserRole').textContent = user.userType === 'admin' ? '管理员' : '普通用户';
             
-            // 根据用户权限显示/隐藏功能
             if (user.userType === 'admin') {
                 document.getElementById('addEmployeeBtn').classList.remove('hidden');
                 document.getElementById('bulkActionsBtn').classList.remove('hidden');
@@ -1531,18 +1901,12 @@
                 document.getElementById('selectAll').style.display = 'none';
             }
             
-            // 延迟执行页面切换，确保数据加载完成
             setTimeout(() => {
-                // 加载对应单位的员工数据
                 loadEmployeeData();
-                
-                // 切换到主页面
                 showPage('mainPage');
-                
                 hideLoading();
                 showToast('登录成功！', 'success');
                 
-                // 额外确保滚动位置正确
                 setTimeout(() => {
                     window.scrollTo(0, 0);
                 }, 100);
@@ -1556,14 +1920,9 @@
                 filteredEmployees = [];
                 currentPage = 1;
                 
-                // 隐藏日历
                 document.getElementById('calendarSection').classList.add('hidden');
-                
                 showPage('loginPage');
-                
-                // 清空表单
                 document.getElementById('loginForm').reset();
-                
                 showToast('已安全退出登录', 'info');
             }
         }
@@ -1575,18 +1934,16 @@
             if (!currentUser) return;
             
             if (currentUser.organization === '省厅') {
-                // 省厅用户可以看到所有数据
                 employees = [];
                 Object.values(employeesByOrganization).forEach(orgEmployees => {
                     employees.push(...orgEmployees);
                 });
             } else {
-                // 分局用户只能看到本单位数据
                 employees = employeesByOrganization[currentUser.organization] || [];
             }
             
             filteredEmployees = [...employees];
-            currentPage = 1; // 重置到第一页
+            currentPage = 1;
             renderEmployeeTable();
             updateFilters();
             updateStats();
@@ -1667,14 +2024,14 @@
         // 身份变化处理
         function handleRoleChange(prefix) {
             const roleSelect = document.getElementById(prefix + 'Role');
-            const onDutySelect = document.getElementById(prefix + 'OnDuty');
+            const workStatusSelect = document.getElementById(prefix + 'WorkStatus');
             
-            if (roleSelect && onDutySelect) {
-                if (roleSelect.value === '协管' || roleSelect.value === '实习') {
-                    onDutySelect.value = '有';
-                    onDutySelect.disabled = true;
+            if (roleSelect && workStatusSelect) {
+                if (roleSelect.value === '见习' || roleSelect.value === '协管') {
+                    workStatusSelect.value = '在岗位';
+                    workStatusSelect.disabled = true;
                 } else {
-                    onDutySelect.disabled = false;
+                    workStatusSelect.disabled = false;
                 }
             }
         }
@@ -1689,15 +2046,21 @@
             switch(role) {
                 case '值班长': return 'bg-red-100 text-red-800';
                 case '值班员': return 'bg-blue-100 text-blue-800';
-                case '协管': return 'bg-green-100 text-green-800';
-                case '实习': return 'bg-gray-100 text-gray-800';
+                case '见习': return 'bg-green-100 text-green-800';
+                case '协管': return 'bg-gray-100 text-gray-800';
                 default: return 'bg-gray-100 text-gray-800';
             }
         }
 
-        // 获取在岗状态颜色
-        function getOnDutyColor(onDuty) {
-            return onDuty === '有' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+        // 获取工作状态颜色
+        function getWorkStatusColor(status) {
+            switch(status) {
+                case 'VTS在岗': return 'bg-green-100 text-green-800';
+                case '海事处': return 'bg-blue-100 text-blue-800';
+                case '机关': return 'bg-purple-100 text-purple-800';
+                case '在岗位': return 'bg-orange-100 text-orange-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
         }
 
         // 渲染员工表格（带分页）
@@ -1707,7 +2070,6 @@
             
             tbody.innerHTML = '';
             
-            // 计算分页
             const totalItems = filteredEmployees.length;
             const totalPages = Math.ceil(totalItems / pageSize);
             const startIndex = (currentPage - 1) * pageSize;
@@ -1750,18 +2112,21 @@
                     `<input type="checkbox" class="employee-checkbox mr-3" value="${emp.id}" aria-label="选择 ${emp.name}">` : 
                     '<span class="mr-3"></span>';
                 
+                // 显示员工照片或默认头像
+                const photoDisplay = emp.photo ? 
+                    `<img src="${emp.photo}" class="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover border-2 border-gray-200" alt="${emp.name}">` :
+                    `<div class="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium text-sm" aria-hidden="true">${emp.name.charAt(0)}</div>`;
+                
                 row.innerHTML = `
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             ${checkboxColumn}
-                            <div class="h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium text-sm" 
-                                 aria-hidden="true">
-                                ${emp.name.charAt(0)}
-                            </div>
+                            ${photoDisplay}
                             <div class="ml-2 md:ml-4">
                                 <div class="text-sm font-medium text-gray-900">${emp.name}</div>
                                 <div class="text-xs md:text-sm text-gray-500">${emp.employeeId}</div>
                                 <div class="text-xs text-gray-500">${emp.gender} | ${emp.birthDate ? calculateAgeFromBirthDate(emp.birthDate) : 'N/A'}岁 | ${emp.education}</div>
+                                ${emp.university ? `<div class="text-xs text-gray-400">${emp.university}</div>` : ''}
                             </div>
                         </div>
                     </td>
@@ -1773,8 +2138,8 @@
                         <div class="text-xs text-gray-500 mt-1">值班: ${emp.dutyTime || '未设置'}</div>
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getOnDutyColor(emp.onDuty)}">
-                            ${emp.onDuty === '有' ? '在岗' : '不在岗'}
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(emp.workStatus)}">
+                            ${emp.workStatus}
                         </span>
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
@@ -1808,7 +2173,6 @@
                 tbody.appendChild(row);
             });
             
-            // 更新分页控件
             updatePagination(totalItems, totalPages);
         }
 
@@ -1817,12 +2181,10 @@
             const startItem = totalItems > 0 ? ((currentPage - 1) * pageSize) + 1 : 0;
             const endItem = Math.min(currentPage * pageSize, totalItems);
             
-            // 更新分页信息
             document.getElementById('startItem').textContent = startItem;
             document.getElementById('endItem').textContent = endItem;
             document.getElementById('totalItems').textContent = totalItems;
             
-            // 更新按钮状态
             const prevPageBtn = document.getElementById('prevPage');
             const nextPageBtn = document.getElementById('nextPage');
             const prevPageMobileBtn = document.getElementById('prevPageMobile');
@@ -1833,7 +2195,6 @@
             prevPageMobileBtn.disabled = currentPage === 1;
             nextPageMobileBtn.disabled = currentPage === totalPages;
             
-            // 生成页码按钮
             const pageNumbers = document.getElementById('pageNumbers');
             pageNumbers.innerHTML = '';
             
@@ -1841,7 +2202,6 @@
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
             
-            // 调整起始页
             if (endPage - startPage + 1 < maxVisiblePages) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
@@ -1858,7 +2218,6 @@
                 pageNumbers.appendChild(pageBtn);
             }
             
-            // 绑定分页按钮事件
             prevPageBtn.onclick = () => goToPage(currentPage - 1);
             nextPageBtn.onclick = () => goToPage(currentPage + 1);
             prevPageMobileBtn.onclick = () => goToPage(currentPage - 1);
@@ -1870,7 +2229,6 @@
             if (page >= 1 && page <= totalPages) {
                 currentPage = page;
                 renderEmployeeTable();
-                // 滚动到表格顶部
                 const table = document.querySelector('.responsive-table');
                 if (table) {
                     table.scrollIntoView({ 
@@ -1898,7 +2256,7 @@
         function updateStats() {
             const elements = {
                 totalCount: employees.length,
-                onDutyCount: employees.filter(emp => emp.onDuty === '有').length,
+                onDutyCount: employees.filter(emp => emp.workStatus === 'VTS在岗').length,
                 supervisorCount: employees.filter(emp => emp.role === '值班长').length,
                 certifiedCount: employees.filter(emp => emp.certificates && emp.certificates.length > 0).length,
                 monthlyDutyHours: employees.reduce((sum, emp) => sum + (emp.dutyHours || 0), 0)
@@ -1907,7 +2265,6 @@
             Object.entries(elements).forEach(([id, value]) => {
                 const element = document.getElementById(id);
                 if (element) {
-                    // 添加数字变化动画效果
                     const currentValue = parseInt(element.textContent) || 0;
                     if (currentValue !== value) {
                         animateNumber(element, currentValue, value);
@@ -1938,7 +2295,7 @@
             const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
             const unit = document.getElementById('unitFilter')?.value || '';
             const role = document.getElementById('roleFilter')?.value || '';
-            const onDuty = document.getElementById('onDutyFilter')?.value || '';
+            const status = document.getElementById('statusFilter')?.value || '';
             const dutyTimeRange = document.getElementById('dutyTimeFilter')?.value || '';
             const certificateFilter = document.getElementById('certificateFilter')?.value || '';
             const education = document.getElementById('educationFilter')?.value || '';
@@ -1949,11 +2306,13 @@
                                     emp.unit.toLowerCase().includes(search) ||
                                     (emp.phone && emp.phone.includes(search)) ||
                                     (emp.email && emp.email.toLowerCase().includes(search)) ||
-                                    (emp.remark && emp.remark.toLowerCase().includes(search));
+                                    (emp.performance && emp.performance.toLowerCase().includes(search)) ||
+                                    (emp.university && emp.university.toLowerCase().includes(search)) ||
+                                    (emp.major && emp.major.toLowerCase().includes(search));
                 
                 const matchesUnit = !unit || emp.unit === unit;
                 const matchesRole = !role || emp.role === role;
-                const matchesOnDuty = !onDuty || emp.onDuty === onDuty;
+                const matchesStatus = !status || emp.workStatus === status;
                 const matchesEducation = !education || emp.education === education;
                 
                 let matchesDutyTime = true;
@@ -1982,10 +2341,10 @@
                     }
                 }
                 
-                return matchesSearch && matchesUnit && matchesRole && matchesOnDuty && matchesEducation && matchesDutyTime && matchesCertificate;
+                return matchesSearch && matchesUnit && matchesRole && matchesStatus && matchesEducation && matchesDutyTime && matchesCertificate;
             });
             
-            currentPage = 1; // 重置到第一页
+            currentPage = 1;
             renderEmployeeTable();
         }, 300);
 
@@ -2003,121 +2362,195 @@
             const avgDutyPerMonth = dutyCount > 0 ? Math.round((dutyHours / 12) * 10) / 10 : 0;
             const currentAge = employee.birthDate ? calculateAgeFromBirthDate(employee.birthDate) : 'N/A';
             
+            // 显示员工照片或默认头像
+            const photoDisplay = employee.photo ? 
+                `<img src="${employee.photo}" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200" alt="${employee.name}">` :
+                `<div class="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-2xl border-4 border-gray-200">${employee.name.charAt(0)}</div>`;
+            
+            // VTS履历展示
+            const vtsHistoryDisplay = employee.vtsHistory && employee.vtsHistory.length > 0 ? 
+                employee.vtsHistory.map(history => `
+                    <div class="bg-gray-50 p-3 rounded-lg mb-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-medium text-gray-900">${history.position}</div>
+                                <div class="text-sm text-gray-600">${history.location}</div>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                ${history.startDate} - ${history.endDate || '至今'}
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : '<div class="text-sm text-gray-400 italic">暂无VTS履历记录</div>';
+
+            // 培训记录展示
+            const trainingDisplay = employee.trainingRecords && employee.trainingRecords.length > 0 ? 
+                employee.trainingRecords.map(training => `
+                    <div class="bg-blue-50 p-3 rounded-lg mb-2">
+                        <div class="font-medium text-blue-900">${training.course}</div>
+                        <div class="text-sm text-blue-700">${training.institution}</div>
+                        <div class="text-sm text-blue-600">
+                            ${training.startDate} - ${training.endDate}
+                        </div>
+                    </div>
+                `).join('') : '<div class="text-sm text-gray-400 italic">暂无培训记录</div>';
+            
             const detailsContent = `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- 基本信息 -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">基本信息</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">姓名:</span>
-                                <span class="text-sm text-gray-900">${employee.name}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">工号:</span>
-                                <span class="text-sm text-gray-900">${employee.employeeId}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">性别:</span>
-                                <span class="text-sm text-gray-900">${employee.gender}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">出生日期:</span>
-                                <span class="text-sm text-gray-900">${employee.birthDate || '未知'}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">年龄:</span>
-                                <span class="text-sm text-gray-900">${currentAge}岁</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">学历:</span>
-                                <span class="text-sm text-gray-900">${employee.education || '未知'}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">薪资:</span>
-                                <span class="text-sm text-gray-900">¥${employee.salary || 0}</span>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- 员工照片和基本信息 -->
+                    <div class="lg:col-span-1">
+                        <div class="text-center mb-6">
+                            ${photoDisplay}
+                            <h3 class="mt-4 text-xl font-bold text-gray-900">${employee.name}</h3>
+                            <p class="text-gray-600">${employee.employeeId}</p>
+                            <span class="inline-flex px-3 py-1 mt-2 text-sm font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">基本信息</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">性别:</span>
+                                    <span class="text-sm text-gray-900">${employee.gender}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">出生日期:</span>
+                                    <span class="text-sm text-gray-900">${employee.birthDate || '未知'}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">年龄:</span>
+                                    <span class="text-sm text-gray-900">${currentAge}岁</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">学历:</span>
+                                    <span class="text-sm text-gray-900">${employee.education || '未知'}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">毕业院校:</span>
+                                    <span class="text-sm text-gray-900">${employee.university || '未知'}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">专业:</span>
+                                    <span class="text-sm text-gray-900">${employee.major || '未知'}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">薪资:</span>
+                                    <span class="text-sm text-gray-900">¥${employee.salary || 0}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm font-medium text-gray-500">入职时间:</span>
+                                    <span class="text-sm text-gray-900">${employee.hireDate || '未知'}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 工作信息 -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">工作信息</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">单位:</span>
-                                <span class="text-sm text-gray-900">${employee.unit}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">身份:</span>
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">在岗情况:</span>
-                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getOnDutyColor(employee.onDuty)}">${employee.onDuty === '有' ? '在岗' : '不在岗'}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">值班时间:</span>
-                                <span class="text-sm text-gray-900">${employee.dutyTime || '未设置'}</span>
+                    <!-- 工作信息和履历 -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- 工作信息 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">工作信息</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">单位:</span>
+                                    <div class="text-sm text-gray-900 mt-1">${employee.unit}</div>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">身份:</span>
+                                    <div class="mt-1">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">工作状态:</span>
+                                    <div class="mt-1">
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(employee.workStatus)}">${employee.workStatus}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">值班时间:</span>
+                                    <div class="text-sm text-gray-900 mt-1">${employee.dutyTime || '未设置'}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 值班信息 -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">值班信息</h4>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-blue-50 p-3 rounded-lg">
-                                <div class="text-lg font-semibold text-blue-900">${dutyCount}</div>
-                                <div class="text-sm text-blue-600">总值班次数</div>
-                            </div>
-                            <div class="bg-green-50 p-3 rounded-lg">
-                                <div class="text-lg font-semibold text-green-900">${dutyHours}</div>
-                                <div class="text-sm text-green-600">总值班时间(小时)</div>
+                        <!-- 涉海经历 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">涉海经历</h4>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <p class="text-sm text-blue-800">${employee.maritimeExperience || '暂无涉海经历记录'}</p>
                             </div>
                         </div>
-                        <div class="text-sm text-gray-600">
-                            平均每月值班: ${avgDutyPerMonth} 小时
-                        </div>
-                        <button onclick="hideViewModal(); showDutyHistory(${employee.id})" 
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                            查看值班历史
-                        </button>
-                    </div>
 
-                    <!-- 证书信息 -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">证书信息</h4>
-                        <div class="space-y-2">
-                            ${employee.certificates && employee.certificates.length > 0 ? 
-                                employee.certificates.map(cert => 
-                                    `<span class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full mr-2 mb-2">${cert}</span>`
-                                ).join('') : 
-                                '<div class="text-sm text-gray-400 italic">暂无证书信息</div>'
-                            }
+                        <!-- VTS履历 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">VTS履历</h4>
+                            ${vtsHistoryDisplay}
                         </div>
-                    </div>
 
-                    <!-- 联系信息 -->
-                    <div class="space-y-4">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">联系信息</h4>
-                        <div class="space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">电话:</span>
-                                <span class="text-sm text-gray-900">${employee.phone || '-'}</span>
+                        <!-- 培训记录 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">培训记录</h4>
+                            ${trainingDisplay}
+                        </div>
+
+                        <!-- 值班统计 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">值班统计</h4>
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="bg-blue-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-blue-900">${dutyCount}</div>
+                                    <div class="text-sm text-blue-600">总值班次数</div>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-green-900">${dutyHours}</div>
+                                    <div class="text-sm text-green-600">总值班时间(小时)</div>
+                                </div>
+                                <div class="bg-orange-50 p-4 rounded-lg text-center">
+                                    <div class="text-2xl font-bold text-orange-900">${avgDutyPerMonth}</div>
+                                    <div class="text-sm text-orange-600">平均月值班(小时)</div>
+                                </div>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-sm font-medium text-gray-500">邮箱:</span>
-                                <span class="text-sm text-gray-900">${employee.email || '-'}</span>
+                            <button onclick="hideViewModal(); showDutyHistory(${employee.id})" 
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                                查看详细值班历史
+                            </button>
+                        </div>
+
+                        <!-- 证书情况 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">证书情况</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${employee.certificates && employee.certificates.length > 0 ? 
+                                    employee.certificates.map(cert => 
+                                        `<span class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">${cert}</span>`
+                                    ).join('') : 
+                                    '<div class="text-sm text-gray-400 italic">暂无证书信息</div>'
+                                }
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 备注信息 -->
-                    <div class="space-y-4 md:col-span-2">
-                        <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">备注信息</h4>
-                        <div class="bg-gray-50 p-4 rounded-lg">
-                            <p class="text-sm text-gray-700">${employee.remark || '暂无备注信息'}</p>
+                        <!-- 联系信息 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">联系信息</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">电话:</span>
+                                    <div class="text-sm text-gray-900 mt-1">${employee.phone || '-'}</div>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">邮箱:</span>
+                                    <div class="text-sm text-gray-900 mt-1">${employee.email || '-'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 工作绩效 -->
+                        <div>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">工作绩效</h4>
+                            <div class="bg-yellow-50 p-4 rounded-lg">
+                                <p class="text-sm text-yellow-800">${employee.performance || '暂无工作绩效记录'}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2126,7 +2559,6 @@
             document.getElementById('employeeDetails').innerHTML = detailsContent;
             document.getElementById('viewModal').classList.add('show');
             
-            // 设置焦点以支持键盘导航
             setTimeout(() => {
                 const modal = document.getElementById('viewModal');
                 const firstFocusable = modal.querySelector('button');
@@ -2159,13 +2591,54 @@
             document.getElementById('editBirthDate').value = employee.birthDate || '';
             document.getElementById('editAge').value = employee.birthDate ? calculateAgeFromBirthDate(employee.birthDate) : '';
             document.getElementById('editEducation').value = employee.education || '本科';
+            document.getElementById('editUniversity').value = employee.university || '';
+            document.getElementById('editMajor').value = employee.major || '';
             document.getElementById('editSalary').value = employee.salary;
+            document.getElementById('editMaritimeExperience').value = employee.maritimeExperience || '';
+            
+            // 设置照片
+            if (employee.photo) {
+                document.getElementById('editPhotoPreview').src = employee.photo;
+            } else {
+                clearPhoto('edit');
+            }
             
             // 填充工作信息
             document.getElementById('editUnit').value = employee.unit;
             document.getElementById('editRole').value = employee.role;
-            document.getElementById('editOnDuty').value = employee.onDuty;
+            document.getElementById('editWorkStatus').value = employee.workStatus || 'VTS在岗';
             document.getElementById('editDutyTime').value = employee.dutyTime || '白班';
+            document.getElementById('editHireDate').value = employee.hireDate || '';
+            
+            // 填充VTS履历
+            const vtsContainer = document.getElementById('editVTSHistoryContainer');
+            vtsContainer.innerHTML = '';
+            if (employee.vtsHistory && employee.vtsHistory.length > 0) {
+                employee.vtsHistory.forEach((history, index) => {
+                    addVTSHistory('edit');
+                    const historyItems = vtsContainer.querySelectorAll('.vts-history-item');
+                    const currentItem = historyItems[index];
+                    currentItem.querySelector('input[name="editVTSStartDate[]"]').value = history.startDate || '';
+                    currentItem.querySelector('input[name="editVTSEndDate[]"]').value = history.endDate || '';
+                    currentItem.querySelector('select[name="editVTSPosition[]"]').value = history.position || '';
+                    currentItem.querySelector('input[name="editVTSLocation[]"]').value = history.location || '';
+                });
+            }
+            
+            // 填充培训记录
+            const trainingContainer = document.getElementById('editTrainingContainer');
+            trainingContainer.innerHTML = '';
+            if (employee.trainingRecords && employee.trainingRecords.length > 0) {
+                employee.trainingRecords.forEach((training, index) => {
+                    addTrainingRecord('edit');
+                    const trainingItems = trainingContainer.querySelectorAll('.vts-history-item');
+                    const currentItem = trainingItems[index];
+                    currentItem.querySelector('input[name="editTrainingStartDate[]"]').value = training.startDate || '';
+                    currentItem.querySelector('input[name="editTrainingEndDate[]"]').value = training.endDate || '';
+                    currentItem.querySelector('input[name="editTrainingCourse[]"]').value = training.course || '';
+                    currentItem.querySelector('input[name="editTrainingInstitution[]"]').value = training.institution || '';
+                });
+            }
             
             // 填充证书信息
             const certCheckboxes = [
@@ -2176,6 +2649,7 @@
                 { id: 'editCertChiefEngineer', name: '轮机长' },
                 { id: 'editCertFirstEngineer', name: '大管轮' },
                 { id: 'editCertSecondEngineer', name: '二管轮' },
+                { id: 'editCertThirdEngineer', name: '三管轮' },
                 { id: 'editCertElectrician', name: '电机员' }
             ];
             
@@ -2189,14 +2663,12 @@
             // 填充联系信息
             document.getElementById('editPhone').value = employee.phone;
             document.getElementById('editEmail').value = employee.email;
-            document.getElementById('editRemark').value = employee.remark || '';
+            document.getElementById('editPerformance').value = employee.performance || '';
             
-            // 处理身份变化逻辑
             handleRoleChange('edit');
             
             document.getElementById('editModal').classList.add('show');
             
-            // 设置焦点
             setTimeout(() => {
                 document.getElementById('editName').focus();
             }, 100);
@@ -2221,10 +2693,23 @@
                 return;
             }
 
-            // 检查工号重复（排除当前编辑的员工）
             const existingEmployee = employees.find(emp => emp.employeeId === employeeId && emp.id !== editingEmployeeId);
             if (existingEmployee) {
                 showToast('工号已存在，请使用其他工号！', 'error');
+                return;
+            }
+
+            // 验证邮箱格式
+            const email = document.getElementById('editEmail').value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showToast('邮箱格式不正确！', 'error');
+                return;
+            }
+
+            // 验证电话格式
+            const phone = document.getElementById('editPhone').value.trim();
+            if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
+                showToast('手机号格式不正确！', 'error');
                 return;
             }
 
@@ -2238,6 +2723,7 @@
                 { id: 'editCertChiefEngineer', name: '轮机长' },
                 { id: 'editCertFirstEngineer', name: '大管轮' },
                 { id: 'editCertSecondEngineer', name: '二管轮' },
+                { id: 'editCertThirdEngineer', name: '三管轮' },
                 { id: 'editCertElectrician', name: '电机员' }
             ];
             
@@ -2247,6 +2733,40 @@
                     certificates.push(cert.name);
                 }
             });
+
+            // 获取VTS履历
+            const vtsHistory = [];
+            const vtsContainer = document.getElementById('editVTSHistoryContainer');
+            const vtsItems = vtsContainer.querySelectorAll('.vts-history-item');
+            vtsItems.forEach(item => {
+                const startDate = item.querySelector('input[name="editVTSStartDate[]"]').value;
+                const endDate = item.querySelector('input[name="editVTSEndDate[]"]').value;
+                const position = item.querySelector('select[name="editVTSPosition[]"]').value;
+                const location = item.querySelector('input[name="editVTSLocation[]"]').value;
+                
+                if (startDate || endDate || position || location) {
+                    vtsHistory.push({ startDate, endDate, position, location });
+                }
+            });
+
+            // 获取培训记录
+            const trainingRecords = [];
+            const trainingContainer = document.getElementById('editTrainingContainer');
+            const trainingItems = trainingContainer.querySelectorAll('.vts-history-item');
+            trainingItems.forEach(item => {
+                const startDate = item.querySelector('input[name="editTrainingStartDate[]"]').value;
+                const endDate = item.querySelector('input[name="editTrainingEndDate[]"]').value;
+                const course = item.querySelector('input[name="editTrainingCourse[]"]').value;
+                const institution = item.querySelector('input[name="editTrainingInstitution[]"]').value;
+                
+                if (startDate || endDate || course || institution) {
+                    trainingRecords.push({ startDate, endDate, course, institution });
+                }
+            });
+
+            // 获取照片
+            const photoPreview = document.getElementById('editPhotoPreview');
+            const photo = photoPreview.src.startsWith('data:') ? photoPreview.src : (employees[empIndex].photo || '');
             
             // 更新员工信息
             employees[empIndex] = {
@@ -2256,20 +2776,25 @@
                 gender: document.getElementById('editGender').value,
                 birthDate: document.getElementById('editBirthDate').value,
                 education: document.getElementById('editEducation').value,
+                university: document.getElementById('editUniversity').value.trim(),
+                major: document.getElementById('editMajor').value.trim(),
+                maritimeExperience: document.getElementById('editMaritimeExperience').value.trim(),
                 salary: parseInt(document.getElementById('editSalary').value) || 5000,
+                hireDate: document.getElementById('editHireDate').value,
+                photo: photo,
                 unit: document.getElementById('editUnit').value.trim(),
                 role: document.getElementById('editRole').value,
-                onDuty: document.getElementById('editOnDuty').value,
+                workStatus: document.getElementById('editWorkStatus').value,
                 dutyTime: document.getElementById('editDutyTime').value,
+                vtsHistory: vtsHistory,
+                trainingRecords: trainingRecords,
                 certificates: certificates,
-                phone: document.getElementById('editPhone').value.trim(),
-                email: document.getElementById('editEmail').value.trim(),
-                remark: document.getElementById('editRemark').value.trim()
+                phone: phone,
+                email: email,
+                performance: document.getElementById('editPerformance').value.trim()
             };
             
-            // 同步更新到employeesByOrganization
             updateEmployeesByOrganization();
-            
             filteredEmployees = [...employees];
             renderEmployeeTable();
             updateFilters();
@@ -2292,10 +2817,8 @@
                 employees = employees.filter(emp => emp.id !== id);
                 filteredEmployees = [...employees];
                 
-                // 同步更新到employeesByOrganization
                 updateEmployeesByOrganization();
                 
-                // 如果当前页没有数据，回到上一页
                 const totalPages = Math.ceil(filteredEmployees.length / pageSize);
                 if (currentPage > totalPages && totalPages > 0) {
                     currentPage = totalPages;
@@ -2383,11 +2906,11 @@
                         employees[empIndex].dutyHistory = [];
                     }
                     employees[empIndex].dutyHistory.push(date);
-                    employees[empIndex].dutyHistory.sort(); // 按日期排序
+                    employees[empIndex].dutyHistory.sort();
                     employees[empIndex].dutyHours = calculateDutyHours(employees[empIndex].dutyHistory);
                     
                     updateEmployeesByOrganization();
-                    showDutyHistory(id); // 刷新显示
+                    showDutyHistory(id);
                     renderEmployeeTable();
                     updateStats();
                     showToast('值班记录添加成功！', 'success');
@@ -2406,7 +2929,7 @@
                     employees[empIndex].dutyHours = calculateDutyHours(employees[empIndex].dutyHistory);
                     
                     updateEmployeesByOrganization();
-                    showDutyHistory(id); // 刷新显示
+                    showDutyHistory(id);
                     renderEmployeeTable();
                     updateStats();
                     showToast('值班记录删除成功！', 'success');
@@ -2424,32 +2947,34 @@
                 return;
             }
             
-            // 清空表单
             document.getElementById('addEmployeeForm').reset();
+            
+            // 清空容器
+            document.getElementById('newVTSHistoryContainer').innerHTML = '';
+            document.getElementById('newTrainingContainer').innerHTML = '';
             
             // 设置默认值
             document.getElementById('newUnit').value = getCurrentUserUnit();
             document.getElementById('newDutyTime').value = '白班';
+            document.getElementById('newWorkStatus').value = 'VTS在岗';
             
             // 清空证书复选框
             const certCheckboxes = [
                 'newCertCaptain', 'newCertChiefOfficer', 'newCertSecondOfficer', 'newCertThirdOfficer',
-                'newCertChiefEngineer', 'newCertFirstEngineer', 'newCertSecondEngineer', 'newCertElectrician'
+                'newCertChiefEngineer', 'newCertFirstEngineer', 'newCertSecondEngineer', 'newCertThirdEngineer', 'newCertElectrician'
             ];
             certCheckboxes.forEach(id => {
                 const checkbox = document.getElementById(id);
                 if (checkbox) checkbox.checked = false;
             });
             
-            // 清空年龄字段
             document.getElementById('newAge').value = '';
+            clearPhoto('new');
             
-            // 处理身份变化逻辑
             handleRoleChange('new');
             
             document.getElementById('addModal').classList.add('show');
             
-            // 设置焦点
             setTimeout(() => {
                 document.getElementById('newName').focus();
             }, 100);
@@ -2468,7 +2993,6 @@
                 return;
             }
 
-            // 检查工号是否重复
             if (employees.find(emp => emp.employeeId === employeeId)) {
                 showToast('工号已存在，请使用其他工号！', 'error');
                 return;
@@ -2498,6 +3022,7 @@
                 { id: 'newCertChiefEngineer', name: '轮机长' },
                 { id: 'newCertFirstEngineer', name: '大管轮' },
                 { id: 'newCertSecondEngineer', name: '二管轮' },
+                { id: 'newCertThirdEngineer', name: '三管轮' },
                 { id: 'newCertElectrician', name: '电机员' }
             ];
             
@@ -2507,6 +3032,40 @@
                     certificates.push(cert.name);
                 }
             });
+
+            // 获取VTS履历
+            const vtsHistory = [];
+            const vtsContainer = document.getElementById('newVTSHistoryContainer');
+            const vtsItems = vtsContainer.querySelectorAll('.vts-history-item');
+            vtsItems.forEach(item => {
+                const startDate = item.querySelector('input[name="newVTSStartDate[]"]').value;
+                const endDate = item.querySelector('input[name="newVTSEndDate[]"]').value;
+                const position = item.querySelector('select[name="newVTSPosition[]"]').value;
+                const location = item.querySelector('input[name="newVTSLocation[]"]').value;
+                
+                if (startDate || endDate || position || location) {
+                    vtsHistory.push({ startDate, endDate, position, location });
+                }
+            });
+
+            // 获取培训记录
+            const trainingRecords = [];
+            const trainingContainer = document.getElementById('newTrainingContainer');
+            const trainingItems = trainingContainer.querySelectorAll('.vts-history-item');
+            trainingItems.forEach(item => {
+                const startDate = item.querySelector('input[name="newTrainingStartDate[]"]').value;
+                const endDate = item.querySelector('input[name="newTrainingEndDate[]"]').value;
+                const course = item.querySelector('input[name="newTrainingCourse[]"]').value;
+                const institution = item.querySelector('input[name="newTrainingInstitution[]"]').value;
+                
+                if (startDate || endDate || course || institution) {
+                    trainingRecords.push({ startDate, endDate, course, institution });
+                }
+            });
+
+            // 获取照片
+            const photoPreview = document.getElementById('newPhotoPreview');
+            const photo = photoPreview.src.startsWith('data:') ? photoPreview.src : '';
 
             showLoading();
 
@@ -2518,24 +3077,29 @@
                 birthDate: document.getElementById('newBirthDate').value,
                 unit: document.getElementById('newUnit').value.trim() || getCurrentUserUnit(),
                 role: document.getElementById('newRole').value,
-                onDuty: document.getElementById('newOnDuty').value,
+                workStatus: document.getElementById('newWorkStatus').value,
                 dutyTime: document.getElementById('newDutyTime').value,
                 phone: phone,
                 email: email,
                 certificates: certificates,
                 education: document.getElementById('newEducation').value,
+                university: document.getElementById('newUniversity').value.trim(),
+                major: document.getElementById('newMajor').value.trim(),
+                maritimeExperience: document.getElementById('newMaritimeExperience').value.trim(),
                 salary: parseInt(document.getElementById('newSalary').value) || 5000,
+                hireDate: document.getElementById('newHireDate').value,
+                photo: photo,
+                vtsHistory: vtsHistory,
+                trainingRecords: trainingRecords,
                 dutyHistory: [],
                 dutyHours: 0,
-                remark: document.getElementById('newRemark').value.trim()
+                performance: document.getElementById('newPerformance').value.trim()
             };
             
-            // 模拟异步操作
             setTimeout(() => {
                 employees.push(newEmp);
                 filteredEmployees = [...employees];
                 
-                // 同步更新到employeesByOrganization
                 updateEmployeesByOrganization();
                 
                 renderEmployeeTable();
@@ -2568,12 +3132,10 @@
 
         // 同步更新employeesByOrganization
         function updateEmployeesByOrganization() {
-            // 清空所有组织的员工数据
             Object.keys(employeesByOrganization).forEach(org => {
                 employeesByOrganization[org] = [];
             });
             
-            // 重新分组员工数据
             employees.forEach(emp => {
                 const unitToOrgMap = {
                     '山东海事局VTS中心': '省厅',
@@ -2636,7 +3198,6 @@
                 filteredEmployees = [...employees];
                 updateEmployeesByOrganization();
                 
-                // 检查当前页是否还有数据
                 const totalPages = Math.ceil(filteredEmployees.length / pageSize);
                 if (currentPage > totalPages && totalPages > 0) {
                     currentPage = totalPages;
@@ -2656,27 +3217,32 @@
                 return;
             }
             
-            const newStatus = confirm('点击"确定"设置为在岗，点击"取消"设置为不在岗') ? '有' : '无';
-            let updatedCount = 0;
+            const newStatus = prompt('请输入新的工作状态：\n1. VTS在岗\n2. 海事处\n3. 机关\n4. 在岗位');
+            const statusOptions = ['VTS在岗', '海事处', '机关', '在岗位'];
             
-            selectedIds.forEach(id => {
-                const empIndex = employees.findIndex(emp => emp.id === id);
-                if (empIndex !== -1) {
-                    // 检查身份限制
-                    if ((employees[empIndex].role === '协管' || employees[empIndex].role === '实习') && newStatus === '无') {
-                        // 协管和实习不能设置为不在岗，跳过
-                        return;
+            if (newStatus && statusOptions.includes(newStatus)) {
+                let updatedCount = 0;
+                
+                selectedIds.forEach(id => {
+                    const empIndex = employees.findIndex(emp => emp.id === id);
+                    if (empIndex !== -1) {
+                        // 检查身份限制
+                        if ((employees[empIndex].role === '见习' || employees[empIndex].role === '协管') && newStatus !== '在岗位') {
+                            return;
+                        }
+                        employees[empIndex].workStatus = newStatus;
+                        updatedCount++;
                     }
-                    employees[empIndex].onDuty = newStatus;
-                    updatedCount++;
-                }
-            });
-            
-            updateEmployeesByOrganization();
-            renderEmployeeTable();
-            updateStats();
-            hideBulkModal();
-            showToast(`已更新 ${updatedCount} 名员工的在岗状态`, 'success');
+                });
+                
+                updateEmployeesByOrganization();
+                renderEmployeeTable();
+                updateStats();
+                hideBulkModal();
+                showToast(`已更新 ${updatedCount} 名员工的工作状态`, 'success');
+            } else if (newStatus) {
+                showToast('输入的工作状态不正确', 'error');
+            }
         }
 
         function bulkExport() {
@@ -2740,29 +3306,31 @@
         }
 
         function exportEmployeesToCSV(employeeData, filename) {
-            const headers = ['姓名', '工号', '性别', '年龄', '单位', '身份', '在岗情况', '值班时间', '证书', '学历', '薪资', '入职日期', '电话', '邮箱', '备注'];
+            const headers = ['姓名', '工号', '性别', '年龄', '单位', '身份', '工作状态', '值班时间', '证书', '学历', '毕业院校', '专业', '薪资', '入职日期', '涉海经历', '电话', '邮箱', '工作绩效'];
             const csvData = employeeData.map(emp => [
                 emp.name, 
                 emp.employeeId, 
                 emp.gender, 
-                emp.age, 
+                emp.birthDate ? calculateAgeFromBirthDate(emp.birthDate) : '', 
                 emp.unit, 
                 emp.role, 
-                emp.onDuty, 
+                emp.workStatus, 
                 emp.dutyHours || 0, 
                 emp.certificates ? emp.certificates.join(';') : '',
                 emp.education,
+                emp.university || '',
+                emp.major || '',
                 emp.salary || 0,
                 emp.hireDate || '',
+                emp.maritimeExperience || '',
                 emp.phone || '',
                 emp.email || '',
-                emp.remark || ''
+                emp.performance || ''
             ]);
             
             const csvContent = [headers, ...csvData]
                 .map(row => row.map(field => {
                     const value = String(field || '');
-                    // 处理包含逗号、引号或换行符的字段
                     if (value.includes(',') || value.includes('"') || value.includes('\n')) {
                         return `"${value.replace(/"/g, '""')}"`;
                     }
@@ -2770,7 +3338,6 @@
                 }).join(','))
                 .join('\n');
             
-            // 添加BOM以支持中文
             const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
@@ -2797,12 +3364,10 @@
             const calendarSection = document.getElementById('calendarSection');
             calendarSection.classList.remove('hidden');
             
-            // 如果日历尚未初始化，则进行初始化
             if (!calendar) {
                 initializeCalendar();
             }
             
-            // 滚动到日历区域
             calendarSection.scrollIntoView({ 
                 behavior: 'smooth',
                 block: 'start'
@@ -2816,7 +3381,6 @@
         function initializeCalendar() {
             const calendarEl = document.getElementById('calendar');
             
-            // 将员工的值班历史转换为日历事件
             const events = employees.flatMap(emp => 
                 (emp.dutyHistory || []).map(date => ({
                     title: `${emp.name} (${emp.role})`,
@@ -2853,14 +3417,12 @@
                 selectMirror: true,
                 events: events,
                 
-                // 日期点击事件
                 dateClick: function(info) {
                     if (currentUser && currentUser.userType === 'admin') {
                         const employeeName = prompt('请输入值班员工姓名:');
                         if (employeeName) {
                             const employee = employees.find(emp => emp.name === employeeName);
                             if (employee) {
-                                // 添加值班记录
                                 if (!employee.dutyHistory) {
                                     employee.dutyHistory = [];
                                 }
@@ -2869,7 +3431,6 @@
                                     employee.dutyHistory.sort();
                                     employee.dutyHours = calculateDutyHours(employee.dutyHistory);
                                     
-                                    // 添加到日历
                                     calendar.addEvent({
                                         title: `${employee.name} (${employee.role})`,
                                         start: info.dateStr,
@@ -2892,7 +3453,6 @@
                     }
                 },
                 
-                // 事件点击
                 eventClick: function(info) {
                     const props = info.event.extendedProps;
                     if (confirm(`${props.employeeName} (${props.role})\n${props.unit}\n\n是否删除此值班安排？`)) {
@@ -2915,7 +3475,6 @@
                     }
                 },
                 
-                // 事件拖拽
                 eventDrop: function(info) {
                     if (currentUser && currentUser.userType === 'admin') {
                         const props = info.event.extendedProps;
@@ -2956,7 +3515,7 @@
 
         function generateDutyAnalysis() {
             const totalEmployees = employees.length;
-            const onDutyEmployees = employees.filter(emp => emp.onDuty === '有');
+            const vtsOnDutyEmployees = employees.filter(emp => emp.workStatus === 'VTS在岗');
             const totalDutyHours = employees.reduce((sum, emp) => sum + (emp.dutyHours || 0), 0);
             const avgDutyHours = totalEmployees > 0 ? Math.round((totalDutyHours / totalEmployees) * 10) / 10 : 0;
 
@@ -2966,13 +3525,13 @@
                 if (!unitStats[emp.unit]) {
                     unitStats[emp.unit] = {
                         total: 0,
-                        onDuty: 0,
+                        vtsOnDuty: 0,
                         dutyHours: 0,
                         supervisors: 0
                     };
                 }
                 unitStats[emp.unit].total++;
-                if (emp.onDuty === '有') unitStats[emp.unit].onDuty++;
+                if (emp.workStatus === 'VTS在岗') unitStats[emp.unit].vtsOnDuty++;
                 if (emp.role === '值班长') unitStats[emp.unit].supervisors++;
                 unitStats[emp.unit].dutyHours += emp.dutyHours || 0;
             });
@@ -2985,6 +3544,16 @@
                 }
                 roleStats[emp.role].count++;
                 roleStats[emp.role].dutyHours += emp.dutyHours || 0;
+            });
+
+            // 按工作状态统计
+            const statusStats = {};
+            employees.forEach(emp => {
+                if (!statusStats[emp.workStatus]) {
+                    statusStats[emp.workStatus] = { count: 0, dutyHours: 0 };
+                }
+                statusStats[emp.workStatus].count++;
+                statusStats[emp.workStatus].dutyHours += emp.dutyHours || 0;
             });
 
             // 证书持有情况
@@ -3034,9 +3603,9 @@
                                         </svg>
                                     </div>
                                     <div class="ml-4">
-                                        <h4 class="font-semibold text-green-800">在岗人员</h4>
-                                        <p class="text-3xl font-bold text-green-600">${onDutyEmployees.length}</p>
-                                        <p class="text-sm text-green-600">${totalEmployees > 0 ? Math.round((onDutyEmployees.length / totalEmployees) * 100) : 0}%</p>
+                                        <h4 class="font-semibold text-green-800">VTS在岗人员</h4>
+                                        <p class="text-3xl font-bold text-green-600">${vtsOnDutyEmployees.length}</p>
+                                        <p class="text-sm text-green-600">${totalEmployees > 0 ? Math.round((vtsOnDutyEmployees.length / totalEmployees) * 100) : 0}%</p>
                                     </div>
                                 </div>
                             </div>
@@ -3081,16 +3650,16 @@
                                         <div class="p-4 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
                                             <div class="flex justify-between items-start mb-2">
                                                 <h5 class="font-medium text-gray-900 text-sm">${unit}</h5>
-                                                <span class="text-xs text-gray-500">${Math.round((stats.onDuty / stats.total) * 100)}% 在岗</span>
+                                                <span class="text-xs text-gray-500">${Math.round((stats.vtsOnDuty / stats.total) * 100)}% VTS在岗</span>
                                             </div>
                                             <div class="grid grid-cols-4 gap-2 text-xs text-gray-600 mb-2">
                                                 <div>总数: ${stats.total}</div>
-                                                <div>在岗: ${stats.onDuty}</div>
+                                                <div>VTS: ${stats.vtsOnDuty}</div>
                                                 <div>值班长: ${stats.supervisors}</div>
                                                 <div>值班: ${stats.dutyHours}h</div>
                                             </div>
                                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: ${(stats.onDuty / stats.total) * 100}%"></div>
+                                                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: ${(stats.vtsOnDuty / stats.total) * 100}%"></div>
                                             </div>
                                         </div>
                                     `).join('')}
@@ -3098,7 +3667,32 @@
                             </div>
                         </div>
 
-                        <!-- 身份分布 -->
+                        <!-- 工作状态分布 -->
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">工作状态分布</h4>
+                            <div class="space-y-3">
+                                ${Object.entries(statusStats).map(([status, stats]) => {
+                                    const avgHours = stats.count > 0 ? Math.round((stats.dutyHours / stats.count) * 10) / 10 : 0;
+                                    const colorClass = getWorkStatusColor(status);
+                                    return `
+                                        <div class="p-4 border rounded-lg ${colorClass.replace('text-', 'border-').replace('100', '200').replace('800', '50')}">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <span class="font-medium text-gray-900">${status}</span>
+                                                <span class="text-sm text-gray-600">${stats.count}人</span>
+                                            </div>
+                                            <div class="flex justify-between text-sm text-gray-600">
+                                                <span>总值班: ${stats.dutyHours}小时</span>
+                                                <span>人均: ${avgHours}小时</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- 身份分布与效率 -->
                         <div>
                             <h4 class="text-lg font-semibold text-gray-900 mb-4">身份分布与效率</h4>
                             <div class="space-y-3">
@@ -3106,7 +3700,7 @@
                                     const avgHours = stats.count > 0 ? Math.round((stats.dutyHours / stats.count) * 10) / 10 : 0;
                                     const colorClass = role === '值班长' ? 'bg-red-50 border-red-200' : 
                                                      role === '值班员' ? 'bg-blue-50 border-blue-200' :
-                                                     role === '协管' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200';
+                                                     role === '见习' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200';
                                     return `
                                         <div class="p-4 ${colorClass} border rounded-lg">
                                             <div class="flex justify-between items-center mb-2">
@@ -3122,9 +3716,7 @@
                                 }).join('')}
                             </div>
                         </div>
-                    </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- 证书统计 -->
                         <div>
                             <h4 class="text-lg font-semibold text-gray-900 mb-4">证书持有情况</h4>
@@ -3143,37 +3735,37 @@
                                 }
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 值班效率分析 -->
-                        <div>
-                            <h4 class="text-lg font-semibold text-gray-900 mb-4">值班效率分析</h4>
-                            <div class="space-y-4">
-                                <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <h5 class="font-medium text-green-800">高效员工 (>80小时)</h5>
-                                            <p class="text-sm text-green-600">表现优秀，值班时间充足</p>
-                                        </div>
-                                        <div class="text-3xl font-bold text-green-600">${dutyRanges.high}</div>
+                    <!-- 值班效率分析 -->
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">值班效率分析</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h5 class="font-medium text-green-800">高效员工 (>80小时)</h5>
+                                        <p class="text-sm text-green-600">表现优秀，值班时间充足</p>
                                     </div>
+                                    <div class="text-3xl font-bold text-green-600">${dutyRanges.high}</div>
                                 </div>
-                                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <h5 class="font-medium text-yellow-800">中等员工 (40-80小时)</h5>
-                                            <p class="text-sm text-yellow-600">值班时间适中，有提升空间</p>
-                                        </div>
-                                        <div class="text-3xl font-bold text-yellow-600">${dutyRanges.medium}</div>
+                            </div>
+                            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h5 class="font-medium text-yellow-800">中等员工 (40-80小时)</h5>
+                                        <p class="text-sm text-yellow-600">值班时间适中，有提升空间</p>
                                     </div>
+                                    <div class="text-3xl font-bold text-yellow-600">${dutyRanges.medium}</div>
                                 </div>
-                                <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <h5 class="font-medium text-red-800">待提升员工 (<40小时)</h5>
-                                            <p class="text-sm text-red-600">需要增加值班安排</p>
-                                        </div>
-                                        <div class="text-3xl font-bold text-red-600">${dutyRanges.low}</div>
+                            </div>
+                            <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h5 class="font-medium text-red-800">待提升员工 (<40小时)</h5>
+                                        <p class="text-sm text-red-600">需要增加值班安排</p>
                                     </div>
+                                    <div class="text-3xl font-bold text-red-600">${dutyRanges.low}</div>
                                 </div>
                             </div>
                         </div>
@@ -3192,10 +3784,10 @@
                                 <div class="flex items-start space-x-3">
                                     <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                                     <div>
-                                        <h5 class="font-medium text-blue-900">在岗率分析</h5>
+                                        <h5 class="font-medium text-blue-900">VTS在岗率分析</h5>
                                         <p class="text-sm text-blue-800">
-                                            当前在岗率: ${totalEmployees > 0 ? Math.round((onDutyEmployees.length / totalEmployees) * 100) : 0}%
-                                            ${onDutyEmployees.length < totalEmployees * 0.8 ? '，建议关注人员调配' : '，人员配置良好'}
+                                            当前VTS在岗率: ${totalEmployees > 0 ? Math.round((vtsOnDutyEmployees.length / totalEmployees) * 100) : 0}%
+                                            ${vtsOnDutyEmployees.length < totalEmployees * 0.7 ? '，建议关注VTS人员调配' : '，VTS人员配置良好'}
                                         </p>
                                     </div>
                                 </div>
@@ -3226,7 +3818,7 @@
                                     <div>
                                         <h5 class="font-medium text-blue-900">改进建议</h5>
                                         <p class="text-sm text-blue-800">
-                                            重点关注值班时间较少的员工，加强培训和轮岗安排，优化资源配置
+                                            重点关注值班时间较少的员工，加强培训和轮岗安排，优化资源配置，提升整体工作效率
                                         </p>
                                     </div>
                                 </div>
@@ -3253,7 +3845,6 @@
                 showLoading();
                 
                 setTimeout(() => {
-                    // 重新加载默认数据
                     loadEmployeeData();
                     hideLoading();
                     showToast('数据已重置为初始状态！', 'success');
@@ -3265,21 +3856,17 @@
          * 键盘导航支持
          *********************/
         
-        // 添加键盘事件监听
         document.addEventListener('keydown', function(e) {
-            // ESC键关闭模态框
             if (e.key === 'Escape') {
                 const openModals = document.querySelectorAll('.modal.show');
                 if (openModals.length > 0) {
                     openModals.forEach(modal => modal.classList.remove('show'));
                 }
-                // 隐藏日历
                 if (!document.getElementById('calendarSection').classList.contains('hidden')) {
                     hideCalendar();
                 }
             }
             
-            // Ctrl+F 聚焦搜索框
             if (e.ctrlKey && e.key === 'f') {
                 e.preventDefault();
                 const searchInput = document.getElementById('searchInput');
@@ -3295,7 +3882,7 @@
         
         function initEventListeners() {
             const filterElements = [
-                'searchInput', 'unitFilter', 'roleFilter', 'onDutyFilter', 
+                'searchInput', 'unitFilter', 'roleFilter', 'statusFilter', 
                 'dutyTimeFilter', 'certificateFilter', 'educationFilter'
             ];
             
@@ -3307,14 +3894,12 @@
                 }
             });
 
-            // 监听复选框变化
             document.addEventListener('change', function(e) {
                 if (e.target.classList.contains('employee-checkbox')) {
                     updateSelectedCount();
                 }
             });
             
-            // 监听表单提交，防止页面刷新
             document.addEventListener('submit', function(e) {
                 if (e.target.id !== 'loginForm' && e.target.id !== 'registerForm') {
                     e.preventDefault();
@@ -3330,16 +3915,13 @@
             initEventListeners();
             showPage('loginPage');
             
-            // 显示欢迎信息
             setTimeout(() => {
                 showToast('欢迎使用海事局VTS值班人事管理系统', 'info');
             }, 1000);
         });
 
-        // 页面可见性变化处理
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible' && currentUser) {
-                // 页面重新可见时刷新数据
                 updateStats();
             }
         });
