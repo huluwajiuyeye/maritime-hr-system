@@ -1825,6 +1825,7 @@
             };
             
             users.push(newUser);
+            saveToLocalStorage(); // 保存到本地存储
             
             if (userType === 'admin') {
                 showToast('管理员账号注册成功，等待审核批准后方可使用！', 'success');
@@ -1880,6 +1881,50 @@
                 showPage('loginPage');
                 document.getElementById('loginForm').reset();
                 showToast('已安全退出登录', 'info');
+            }
+        }
+
+        /*********************
+         * 数据持久化存储
+         *********************/
+        function saveToLocalStorage() {
+            try {
+                const dataToSave = {
+                    employeesByOrganization: employeesByOrganization,
+                    users: users,
+                    lastUpdated: new Date().toISOString()
+                };
+                localStorage.setItem('vtsManagementSystem', JSON.stringify(dataToSave));
+            } catch (e) {
+                console.warn('无法保存数据到本地存储:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedData = localStorage.getItem('vtsManagementSystem');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    if (data.employeesByOrganization) {
+                        employeesByOrganization = data.employeesByOrganization;
+                    }
+                    if (data.users) {
+                        users = data.users;
+                    }
+                    return true;
+                }
+            } catch (e) {
+                console.warn('无法从本地存储加载数据:', e);
+            }
+            return false;
+        }
+
+        function clearLocalStorage() {
+            try {
+                localStorage.removeItem('vtsManagementSystem');
+                showToast('本地存储已清除！', 'info');
+            } catch (e) {
+                console.warn('无法清除本地存储:', e);
             }
         }
 
@@ -1958,6 +2003,7 @@
             const user = users.find(u => u.id === userId);
             if (user) {
                 user.status = 'active';
+                saveToLocalStorage(); // 保存到本地存储
                 showToast(`用户 ${user.realName} 已批准！`, 'success');
                 renderUserTable();
             }
@@ -1966,6 +2012,7 @@
         function rejectUser(userId) {
             if (confirm('确定要拒绝这个用户的注册申请吗？')) {
                 users = users.filter(u => u.id !== userId);
+                saveToLocalStorage(); // 保存到本地存储
                 renderUserTable();
                 showToast('用户申请已拒绝', 'info');
             }
@@ -1975,6 +2022,7 @@
             const user = users.find(u => u.id === userId);
             if (user && confirm(`确定要${user.status === 'active' ? '禁用' : '启用'}这个用户吗？`)) {
                 user.status = user.status === 'active' ? 'disabled' : 'active';
+                saveToLocalStorage(); // 保存到本地存储
                 renderUserTable();
                 showToast(`用户状态已${user.status === 'active' ? '启用' : '禁用'}`, 'info');
             }
@@ -2727,6 +2775,7 @@
             updateFilters();
             updateStats();
             hideEditModal();
+            saveToLocalStorage(); // 保存到本地存储
             showToast('员工信息更新成功！', 'success');
         }
 
@@ -2753,6 +2802,7 @@
                 
                 renderEmployeeTable();
                 updateStats();
+                saveToLocalStorage(); // 保存到本地存储
                 showToast('员工删除成功！', 'success');
             }
         }
@@ -2889,6 +2939,7 @@
                 showDutyHistory(id);
                 renderEmployeeTable();
                 updateStats();
+                saveToLocalStorage(); // 保存到本地存储
                 showToast('VTS履历添加成功！', 'success');
             }
         }
@@ -2906,6 +2957,7 @@
                     showDutyHistory(id);
                     renderEmployeeTable();
                     updateStats();
+                    saveToLocalStorage(); // 保存到本地存储
                     showToast('VTS履历记录删除成功！', 'success');
                 }
             }
@@ -3070,6 +3122,7 @@
                 updateStats();
                 hideAddModal();
                 hideLoading();
+                saveToLocalStorage(); // 保存到本地存储
                 showToast('员工添加成功！', 'success');
             }, 500);
         }
@@ -3169,6 +3222,7 @@
                 renderEmployeeTable();
                 updateStats();
                 hideBulkModal();
+                saveToLocalStorage(); // 保存到本地存储
                 showToast(`已删除 ${selectedIds.length} 名员工`, 'success');
             }
         }
@@ -3202,6 +3256,7 @@
                 renderEmployeeTable();
                 updateStats();
                 hideBulkModal();
+                saveToLocalStorage(); // 保存到本地存储
                 showToast(`已更新 ${updatedCount} 名员工的工作状态`, 'success');
             } else if (newStatus) {
                 showToast('输入的工作状态不正确', 'error');
@@ -3277,6 +3332,7 @@
             renderEmployeeTable();
             updateStats();
             hideBulkModal();
+            saveToLocalStorage(); // 保存到本地存储
             showToast(`已为 ${selectedIds.length} 名员工添加VTS履历`, 'success');
         }
 
@@ -3820,15 +3876,113 @@
                 return;
             }
             
-            if (confirm('确定要重置所有数据为初始状态吗？这将清除所有修改！')) {
-                showLoading();
-                
-                setTimeout(() => {
-                    loadEmployeeData();
-                    hideLoading();
-                    showToast('数据已重置为初始状态！', 'success');
-                }, 1000);
+            const choice = confirm('确定要重置所有数据为初始状态吗？\n\n点击"确定"重置为原始数据\n点击"取消"保持当前数据');
+            if (!choice) return;
+            
+            const clearStorage = confirm('是否同时清除本地存储的数据？\n\n点击"确定"清除本地存储（数据不会在刷新后保留）\n点击"取消"保留本地存储（数据会在刷新后恢复）');
+            
+            if (clearStorage) {
+                clearLocalStorage();
             }
+            
+            showLoading();
+            
+            setTimeout(() => {
+                // 重置为原始数据结构
+                employeesByOrganization = {
+                    '省厅': [
+                        {
+                            id: 1, name: '王局长', gender: '男', birthDate: '1976-03-15',
+                            unit: '山东海事局', role: '值班长', workStatus: 'VTS在岗',
+                            phone: '13800001111', email: 'wang@sd.vts.msa.gov.cn',
+                            certificates: ['船长', '大副'], education: '研究生及以上', 
+                            university: '大连海事大学', major: '航海技术', maritimeExperience: '20年海事管理经验，曾任船长8年',
+                            hireDate: '2010-03-15', photo: '',
+                            vtsHistory: [
+                                {startDate: '2010-03-15', endDate: '2015-06-30', position: '值班员', location: '青岛分局'},
+                                {startDate: '2015-07-01', endDate: '2020-12-31', position: '值班长', location: '烟台分局'},
+                                {startDate: '2021-01-01', endDate: '', position: '值班长', location: '山东海事局'}
+                            ],
+                            trainingRecords: [
+                                {startDate: '2020-05-10', endDate: '2020-05-20', course: 'VTS高级管理培训', institution: '交通部海事局'},
+                                {startDate: '2022-03-15', endDate: '2022-03-25', course: 'ECDIS系统培训', institution: '大连海事大学'}
+                            ],
+                            performance: '2023年荣获"优秀VTS管理者"称号，主导VTS系统升级项目，发表《现代VTS管理技术研究》论文，获得山东省科技进步三等奖。'
+                        },
+                        {
+                            id: 2, name: '李副局长', gender: '男', birthDate: '1979-06-20',
+                            unit: '山东海事局', role: '值班长', workStatus: 'VTS在岗',
+                            phone: '13800001112', email: 'li@sd.vts.msa.gov.cn',
+                            certificates: ['船长', '轮机长'], education: '研究生及以上',
+                            university: '上海海事大学', major: '轮机工程', maritimeExperience: '18年海事工作经历，船舶服务12年',
+                            hireDate: '2012-08-01', photo: '',
+                            vtsHistory: [
+                                {startDate: '2012-08-01', endDate: '2018-12-31', position: '值班员', location: '威海分局'},
+                                {startDate: '2019-01-01', endDate: '', position: '值班长', location: '山东海事局'}
+                            ],
+                            trainingRecords: [
+                                {startDate: '2021-09-01', endDate: '2021-09-10', course: '港口交通管理培训', institution: '中国海事局培训中心'}
+                            ],
+                            performance: '负责全省VTS协调工作，2022年全国VTS技能比武二等奖，参与制定《山东省VTS管理规范》标准。'
+                        }
+                    ],
+                    '青岛分局': [
+                        {
+                            id: 3, name: '张伟', gender: '男', birthDate: '1989-03-15',
+                            unit: '青岛海事局', role: '值班长', workStatus: 'VTS在岗',
+                            phone: '13800138001', email: 'zhangwei@qd.vts.msa.gov.cn',
+                            certificates: ['船长', '大副'], education: '本科', 
+                            university: '青岛科技大学', major: '海洋技术', maritimeExperience: '10年VTS工作经验，5年船舶值班经历',
+                            hireDate: '2014-07-01', photo: '',
+                            vtsHistory: [
+                                {startDate: '2014-07-01', endDate: '2018-06-30', position: '见习', location: '青岛海事局'},
+                                {startDate: '2018-07-01', endDate: '2021-12-31', position: '值班员', location: '青岛海事局'},
+                                {startDate: '2022-01-01', endDate: '', position: '值班长', location: '青岛海事局'}
+                            ],
+                            trainingRecords: [
+                                {startDate: '2020-04-15', endDate: '2020-04-25', course: 'VTS操作员培训', institution: '青岛海事局'}
+                            ],
+                            performance: '青岛港区值班长，经验丰富。2023年青岛分局技能比武一等奖，多次获得月度优秀员工。'
+                        },
+                        {
+                            id: 4, name: '李红', gender: '女', birthDate: '1996-07-01',
+                            unit: '青岛海事局', role: '值班员', workStatus: 'VTS在岗',
+                            phone: '13800138002', email: 'lihong@qd.vts.msa.gov.cn',
+                            certificates: ['大副', '二副'], education: '本科',
+                            university: '中国海洋大学', major: '港口航道与海岸工程', maritimeExperience: '6年海事工作经验',
+                            hireDate: '2018-03-01', photo: '',
+                            vtsHistory: [
+                                {startDate: '2018-03-01', endDate: '2020-02-29', position: '见习', location: '青岛海事局'},
+                                {startDate: '2020-03-01', endDate: '', position: '值班员', location: '青岛海事局'}
+                            ],
+                            trainingRecords: [],
+                            performance: '青岛港VTS操作员，工作认真负责，连续两年获得优秀员工称号。'
+                        }
+                    ],
+                    '烟台分局': [],
+                    '威海分局': [],
+                    '日照分局': [],
+                    '东营分局': [],
+                    '潍坊分局': [],
+                    '董家口分局': [],
+                    '滨州分局': []
+                };
+                
+                // 计算每个员工的履历天数
+                Object.values(employeesByOrganization).forEach(orgEmployees => {
+                    orgEmployees.forEach(emp => {
+                        emp.dutyDays = calculateDutyDays(emp.vtsHistory);
+                    });
+                });
+                
+                if (!clearStorage) {
+                    saveToLocalStorage(); // 如果不清除本地存储，保存重置后的数据
+                }
+                
+                loadEmployeeData();
+                hideLoading();
+                showToast('数据已重置为初始状态！', 'success');
+            }, 1000);
         }
 
         /*********************
@@ -3891,6 +4045,13 @@
          *********************/
         
         document.addEventListener('DOMContentLoaded', function() {
+            // 首先尝试从本地存储加载数据
+            const hasLocalData = loadFromLocalStorage();
+            
+            if (hasLocalData) {
+                showToast('已加载本地保存的数据', 'success');
+            }
+            
             // 确保所有员工都有履历天数
             Object.values(employeesByOrganization).forEach(orgEmployees => {
                 orgEmployees.forEach(emp => {
@@ -3904,7 +4065,11 @@
             showPage('loginPage');
             
             setTimeout(() => {
-                showToast('欢迎使用海事局VTS值班人事管理系统', 'info');
+                if (hasLocalData) {
+                    showToast('系统已恢复您之前的数据，添加的信息在刷新后仍会保留', 'info');
+                } else {
+                    showToast('欢迎使用海事局VTS值班人事管理系统', 'info');
+                }
             }, 1000);
         });
 
