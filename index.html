@@ -374,7 +374,7 @@
                     <div class="stat-card bg-white rounded-lg shadow p-3 md:p-6 hover:shadow-md transition-shadow">
                         <div class="flex items-center">
                             <svg class="h-6 w-6 md:h-8 md:w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
                             <div class="ml-2 md:ml-4">
                                 <p class="text-xs md:text-sm font-medium text-gray-600">总人数</p>
@@ -426,9 +426,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div class="ml-2 md:ml-4">
-                                <p class="text-xs md:text-sm font-medium text-gray-600">本月值班</p>
-                                <p class="text-lg md:text-2xl font-semibold text-gray-900" id="monthlyDutyHours">0</p>
-                                <p class="text-xs text-gray-500">小时</p>
+                                <p class="text-xs md:text-sm font-medium text-gray-600">累计履历</p>
+                                <p class="text-lg md:text-2xl font-semibold text-gray-900" id="monthlyDutyDays">0</p>
+                                <p class="text-xs text-gray-500">天数</p>
                             </div>
                         </div>
                     </div>
@@ -508,11 +508,11 @@
                             </button>
                             <button onclick="showDutySchedule()" 
                                     class="bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                                值班日历
+                                履历日历
                             </button>
                             <button onclick="showDutyAnalysis()" 
                                     class="bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                                值班分析
+                                履历分析
                             </button>
                         </div>
 
@@ -605,7 +605,7 @@
                 <!-- 值班日历区域 -->
                 <div id="calendarSection" class="mt-8 bg-white rounded-lg shadow p-6 hidden">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-semibold text-gray-900">值班日历安排</h3>
+                        <h3 class="text-lg font-semibold text-gray-900">VTS履历日历</h3>
                         <button onclick="hideCalendar()" 
                                 class="text-gray-400 hover:text-gray-600 focus:outline-none">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1149,14 +1149,14 @@
         </div>
     </div>
 
-    <!-- 值班历史模态框 -->
+    <!-- 履历历史模态框 -->
     <div id="dutyHistoryModal" class="modal fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="dutyHistoryModalTitle">
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="hideDutyHistoryModal()" aria-hidden="true"></div>
             
             <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto z-10">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 id="dutyHistoryModalTitle" class="text-lg font-medium text-gray-900">值班历史管理</h3>
+                    <h3 id="dutyHistoryModalTitle" class="text-lg font-medium text-gray-900">VTS履历详情</h3>
                     <button onclick="hideDutyHistoryModal()" 
                             class="text-gray-400 hover:text-gray-600 focus:outline-none">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1166,7 +1166,7 @@
                 </div>
                 
                 <div class="px-6 py-6 max-h-96 overflow-y-auto" id="dutyHistoryContent">
-                    <!-- 值班历史内容将由JavaScript动态填充 -->
+                    <!-- VTS履历内容将由JavaScript动态填充 -->
                 </div>
             </div>
         </div>
@@ -1196,9 +1196,9 @@
                                 class="bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-200 text-white px-4 py-2 rounded-lg transition-colors">
                             导出选中员工
                         </button>
-                        <button onclick="addDutyRecord()" 
+                        <button onclick="addVTSRecord()" 
                                 class="bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-200 text-white px-4 py-2 rounded-lg transition-colors">
-                            添加值班记录
+                            添加VTS履历
                         </button>
                     </div>
                 </div>
@@ -1213,14 +1213,14 @@
         </div>
     </div>
 
-    <!-- 值班分析模态框 -->
+    <!-- 履历分析模态框 -->
     <div id="analysisModal" class="modal fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="analysisModalTitle">
         <div class="flex items-center justify-center min-h-screen px-4 py-8">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="hideAnalysisModal()" aria-hidden="true"></div>
             
             <div class="relative bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto z-10 max-h-screen overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 id="analysisModalTitle" class="text-lg font-medium text-gray-900">值班分析报告</h3>
+                    <h3 id="analysisModalTitle" class="text-lg font-medium text-gray-900">VTS履历分析报告</h3>
                     <button onclick="hideAnalysisModal()" 
                             class="text-gray-400 hover:text-gray-600 focus:outline-none">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1291,8 +1291,6 @@
                         {startDate: '2020-05-10', endDate: '2020-05-20', course: 'VTS高级管理培训', institution: '交通部海事局'},
                         {startDate: '2022-03-15', endDate: '2022-03-25', course: 'ECDIS系统培训', institution: '大连海事大学'}
                     ],
-                    dutyHistory: ['2024-01-15', '2024-01-20', '2024-02-01', '2024-02-15'],
-                    dutyHours: 120, 
                     performance: '2023年荣获"优秀VTS管理者"称号，主导VTS系统升级项目，发表《现代VTS管理技术研究》论文，获得山东省科技进步三等奖。'
                 },
                 {
@@ -1309,8 +1307,6 @@
                     trainingRecords: [
                         {startDate: '2021-09-01', endDate: '2021-09-10', course: '港口交通管理培训', institution: '中国海事局培训中心'}
                     ],
-                    dutyHistory: ['2024-01-12', '2024-01-25', '2024-02-10'],
-                    dutyHours: 88, 
                     performance: '负责全省VTS协调工作，2022年全国VTS技能比武二等奖，参与制定《山东省VTS管理规范》标准。'
                 }
             ],
@@ -1330,8 +1326,6 @@
                     trainingRecords: [
                         {startDate: '2020-04-15', endDate: '2020-04-25', course: 'VTS操作员培训', institution: '青岛海事局'}
                     ],
-                    dutyHistory: ['2024-01-15', '2024-01-20', '2024-02-01', '2024-02-15'],
-                    dutyHours: 96, 
                     performance: '青岛港区值班长，经验丰富。2023年青岛分局技能比武一等奖，多次获得月度优秀员工。'
                 },
                 {
@@ -1346,8 +1340,6 @@
                         {startDate: '2020-03-01', endDate: '', position: '值班员', location: '青岛海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-18', '2024-01-25', '2024-02-08'],
-                    dutyHours: 72, 
                     performance: '青岛港VTS操作员，工作认真负责，连续两年获得优秀员工称号。'
                 }
             ],
@@ -1366,8 +1358,6 @@
                     trainingRecords: [
                         {startDate: '2019-10-01', endDate: '2019-10-15', course: 'VTS技术升级培训', institution: '交通部培训中心'}
                     ],
-                    dutyHistory: ['2024-01-10', '2024-01-22', '2024-02-05', '2024-02-18'],
-                    dutyHours: 96, 
                     performance: '烟台港区技术专家，主导多项VTS技术改进项目，获得省级科技进步奖，发表技术论文5篇。'
                 },
                 {
@@ -1382,8 +1372,6 @@
                         {startDate: '2022-09-01', endDate: '', position: '值班员', location: '烟台海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-14', '2024-01-28', '2024-02-12'],
-                    dutyHours: 72, 
                     performance: '烟台港VTS新秀，学习能力强，多次在培训中表现优异。'
                 }
             ],
@@ -1400,8 +1388,6 @@
                         {startDate: '2017-05-01', endDate: '', position: '值班长', location: '威海海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-16', '2024-01-30', '2024-02-14'],
-                    dutyHours: 72, 
                     performance: '威海港区值班经验丰富，多次处理突发事件，获得上级表彰。'
                 }
             ],
@@ -1418,8 +1404,6 @@
                         {startDate: '2019-06-01', endDate: '', position: '值班员', location: '日照海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-13', '2024-01-27', '2024-02-11'],
-                    dutyHours: 72, 
                     performance: '日照港VTS操作熟练，工作细致认真，多次获得月度优秀员工。'
                 }
             ],
@@ -1436,8 +1420,6 @@
                         {startDate: '2023-07-01', endDate: '', position: '值班员', location: '东营海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-19', '2024-02-03'],
-                    dutyHours: 48, 
                     performance: '东营港新进员工，积极上进，适应能力强。'
                 }
             ],
@@ -1454,8 +1436,6 @@
                         {startDate: '2016-04-01', endDate: '', position: '值班长', location: '潍坊海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-11', '2024-01-24', '2024-02-07'],
-                    dutyHours: 72, 
                     performance: '潍坊港区技术骨干，多次参与重要设备维护和技术改进工作。'
                 }
             ],
@@ -1472,8 +1452,6 @@
                         {startDate: '2020-10-01', endDate: '', position: '值班员', location: '董家口海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-17', '2024-01-31', '2024-02-15'],
-                    dutyHours: 72, 
                     performance: '董家口港新兴港区业务熟练，适应能力强，多次协助处理复杂航行情况。'
                 }
             ],
@@ -1489,8 +1467,6 @@
                         {startDate: '2022-08-01', endDate: '', position: '见习', location: '滨州海事局'}
                     ],
                     trainingRecords: [],
-                    dutyHistory: ['2024-01-21', '2024-02-04'],
-                    dutyHours: 48, 
                     performance: '滨州港实习生，表现优秀，学习态度认真，深受同事好评。'
                 }
             ]
@@ -1701,6 +1677,35 @@
         }
 
         /*********************
+         * VTS履历天数计算
+         *********************/
+        
+        // 计算VTS履历总天数（替代原来的值班时间计算）
+        function calculateDutyDays(vtsHistory) {
+            if (!vtsHistory || vtsHistory.length === 0) return 0;
+            
+            let totalDays = 0;
+            const today = new Date();
+            
+            vtsHistory.forEach(history => {
+                if (history.startDate) {
+                    const startDate = new Date(history.startDate);
+                    const endDate = history.endDate ? new Date(history.endDate) : today;
+                    
+                    // 计算天数差
+                    const timeDiff = endDate.getTime() - startDate.getTime();
+                    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    
+                    if (daysDiff > 0) {
+                        totalDays += daysDiff;
+                    }
+                }
+            });
+            
+            return totalDays;
+        }
+
+        /*********************
          * 页面切换函数
          *********************/
         function showPage(pageId) {
@@ -1893,6 +1898,13 @@
                 employees = employeesByOrganization[currentUser.organization] || [];
             }
             
+            // 确保每个员工都有计算好的履历天数
+            employees.forEach(emp => {
+                if (!emp.dutyDays) {
+                    emp.dutyDays = calculateDutyDays(emp.vtsHistory);
+                }
+            });
+            
             filteredEmployees = [...employees];
             currentPage = 1;
             renderEmployeeTable();
@@ -1987,11 +1999,6 @@
             }
         }
 
-        // 计算值班时间
-        function calculateDutyHours(dutyHistory) {
-            return dutyHistory ? dutyHistory.length * 24 : 0;
-        }
-
         // 获取身份颜色
         function getRoleColor(role) {
             switch(role) {
@@ -2028,7 +2035,7 @@
             const pageEmployees = filteredEmployees.slice(startIndex, endIndex);
             
             pageEmployees.forEach(emp => {
-                const dutyHours = emp.dutyHours || calculateDutyHours(emp.dutyHistory);
+                const dutyDays = emp.dutyDays || calculateDutyDays(emp.vtsHistory);
                 const certCount = emp.certificates ? emp.certificates.length : 0;
                 const vtsHistoryCount = emp.vtsHistory ? emp.vtsHistory.length : 0;
                 
@@ -2094,7 +2101,7 @@
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
                         <div class="text-xs md:text-sm text-gray-900">${vtsHistoryCount}条履历</div>
-                        <div class="text-xs text-gray-500">${dutyHours}小时值班</div>
+                        <div class="text-xs text-gray-500">${dutyDays}天经历</div>
                         <button onclick="showDutyHistory(${emp.id})" 
                                 class="text-blue-600 hover:text-blue-900 text-xs focus:outline-none focus:underline"
                                 aria-label="查看 ${emp.name} 的履历详情">
@@ -2209,7 +2216,7 @@
                 onDutyCount: employees.filter(emp => emp.workStatus === 'VTS在岗').length,
                 supervisorCount: employees.filter(emp => emp.role === '值班长').length,
                 certifiedCount: employees.filter(emp => emp.certificates && emp.certificates.length > 0).length,
-                monthlyDutyHours: employees.reduce((sum, emp) => sum + (emp.dutyHours || 0), 0)
+                monthlyDutyDays: employees.reduce((sum, emp) => sum + (emp.dutyDays || calculateDutyDays(emp.vtsHistory)), 0)
             };
 
             Object.entries(elements).forEach(([id, value]) => {
@@ -2291,9 +2298,9 @@
             const employee = employees.find(emp => emp.id === id);
             if (!employee) return;
             
-            const dutyHours = employee.dutyHours || 0;
-            const dutyCount = employee.dutyHistory ? employee.dutyHistory.length : 0;
-            const avgDutyPerMonth = dutyCount > 0 ? Math.round((dutyHours / 12) * 10) / 10 : 0;
+            const dutyDays = employee.dutyDays || calculateDutyDays(employee.vtsHistory);
+            const vtsHistoryCount = employee.vtsHistory ? employee.vtsHistory.length : 0;
+            const avgDaysPerPeriod = vtsHistoryCount > 0 ? Math.round((dutyDays / vtsHistoryCount) * 10) / 10 : 0;
             const currentAge = employee.birthDate ? calculateAgeFromBirthDate(employee.birthDate) : 'N/A';
             
             // 显示员工照片或默认头像
@@ -2303,19 +2310,26 @@
             
             // VTS履历展示
             const vtsHistoryDisplay = employee.vtsHistory && employee.vtsHistory.length > 0 ? 
-                employee.vtsHistory.map(history => `
-                    <div class="bg-gray-50 p-3 rounded-lg mb-2">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="font-medium text-gray-900">${history.position}</div>
-                                <div class="text-sm text-gray-600">${history.location}</div>
-                            </div>
-                            <div class="text-sm text-gray-500">
-                                ${history.startDate} - ${history.endDate || '至今'}
+                employee.vtsHistory.map(history => {
+                    const startDate = history.startDate ? new Date(history.startDate) : null;
+                    const endDate = history.endDate ? new Date(history.endDate) : new Date();
+                    const days = startDate ? Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) : 0;
+                    
+                    return `
+                        <div class="bg-gray-50 p-3 rounded-lg mb-2">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-medium text-gray-900">${history.position}</div>
+                                    <div class="text-sm text-gray-600">${history.location}</div>
+                                    <div class="text-xs text-blue-600 mt-1">${days > 0 ? days + '天' : ''}</div>
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    ${history.startDate} - ${history.endDate || '至今'}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('') : '<div class="text-sm text-gray-400 italic">暂无VTS履历记录</div>';
+                    `;
+                }).join('') : '<div class="text-sm text-gray-400 italic">暂无VTS履历记录</div>';
 
             // 培训记录展示
             const trainingDisplay = employee.trainingRecords && employee.trainingRecords.length > 0 ? 
@@ -2432,26 +2446,26 @@
                             ${trainingDisplay}
                         </div>
 
-                        <!-- 值班统计 -->
+                        <!-- 履历统计 -->
                         <div>
-                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">值班统计</h4>
+                            <h4 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2 mb-4">履历统计</h4>
                             <div class="grid grid-cols-3 gap-4 mb-4">
                                 <div class="bg-blue-50 p-4 rounded-lg text-center">
-                                    <div class="text-2xl font-bold text-blue-900">${dutyCount}</div>
-                                    <div class="text-sm text-blue-600">总值班次数</div>
+                                    <div class="text-2xl font-bold text-blue-900">${vtsHistoryCount}</div>
+                                    <div class="text-sm text-blue-600">履历阶段数</div>
                                 </div>
                                 <div class="bg-green-50 p-4 rounded-lg text-center">
-                                    <div class="text-2xl font-bold text-green-900">${dutyHours}</div>
-                                    <div class="text-sm text-green-600">总值班时间(小时)</div>
+                                    <div class="text-2xl font-bold text-green-900">${dutyDays}</div>
+                                    <div class="text-sm text-green-600">累计天数</div>
                                 </div>
                                 <div class="bg-orange-50 p-4 rounded-lg text-center">
-                                    <div class="text-2xl font-bold text-orange-900">${avgDutyPerMonth}</div>
-                                    <div class="text-sm text-orange-600">平均月值班(小时)</div>
+                                    <div class="text-2xl font-bold text-orange-900">${avgDaysPerPeriod}</div>
+                                    <div class="text-sm text-orange-600">平均每阶段(天)</div>
                                 </div>
                             </div>
                             <button onclick="hideViewModal(); showDutyHistory(${employee.id})" 
                                     class="w-full bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                                查看详细值班历史
+                                查看详细VTS履历
                             </button>
                         </div>
 
@@ -2703,7 +2717,8 @@
                 certificates: certificates,
                 phone: phone,
                 email: email,
-                performance: document.getElementById('editPerformance').value.trim()
+                performance: document.getElementById('editPerformance').value.trim(),
+                dutyDays: calculateDutyDays(vtsHistory) // 重新计算履历天数
             };
             
             updateEmployeesByOrganization();
@@ -2742,82 +2757,75 @@
             }
         }
 
-        // 显示值班历史
+        // 显示VTS履历详情
         function showDutyHistory(id) {
             const employee = employees.find(emp => emp.id === id);
             if (!employee) return;
             
             const isAdmin = currentUser && currentUser.userType === 'admin';
+            const dutyDays = employee.dutyDays || calculateDutyDays(employee.vtsHistory);
+            const vtsHistoryCount = employee.vtsHistory ? employee.vtsHistory.length : 0;
+            
             const dutyHistoryContent = `
                 <div class="space-y-4">
                     <div class="flex justify-between items-center">
-                        <h4 class="text-lg font-medium">${employee.name} 的履历详情</h4>
-                        ${isAdmin ? `<button onclick="addNewDutyRecord(${id})" 
+                        <h4 class="text-lg font-medium">${employee.name} 的VTS履历详情</h4>
+                        ${isAdmin ? `<button onclick="addNewVTSRecord(${id})" 
                                              class="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                            添加值班记录
+                            添加VTS履历
                         </button>` : ''}
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-gray-50 p-4 rounded-lg">
-                            <h5 class="font-medium text-gray-900 mb-2">值班统计</h5>
+                            <h5 class="font-medium text-gray-900 mb-2">履历统计</h5>
                             <div class="space-y-1 text-sm">
-                                <div>总值班次数: <span class="font-medium">${employee.dutyHistory ? employee.dutyHistory.length : 0}</span></div>
-                                <div>总值班时间: <span class="font-medium">${employee.dutyHours || 0}小时</span></div>
-                                <div>平均每月: <span class="font-medium">${Math.round((employee.dutyHours || 0) / 12 * 10) / 10}小时</span></div>
+                                <div>履历阶段: <span class="font-medium">${vtsHistoryCount}</span></div>
+                                <div>累计天数: <span class="font-medium">${dutyDays}天</span></div>
+                                <div>平均每阶段: <span class="font-medium">${vtsHistoryCount > 0 ? Math.round((dutyDays / vtsHistoryCount) * 10) / 10 : 0}天</span></div>
                             </div>
                         </div>
                         
                         <div class="bg-blue-50 p-4 rounded-lg">
-                            <h5 class="font-medium text-blue-900 mb-2">最近值班</h5>
-                            ${employee.dutyHistory && employee.dutyHistory.length > 0 ? 
-                                `<div class="text-sm text-blue-800">${employee.dutyHistory[employee.dutyHistory.length - 1]}</div>` :
-                                '<div class="text-sm text-blue-600">暂无值班记录</div>'
-                            }
+                            <h5 class="font-medium text-blue-900 mb-2">当前状态</h5>
+                            <div class="text-sm text-blue-800">
+                                <div>职务: ${employee.role}</div>
+                                <div>状态: ${employee.workStatus}</div>
+                                <div>单位: ${employee.unit}</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- VTS履历部分 -->
+                    <!-- VTS履历列表 -->
                     <div>
-                        <h5 class="font-medium text-gray-900 mb-3">VTS履历</h5>
+                        <h5 class="font-medium text-gray-900 mb-3">VTS履历记录</h5>
                         <div class="max-h-64 overflow-y-auto border rounded-lg">
                             ${employee.vtsHistory && employee.vtsHistory.length > 0 ? 
-                                employee.vtsHistory.map((history, index) => `
-                                    <div class="p-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <div class="font-medium text-gray-900">${history.position}</div>
-                                                <div class="text-sm text-gray-600">${history.location}</div>
-                                                <div class="text-sm text-gray-500">
-                                                    ${history.startDate} - ${history.endDate || '至今'}
+                                employee.vtsHistory.map((history, index) => {
+                                    const startDate = history.startDate ? new Date(history.startDate) : null;
+                                    const endDate = history.endDate ? new Date(history.endDate) : new Date();
+                                    const days = startDate ? Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) : 0;
+                                    
+                                    return `
+                                        <div class="p-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
+                                            <div class="flex justify-between items-start">
+                                                <div>
+                                                    <div class="font-medium text-gray-900">${history.position}</div>
+                                                    <div class="text-sm text-gray-600">${history.location}</div>
+                                                    <div class="text-sm text-gray-500">
+                                                        ${history.startDate} - ${history.endDate || '至今'}
+                                                    </div>
+                                                    <div class="text-xs text-blue-600 mt-1">${days > 0 ? days + '天' : ''}</div>
                                                 </div>
+                                                ${isAdmin ? `<button onclick="removeVTSRecord(${id}, ${index})" 
+                                                                     class="text-red-600 hover:text-red-900 focus:outline-none focus:underline text-sm">
+                                                    删除
+                                                </button>` : ''}
                                             </div>
                                         </div>
-                                    </div>
-                                `).join('') :
+                                    `;
+                                }).join('') :
                                 '<div class="p-8 text-center text-gray-500">暂无VTS履历记录</div>'
-                            }
-                        </div>
-                    </div>
-                    
-                    <!-- 值班记录部分 -->
-                    <div>
-                        <h5 class="font-medium text-gray-900 mb-3">值班记录</h5>
-                        <div class="max-h-64 overflow-y-auto border rounded-lg">
-                            ${employee.dutyHistory && employee.dutyHistory.length > 0 ? 
-                                employee.dutyHistory.map((date, index) => `
-                                    <div class="flex justify-between items-center p-3 border-b last:border-b-0 hover:bg-gray-50 transition-colors">
-                                        <div>
-                                            <div class="font-medium">${date}</div>
-                                            <div class="text-sm text-gray-500">第${index + 1}次值班 - 24小时</div>
-                                        </div>
-                                        ${isAdmin ? `<button onclick="removeDutyRecord(${id}, ${index})" 
-                                                             class="text-red-600 hover:text-red-900 focus:outline-none focus:underline text-sm">
-                                            删除
-                                        </button>` : ''}
-                                    </div>
-                                `).join('') :
-                                '<div class="p-8 text-center text-gray-500">暂无值班记录</div>'
                             }
                         </div>
                     </div>
@@ -2832,43 +2840,73 @@
             document.getElementById('dutyHistoryModal').classList.remove('show');
         }
 
-        // 添加值班记录
-        function addNewDutyRecord(id) {
-            const date = prompt('请输入值班日期 (格式: YYYY-MM-DD):');
-            if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-                const empIndex = employees.findIndex(emp => emp.id === id);
-                if (empIndex !== -1) {
-                    if (!employees[empIndex].dutyHistory) {
-                        employees[empIndex].dutyHistory = [];
-                    }
-                    employees[empIndex].dutyHistory.push(date);
-                    employees[empIndex].dutyHistory.sort();
-                    employees[empIndex].dutyHours = calculateDutyHours(employees[empIndex].dutyHistory);
-                    
-                    updateEmployeesByOrganization();
-                    showDutyHistory(id);
-                    renderEmployeeTable();
-                    updateStats();
-                    showToast('值班记录添加成功！', 'success');
+        // 添加新的VTS履历记录
+        function addNewVTSRecord(id) {
+            const startDate = prompt('请输入开始日期 (格式: YYYY-MM-DD):');
+            if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+                if (startDate) showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
+            }
+
+            const endDate = prompt('请输入结束日期 (格式: YYYY-MM-DD，或留空表示至今):');
+            if (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+                showToast('结束日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
+            }
+
+            const position = prompt('请输入职务:\n1. 见习\n2. 值班员\n3. 值班长');
+            if (!position || !['见习', '值班员', '值班长'].includes(position)) {
+                if (position) showToast('职务输入不正确，请输入：见习、值班员或值班长', 'error');
+                return;
+            }
+
+            const location = prompt('请输入工作地点:');
+            if (!location) {
+                showToast('工作地点不能为空', 'error');
+                return;
+            }
+
+            const empIndex = employees.findIndex(emp => emp.id === id);
+            if (empIndex !== -1) {
+                if (!employees[empIndex].vtsHistory) {
+                    employees[empIndex].vtsHistory = [];
                 }
-            } else if (date) {
-                showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                
+                employees[empIndex].vtsHistory.push({
+                    startDate: startDate,
+                    endDate: endDate || '',
+                    position: position,
+                    location: location
+                });
+                
+                // 按开始日期排序
+                employees[empIndex].vtsHistory.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                
+                // 重新计算履历天数
+                employees[empIndex].dutyDays = calculateDutyDays(employees[empIndex].vtsHistory);
+                
+                updateEmployeesByOrganization();
+                showDutyHistory(id);
+                renderEmployeeTable();
+                updateStats();
+                showToast('VTS履历添加成功！', 'success');
             }
         }
 
-        // 删除值班记录
-        function removeDutyRecord(id, index) {
-            if (confirm('确定要删除这条值班记录吗？')) {
+        // 删除VTS履历记录
+        function removeVTSRecord(id, index) {
+            if (confirm('确定要删除这条VTS履历记录吗？')) {
                 const empIndex = employees.findIndex(emp => emp.id === id);
-                if (empIndex !== -1 && employees[empIndex].dutyHistory) {
-                    employees[empIndex].dutyHistory.splice(index, 1);
-                    employees[empIndex].dutyHours = calculateDutyHours(employees[empIndex].dutyHistory);
+                if (empIndex !== -1 && employees[empIndex].vtsHistory) {
+                    employees[empIndex].vtsHistory.splice(index, 1);
+                    // 重新计算履历天数
+                    employees[empIndex].dutyDays = calculateDutyDays(employees[empIndex].vtsHistory);
                     
                     updateEmployeesByOrganization();
                     showDutyHistory(id);
                     renderEmployeeTable();
                     updateStats();
-                    showToast('值班记录删除成功！', 'success');
+                    showToast('VTS履历记录删除成功！', 'success');
                 }
             }
         }
@@ -3017,8 +3055,7 @@
                 photo: photo,
                 vtsHistory: vtsHistory,
                 trainingRecords: trainingRecords,
-                dutyHistory: [],
-                dutyHours: 0,
+                dutyDays: calculateDutyDays(vtsHistory), // 计算履历天数
                 performance: document.getElementById('newPerformance').value.trim()
             };
             
@@ -3183,35 +3220,64 @@
             hideBulkModal();
         }
 
-        function addDutyRecord() {
+        function addVTSRecord() {
             const selectedIds = getSelectedEmployees();
             if (selectedIds.length === 0) {
                 showToast('请先选择员工', 'error');
                 return;
             }
             
-            const date = prompt('请输入值班日期 (格式: YYYY-MM-DD):');
-            if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-                selectedIds.forEach(id => {
-                    const empIndex = employees.findIndex(emp => emp.id === id);
-                    if (empIndex !== -1) {
-                        if (!employees[empIndex].dutyHistory) {
-                            employees[empIndex].dutyHistory = [];
-                        }
-                        employees[empIndex].dutyHistory.push(date);
-                        employees[empIndex].dutyHistory.sort();
-                        employees[empIndex].dutyHours = calculateDutyHours(employees[empIndex].dutyHistory);
-                    }
-                });
-                
-                updateEmployeesByOrganization();
-                renderEmployeeTable();
-                updateStats();
-                hideBulkModal();
-                showToast(`已为 ${selectedIds.length} 名员工添加值班记录`, 'success');
-            } else if (date) {
-                showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+            const startDate = prompt('请输入开始日期 (格式: YYYY-MM-DD):');
+            if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+                if (startDate) showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
             }
+
+            const endDate = prompt('请输入结束日期 (格式: YYYY-MM-DD，或留空表示至今):');
+            if (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+                showToast('结束日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
+            }
+
+            const position = prompt('请输入职务:\n1. 见习\n2. 值班员\n3. 值班长');
+            if (!position || !['见习', '值班员', '值班长'].includes(position)) {
+                if (position) showToast('职务输入不正确，请输入：见习、值班员或值班长', 'error');
+                return;
+            }
+
+            const location = prompt('请输入工作地点:');
+            if (!location) {
+                showToast('工作地点不能为空', 'error');
+                return;
+            }
+
+            selectedIds.forEach(id => {
+                const empIndex = employees.findIndex(emp => emp.id === id);
+                if (empIndex !== -1) {
+                    if (!employees[empIndex].vtsHistory) {
+                        employees[empIndex].vtsHistory = [];
+                    }
+                    
+                    employees[empIndex].vtsHistory.push({
+                        startDate: startDate,
+                        endDate: endDate || '',
+                        position: position,
+                        location: location
+                    });
+                    
+                    // 按开始日期排序
+                    employees[empIndex].vtsHistory.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                    
+                    // 重新计算履历天数
+                    employees[empIndex].dutyDays = calculateDutyDays(employees[empIndex].vtsHistory);
+                }
+            });
+            
+            updateEmployeesByOrganization();
+            renderEmployeeTable();
+            updateStats();
+            hideBulkModal();
+            showToast(`已为 ${selectedIds.length} 名员工添加VTS履历`, 'success');
         }
 
         function toggleSelectAll() {
@@ -3232,7 +3298,7 @@
         }
 
         function exportEmployeesToCSV(employeeData, filename) {
-            const headers = ['姓名', '性别', '年龄', '单位', '身份', '工作状态', '证书', '学历', '毕业院校', '专业', '入职日期', '涉海经历', '电话', '邮箱', '工作绩效'];
+            const headers = ['姓名', '性别', '年龄', '单位', '身份', '工作状态', '证书', '学历', '毕业院校', '专业', '入职日期', '涉海经历', '电话', '邮箱', 'VTS履历天数', '工作绩效'];
             const csvData = employeeData.map(emp => [
                 emp.name, 
                 emp.gender, 
@@ -3248,6 +3314,7 @@
                 emp.maritimeExperience || '',
                 emp.phone || '',
                 emp.email || '',
+                emp.dutyDays || calculateDutyDays(emp.vtsHistory),
                 emp.performance || ''
             ]);
             
@@ -3280,7 +3347,7 @@
         }
 
         /*********************
-         * 值班日历功能
+         * 履历日历功能
          *********************/
         
         function showDutySchedule() {
@@ -3304,21 +3371,34 @@
         function initializeCalendar() {
             const calendarEl = document.getElementById('calendar');
             
-            const events = employees.flatMap(emp => 
-                (emp.dutyHistory || []).map(date => ({
-                    title: `${emp.name} (${emp.role})`,
-                    start: date,
-                    allDay: true,
-                    backgroundColor: emp.role === '值班长' ? '#ef4444' : '#3b82f6',
-                    borderColor: emp.role === '值班长' ? '#dc2626' : '#2563eb',
-                    extendedProps: {
-                        employeeId: emp.id,
-                        employeeName: emp.name,
-                        role: emp.role,
-                        unit: emp.unit
-                    }
-                }))
-            );
+            // 基于VTS履历生成日历事件
+            const events = employees.flatMap(emp => {
+                if (!emp.vtsHistory || emp.vtsHistory.length === 0) return [];
+                
+                return emp.vtsHistory.map(history => {
+                    if (!history.startDate) return null;
+                    
+                    const startDate = history.startDate;
+                    const endDate = history.endDate || new Date().toISOString().split('T')[0];
+                    
+                    return {
+                        title: `${emp.name} - ${history.position}`,
+                        start: startDate,
+                        end: endDate,
+                        backgroundColor: emp.role === '值班长' ? '#ef4444' : '#3b82f6',
+                        borderColor: emp.role === '值班长' ? '#dc2626' : '#2563eb',
+                        extendedProps: {
+                            employeeId: emp.id,
+                            employeeName: emp.name,
+                            role: emp.role,
+                            unit: emp.unit,
+                            position: history.position,
+                            location: history.location,
+                            historyIndex: emp.vtsHistory.indexOf(history)
+                        }
+                    };
+                }).filter(event => event !== null);
+            });
             
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -3342,79 +3422,55 @@
                 
                 dateClick: function(info) {
                     if (currentUser && currentUser.userType === 'admin') {
-                        const employeeName = prompt('请输入值班员工姓名:');
-                        if (employeeName) {
-                            const employee = employees.find(emp => emp.name === employeeName);
-                            if (employee) {
-                                if (!employee.dutyHistory) {
-                                    employee.dutyHistory = [];
-                                }
-                                if (!employee.dutyHistory.includes(info.dateStr)) {
-                                    employee.dutyHistory.push(info.dateStr);
-                                    employee.dutyHistory.sort();
-                                    employee.dutyHours = calculateDutyHours(employee.dutyHistory);
-                                    
-                                    calendar.addEvent({
-                                        title: `${employee.name} (${employee.role})`,
-                                        start: info.dateStr,
-                                        allDay: true,
-                                        backgroundColor: employee.role === '值班长' ? '#ef4444' : '#3b82f6',
-                                        borderColor: employee.role === '值班长' ? '#dc2626' : '#2563eb'
-                                    });
-                                    
-                                    updateEmployeesByOrganization();
-                                    renderEmployeeTable();
-                                    updateStats();
-                                    showToast('值班安排添加成功！', 'success');
-                                } else {
-                                    showToast('该员工在此日期已有值班安排', 'error');
-                                }
-                            } else {
-                                showToast('未找到该员工', 'error');
-                            }
+                        const employeeName = prompt('请输入员工姓名:');
+                        if (!employeeName) return;
+                        
+                        const employee = employees.find(emp => emp.name === employeeName);
+                        if (!employee) {
+                            showToast('未找到该员工', 'error');
+                            return;
                         }
+                        
+                        const position = prompt('请输入职务:\n1. 见习\n2. 值班员\n3. 值班长');
+                        if (!position || !['见习', '值班员', '值班长'].includes(position)) {
+                            if (position) showToast('职务输入不正确', 'error');
+                            return;
+                        }
+                        
+                        const location = prompt('请输入工作地点:');
+                        if (!location) return;
+                        
+                        if (!employee.vtsHistory) {
+                            employee.vtsHistory = [];
+                        }
+                        
+                        employee.vtsHistory.push({
+                            startDate: info.dateStr,
+                            endDate: '',
+                            position: position,
+                            location: location
+                        });
+                        
+                        // 重新计算履历天数
+                        employee.dutyDays = calculateDutyDays(employee.vtsHistory);
+                        
+                        // 重新初始化日历以显示新事件
+                        calendar.destroy();
+                        initializeCalendar();
+                        
+                        updateEmployeesByOrganization();
+                        renderEmployeeTable();
+                        updateStats();
+                        showToast('VTS履历添加成功！', 'success');
                     }
                 },
                 
                 eventClick: function(info) {
                     const props = info.event.extendedProps;
-                    if (confirm(`${props.employeeName} (${props.role})\n${props.unit}\n\n是否删除此值班安排？`)) {
+                    if (confirm(`${props.employeeName} - ${props.position}\n${props.location}\n\n是否删除此VTS履历？`)) {
                         if (currentUser && currentUser.userType === 'admin') {
-                            const employee = employees.find(emp => emp.id === props.employeeId);
-                            if (employee && employee.dutyHistory) {
-                                const dateIndex = employee.dutyHistory.indexOf(info.event.startStr);
-                                if (dateIndex > -1) {
-                                    employee.dutyHistory.splice(dateIndex, 1);
-                                    employee.dutyHours = calculateDutyHours(employee.dutyHistory);
-                                    info.event.remove();
-                                    
-                                    updateEmployeesByOrganization();
-                                    renderEmployeeTable();
-                                    updateStats();
-                                    showToast('值班安排删除成功！', 'success');
-                                }
-                            }
-                        }
-                    }
-                },
-                
-                eventDrop: function(info) {
-                    if (currentUser && currentUser.userType === 'admin') {
-                        const props = info.event.extendedProps;
-                        const employee = employees.find(emp => emp.id === props.employeeId);
-                        if (employee && employee.dutyHistory) {
-                            const oldDate = info.oldEvent.startStr;
-                            const newDate = info.event.startStr;
-                            
-                            const dateIndex = employee.dutyHistory.indexOf(oldDate);
-                            if (dateIndex > -1) {
-                                employee.dutyHistory[dateIndex] = newDate;
-                                employee.dutyHistory.sort();
-                                
-                                updateEmployeesByOrganization();
-                                renderEmployeeTable();
-                                showToast('值班安排更新成功！', 'success');
-                            }
+                            removeVTSRecord(props.employeeId, props.historyIndex);
+                            info.event.remove();
                         }
                     }
                 }
@@ -3424,7 +3480,7 @@
         }
 
         /*********************
-         * 值班分析功能
+         * 履历分析功能
          *********************/
         
         function showDutyAnalysis() {
@@ -3439,8 +3495,8 @@
         function generateDutyAnalysis() {
             const totalEmployees = employees.length;
             const vtsOnDutyEmployees = employees.filter(emp => emp.workStatus === 'VTS在岗');
-            const totalDutyHours = employees.reduce((sum, emp) => sum + (emp.dutyHours || 0), 0);
-            const avgDutyHours = totalEmployees > 0 ? Math.round((totalDutyHours / totalEmployees) * 10) / 10 : 0;
+            const totalDutyDays = employees.reduce((sum, emp) => sum + (emp.dutyDays || calculateDutyDays(emp.vtsHistory)), 0);
+            const avgDutyDays = totalEmployees > 0 ? Math.round((totalDutyDays / totalEmployees) * 10) / 10 : 0;
 
             // 按单位统计
             const unitStats = {};
@@ -3449,34 +3505,34 @@
                     unitStats[emp.unit] = {
                         total: 0,
                         vtsOnDuty: 0,
-                        dutyHours: 0,
+                        dutyDays: 0,
                         supervisors: 0
                     };
                 }
                 unitStats[emp.unit].total++;
                 if (emp.workStatus === 'VTS在岗') unitStats[emp.unit].vtsOnDuty++;
                 if (emp.role === '值班长') unitStats[emp.unit].supervisors++;
-                unitStats[emp.unit].dutyHours += emp.dutyHours || 0;
+                unitStats[emp.unit].dutyDays += emp.dutyDays || calculateDutyDays(emp.vtsHistory);
             });
 
             // 按身份统计
             const roleStats = {};
             employees.forEach(emp => {
                 if (!roleStats[emp.role]) {
-                    roleStats[emp.role] = { count: 0, dutyHours: 0 };
+                    roleStats[emp.role] = { count: 0, dutyDays: 0 };
                 }
                 roleStats[emp.role].count++;
-                roleStats[emp.role].dutyHours += emp.dutyHours || 0;
+                roleStats[emp.role].dutyDays += emp.dutyDays || calculateDutyDays(emp.vtsHistory);
             });
 
             // 按工作状态统计
             const statusStats = {};
             employees.forEach(emp => {
                 if (!statusStats[emp.workStatus]) {
-                    statusStats[emp.workStatus] = { count: 0, dutyHours: 0 };
+                    statusStats[emp.workStatus] = { count: 0, dutyDays: 0 };
                 }
                 statusStats[emp.workStatus].count++;
-                statusStats[emp.workStatus].dutyHours += emp.dutyHours || 0;
+                statusStats[emp.workStatus].dutyDays += emp.dutyDays || calculateDutyDays(emp.vtsHistory);
             });
 
             // 证书持有情况
@@ -3489,14 +3545,14 @@
                 }
             });
 
-            // 值班时长分析
+            // 履历天数分析
             const dutyRanges = {
-                high: employees.filter(emp => (emp.dutyHours || 0) > 80).length,
+                high: employees.filter(emp => (emp.dutyDays || calculateDutyDays(emp.vtsHistory)) > 1800).length, // 5年以上
                 medium: employees.filter(emp => {
-                    const hours = emp.dutyHours || 0;
-                    return hours >= 40 && hours <= 80;
+                    const days = emp.dutyDays || calculateDutyDays(emp.vtsHistory);
+                    return days >= 730 && days <= 1800; // 2-5年
                 }).length,
-                low: employees.filter(emp => (emp.dutyHours || 0) < 40).length
+                low: employees.filter(emp => (emp.dutyDays || calculateDutyDays(emp.vtsHistory)) < 730).length // 2年以下
             };
 
             const analysisContent = `
@@ -3509,7 +3565,7 @@
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0">
                                         <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                         </svg>
                                     </div>
                                     <div class="ml-4">
@@ -3540,9 +3596,9 @@
                                         </svg>
                                     </div>
                                     <div class="ml-4">
-                                        <h4 class="font-semibold text-purple-800">总值班时间</h4>
-                                        <p class="text-3xl font-bold text-purple-600">${totalDutyHours}</p>
-                                        <p class="text-sm text-purple-600">小时</p>
+                                        <h4 class="font-semibold text-purple-800">累计履历</h4>
+                                        <p class="text-3xl font-bold text-purple-600">${totalDutyDays}</p>
+                                        <p class="text-sm text-purple-600">天</p>
                                     </div>
                                 </div>
                             </div>
@@ -3554,9 +3610,9 @@
                                         </svg>
                                     </div>
                                     <div class="ml-4">
-                                        <h4 class="font-semibold text-orange-800">人均值班</h4>
-                                        <p class="text-3xl font-bold text-orange-600">${avgDutyHours}</p>
-                                        <p class="text-sm text-orange-600">小时/人</p>
+                                        <h4 class="font-semibold text-orange-800">人均履历</h4>
+                                        <p class="text-3xl font-bold text-orange-600">${avgDutyDays}</p>
+                                        <p class="text-sm text-orange-600">天/人</p>
                                     </div>
                                 </div>
                             </div>
@@ -3579,7 +3635,7 @@
                                                 <div>总数: ${stats.total}</div>
                                                 <div>VTS: ${stats.vtsOnDuty}</div>
                                                 <div>值班长: ${stats.supervisors}</div>
-                                                <div>值班: ${stats.dutyHours}h</div>
+                                                <div>履历: ${stats.dutyDays}天</div>
                                             </div>
                                             <div class="w-full bg-gray-200 rounded-full h-2">
                                                 <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: ${(stats.vtsOnDuty / stats.total) * 100}%"></div>
@@ -3595,7 +3651,7 @@
                             <h4 class="text-lg font-semibold text-gray-900 mb-4">工作状态分布</h4>
                             <div class="space-y-3">
                                 ${Object.entries(statusStats).map(([status, stats]) => {
-                                    const avgHours = stats.count > 0 ? Math.round((stats.dutyHours / stats.count) * 10) / 10 : 0;
+                                    const avgDays = stats.count > 0 ? Math.round((stats.dutyDays / stats.count) * 10) / 10 : 0;
                                     const colorClass = getWorkStatusColor(status);
                                     return `
                                         <div class="p-4 border rounded-lg ${colorClass.replace('text-', 'border-').replace('100', '200').replace('800', '50')}">
@@ -3604,8 +3660,8 @@
                                                 <span class="text-sm text-gray-600">${stats.count}人</span>
                                             </div>
                                             <div class="flex justify-between text-sm text-gray-600">
-                                                <span>总值班: ${stats.dutyHours}小时</span>
-                                                <span>人均: ${avgHours}小时</span>
+                                                <span>总履历: ${stats.dutyDays}天</span>
+                                                <span>人均: ${avgDays}天</span>
                                             </div>
                                         </div>
                                     `;
@@ -3617,10 +3673,10 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- 身份分布与效率 -->
                         <div>
-                            <h4 class="text-lg font-semibold text-gray-900 mb-4">身份分布与效率</h4>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-4">身份分布与履历</h4>
                             <div class="space-y-3">
                                 ${Object.entries(roleStats).map(([role, stats]) => {
-                                    const avgHours = stats.count > 0 ? Math.round((stats.dutyHours / stats.count) * 10) / 10 : 0;
+                                    const avgDays = stats.count > 0 ? Math.round((stats.dutyDays / stats.count) * 10) / 10 : 0;
                                     const colorClass = role === '值班长' ? 'bg-red-50 border-red-200' : 
                                                      role === '值班员' ? 'bg-blue-50 border-blue-200' :
                                                      role === '见习' ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200';
@@ -3631,8 +3687,8 @@
                                                 <span class="text-sm text-gray-600">${stats.count}人</span>
                                             </div>
                                             <div class="flex justify-between text-sm text-gray-600">
-                                                <span>总值班: ${stats.dutyHours}小时</span>
-                                                <span>人均: ${avgHours}小时</span>
+                                                <span>总履历: ${stats.dutyDays}天</span>
+                                                <span>人均: ${avgDays}天</span>
                                             </div>
                                         </div>
                                     `;
@@ -3660,15 +3716,15 @@
                         </div>
                     </div>
 
-                    <!-- 值班效率分析 -->
+                    <!-- VTS履历经验分析 -->
                     <div>
-                        <h4 class="text-lg font-semibold text-gray-900 mb-4">值班效率分析</h4>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">VTS履历经验分析</h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h5 class="font-medium text-green-800">高效员工 (>80小时)</h5>
-                                        <p class="text-sm text-green-600">表现优秀，值班时间充足</p>
+                                        <h5 class="font-medium text-green-800">资深员工 (>5年)</h5>
+                                        <p class="text-sm text-green-600">经验丰富，技能熟练</p>
                                     </div>
                                     <div class="text-3xl font-bold text-green-600">${dutyRanges.high}</div>
                                 </div>
@@ -3676,8 +3732,8 @@
                             <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h5 class="font-medium text-yellow-800">中等员工 (40-80小时)</h5>
-                                        <p class="text-sm text-yellow-600">值班时间适中，有提升空间</p>
+                                        <h5 class="font-medium text-yellow-800">中级员工 (2-5年)</h5>
+                                        <p class="text-sm text-yellow-600">具备基础经验，持续成长</p>
                                     </div>
                                     <div class="text-3xl font-bold text-yellow-600">${dutyRanges.medium}</div>
                                 </div>
@@ -3685,8 +3741,8 @@
                             <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <h5 class="font-medium text-red-800">待提升员工 (<40小时)</h5>
-                                        <p class="text-sm text-red-600">需要增加值班安排</p>
+                                        <h5 class="font-medium text-red-800">新进员工 (<2年)</h5>
+                                        <p class="text-sm text-red-600">需要更多培训和指导</p>
                                     </div>
                                     <div class="text-3xl font-bold text-red-600">${dutyRanges.low}</div>
                                 </div>
@@ -3717,10 +3773,10 @@
                                 <div class="flex items-start space-x-3">
                                     <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
                                     <div>
-                                        <h5 class="font-medium text-blue-900">值班强度</h5>
+                                        <h5 class="font-medium text-blue-900">履历经验</h5>
                                         <p class="text-sm text-blue-800">
-                                            人均值班时间: ${avgDutyHours}小时
-                                            ${avgDutyHours < 60 ? '，可适当增加值班安排' : avgDutyHours > 100 ? '，注意合理安排休息' : '，值班强度适中'}
+                                            人均履历天数: ${avgDutyDays}天
+                                            ${avgDutyDays < 1095 ? '，可加强人员培训' : avgDutyDays > 2555 ? '，团队经验丰富' : '，履历经验适中'}
                                         </p>
                                     </div>
                                 </div>
@@ -3741,7 +3797,7 @@
                                     <div>
                                         <h5 class="font-medium text-blue-900">改进建议</h5>
                                         <p class="text-sm text-blue-800">
-                                            重点关注值班时间较少的员工，加强培训和轮岗安排，优化资源配置，提升整体工作效率
+                                            重点培养新进员工VTS技能，加强资深员工与新员工的传帮带，优化人员配置，提升整体履历水平
                                         </p>
                                     </div>
                                 </div>
@@ -3835,6 +3891,15 @@
          *********************/
         
         document.addEventListener('DOMContentLoaded', function() {
+            // 确保所有员工都有履历天数
+            Object.values(employeesByOrganization).forEach(orgEmployees => {
+                orgEmployees.forEach(emp => {
+                    if (!emp.dutyDays) {
+                        emp.dutyDays = calculateDutyDays(emp.vtsHistory);
+                    }
+                });
+            });
+            
             initEventListeners();
             showPage('loginPage');
             
