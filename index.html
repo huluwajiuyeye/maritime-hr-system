@@ -66,7 +66,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* 主内容区域 - 移除多余的padding */
+        /* 主内容区域 */
         .main-content {
             padding-top: 0;
             min-height: calc(100vh - 200px);
@@ -158,6 +158,28 @@
         
         .vts-history-item:hover {
             background: #f3f4f6;
+        }
+        
+        /* 数据验证提示 */
+        .validation-error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+        
+        .validation-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* 改进的状态指示器 */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
         
         /* 响应式优化 */
@@ -277,24 +299,28 @@
                         <label for="regUsername" class="block text-sm font-medium text-gray-700 mb-1">用户名</label>
                         <input type="text" id="regUsername" required 
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div id="regUsernameError" class="validation-message hidden"></div>
                     </div>
                     
                     <div>
                         <label for="regPassword" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
                         <input type="password" id="regPassword" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div id="regPasswordError" class="validation-message hidden"></div>
                     </div>
                     
                     <div>
                         <label for="regPasswordConfirm" class="block text-sm font-medium text-gray-700 mb-1">确认密码</label>
                         <input type="password" id="regPasswordConfirm" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div id="regPasswordConfirmError" class="validation-message hidden"></div>
                     </div>
                     
                     <div>
                         <label for="regRealName" class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
                         <input type="text" id="regRealName" required
                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div id="regRealNameError" class="validation-message hidden"></div>
                     </div>
                     
                     <div>
@@ -467,7 +493,6 @@
                             <option value="VTS在岗">VTS在岗</option>
                             <option value="海事处">海事处</option>
                             <option value="机关">机关</option>
-                            <option value="在岗位">在岗位</option>
                         </select>
                         
                         <select id="certificateFilter" 
@@ -695,6 +720,7 @@
                                     <label for="newName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
                                     <input type="text" id="newName" required
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <div id="newNameError" class="validation-message hidden"></div>
                                 </div>
                                 <div>
                                     <label for="newGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
@@ -813,7 +839,6 @@
                                     <option value="VTS在岗">VTS在岗</option>
                                     <option value="海事处">海事处</option>
                                     <option value="机关">机关</option>
-                                    <option value="在岗位">在岗位</option>
                                 </select>
                             </div>
                             <div>
@@ -860,11 +885,13 @@
                                 <label for="newPhone" class="block text-sm font-medium text-gray-700 mb-1">电话</label>
                                 <input type="tel" id="newPhone" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <div id="newPhoneError" class="validation-message hidden"></div>
                             </div>
                             <div>
                                 <label for="newEmail" class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
                                 <input type="email" id="newEmail" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <div id="newEmailError" class="validation-message hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -949,6 +976,7 @@
                                     <label for="editName" class="block text-sm font-medium text-gray-700 mb-1">姓名 *</label>
                                     <input type="text" id="editName" required
                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <div id="editNameError" class="validation-message hidden"></div>
                                 </div>
                                 <div>
                                     <label for="editGender" class="block text-sm font-medium text-gray-700 mb-1">性别</label>
@@ -1067,7 +1095,6 @@
                                     <option value="VTS在岗">VTS在岗</option>
                                     <option value="海事处">海事处</option>
                                     <option value="机关">机关</option>
-                                    <option value="在岗位">在岗位</option>
                                 </select>
                             </div>
                             <div>
@@ -1114,11 +1141,13 @@
                                 <label for="editPhone" class="block text-sm font-medium text-gray-700 mb-1">电话</label>
                                 <input type="tel" id="editPhone" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <div id="editPhoneError" class="validation-message hidden"></div>
                             </div>
                             <div>
                                 <label for="editEmail" class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
                                 <input type="email" id="editEmail" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <div id="editEmailError" class="validation-message hidden"></div>
                             </div>
                         </div>
                     </div>
@@ -1272,7 +1301,7 @@
             }
         ];
 
-        // 员工数据按单位分组（更新后的数据结构）
+        // 员工数据按单位分组（优化后的数据结构）
         let employeesByOrganization = {
             '省厅': [
                 {
@@ -1343,133 +1372,13 @@
                     performance: '青岛港VTS操作员，工作认真负责，连续两年获得优秀员工称号。'
                 }
             ],
-            '烟台分局': [
-                {
-                    id: 5, name: '王强', gender: '男', birthDate: '1982-08-20',
-                    unit: '烟台海事局', role: '值班长', workStatus: 'VTS在岗',
-                    phone: '13800138003', email: 'wangqiang@yt.vts.msa.gov.cn',
-                    certificates: ['船长', '轮机长', '大副'], education: '研究生及以上',
-                    university: '大连海事大学', major: '交通运输工程', maritimeExperience: '15年海事工作，10年船舶服务经历',
-                    hireDate: '2009-06-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2009-06-01', endDate: '2015-05-31', position: '值班员', location: '烟台海事局'},
-                        {startDate: '2015-06-01', endDate: '', position: '值班长', location: '烟台海事局'}
-                    ],
-                    trainingRecords: [
-                        {startDate: '2019-10-01', endDate: '2019-10-15', course: 'VTS技术升级培训', institution: '交通部培训中心'}
-                    ],
-                    performance: '烟台港区技术专家，主导多项VTS技术改进项目，获得省级科技进步奖，发表技术论文5篇。'
-                },
-                {
-                    id: 6, name: '刘明', gender: '男', birthDate: '1994-05-10',
-                    unit: '烟台海事局', role: '值班员', workStatus: 'VTS在岗',
-                    phone: '13800138004', email: 'liuming@yt.vts.msa.gov.cn',
-                    certificates: ['二副', '三副'], education: '本科',
-                    university: '烟台大学', major: '船舶与海洋工程', maritimeExperience: '4年VTS工作经验',
-                    hireDate: '2020-09-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2020-09-01', endDate: '2022-08-31', position: '见习', location: '烟台海事局'},
-                        {startDate: '2022-09-01', endDate: '', position: '值班员', location: '烟台海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '烟台港VTS新秀，学习能力强，多次在培训中表现优异。'
-                }
-            ],
-            '威海分局': [
-                {
-                    id: 7, name: '陈明', gender: '男', birthDate: '1986-04-15',
-                    unit: '威海海事局', role: '值班长', workStatus: 'VTS在岗',
-                    phone: '13800138005', email: 'chenming@wh.vts.msa.gov.cn',
-                    certificates: ['船长', '大副'], education: '本科',
-                    university: '威海海洋职业学院', major: '航海技术', maritimeExperience: '12年海事工作经验',
-                    hireDate: '2012-05-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2012-05-01', endDate: '2017-04-30', position: '值班员', location: '威海海事局'},
-                        {startDate: '2017-05-01', endDate: '', position: '值班长', location: '威海海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '威海港区值班经验丰富，多次处理突发事件，获得上级表彰。'
-                }
-            ],
-            '日照分局': [
-                {
-                    id: 8, name: '孙丽', gender: '女', birthDate: '1992-09-10',
-                    unit: '日照海事局', role: '值班员', workStatus: 'VTS在岗',
-                    phone: '13800138006', email: 'sunli@rz.vts.msa.gov.cn',
-                    certificates: ['大副', '二副'], education: '本科',
-                    university: '山东交通学院', major: '海事管理', maritimeExperience: '7年VTS工作经验',
-                    hireDate: '2017-06-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2017-06-01', endDate: '2019-05-31', position: '见习', location: '日照海事局'},
-                        {startDate: '2019-06-01', endDate: '', position: '值班员', location: '日照海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '日照港VTS操作熟练，工作细致认真，多次获得月度优秀员工。'
-                }
-            ],
-            '东营分局': [
-                {
-                    id: 9, name: '赵勇', gender: '男', birthDate: '1995-03-20',
-                    unit: '东营海事局', role: '值班员', workStatus: 'VTS在岗',
-                    phone: '13800138007', email: 'zhaoyong@dy.vts.msa.gov.cn',
-                    certificates: ['二副', '三副'], education: '本科',
-                    university: '中国石油大学（华东）', major: '海洋工程', maritimeExperience: '3年VTS工作经验',
-                    hireDate: '2021-07-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2021-07-01', endDate: '2023-06-30', position: '见习', location: '东营海事局'},
-                        {startDate: '2023-07-01', endDate: '', position: '值班员', location: '东营海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '东营港新进员工，积极上进，适应能力强。'
-                }
-            ],
-            '潍坊分局': [
-                {
-                    id: 10, name: '马超', gender: '男', birthDate: '1988-07-12',
-                    unit: '潍坊海事局', role: '值班长', workStatus: 'VTS在岗',
-                    phone: '13800138008', email: 'machao@wf.vts.msa.gov.cn',
-                    certificates: ['船长', '大副', '轮机长'], education: '本科',
-                    university: '山东理工大学', major: '交通运输', maritimeExperience: '13年海事工作经验',
-                    hireDate: '2011-04-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2011-04-01', endDate: '2016-03-31', position: '值班员', location: '潍坊海事局'},
-                        {startDate: '2016-04-01', endDate: '', position: '值班长', location: '潍坊海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '潍坊港区技术骨干，多次参与重要设备维护和技术改进工作。'
-                }
-            ],
-            '董家口分局': [
-                {
-                    id: 11, name: '杨帆', gender: '男', birthDate: '1991-11-05',
-                    unit: '董家口海事局', role: '值班员', workStatus: 'VTS在岗',
-                    phone: '13800138009', email: 'yangfan@djk.vts.msa.gov.cn',
-                    certificates: ['大副', '二副'], education: '本科',
-                    university: '青岛理工大学', major: '港口航道与海岸工程', maritimeExperience: '6年VTS工作经验',
-                    hireDate: '2018-10-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2018-10-01', endDate: '2020-09-30', position: '见习', location: '董家口海事局'},
-                        {startDate: '2020-10-01', endDate: '', position: '值班员', location: '董家口海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '董家口港新兴港区业务熟练，适应能力强，多次协助处理复杂航行情况。'
-                }
-            ],
-            '滨州分局': [
-                {
-                    id: 12, name: '周静', gender: '女', birthDate: '1997-08-15',
-                    unit: '滨州海事局', role: '见习', workStatus: '在岗位',
-                    phone: '13800138010', email: 'zhoujing@bz.vts.msa.gov.cn',
-                    certificates: [], education: '大专',
-                    university: '滨州职业学院', major: '港口与航道工程', maritimeExperience: '2年实习经验',
-                    hireDate: '2022-08-01', photo: '',
-                    vtsHistory: [
-                        {startDate: '2022-08-01', endDate: '', position: '见习', location: '滨州海事局'}
-                    ],
-                    trainingRecords: [],
-                    performance: '滨州港实习生，表现优秀，学习态度认真，深受同事好评。'
-                }
-            ]
+            '烟台分局': [],
+            '威海分局': [],
+            '日照分局': [],
+            '东营分局': [],
+            '潍坊分局': [],
+            '董家口分局': [],
+            '滨州分局': []
         };
 
         let employees = [];
@@ -1482,9 +1391,107 @@
         const pageSize = 10;
 
         /*********************
-         * 工具函数
+         * 工具函数与验证
          *********************/
         
+        // 验证函数
+        function validateName(name) {
+            if (!name || name.trim().length < 2) {
+                return '姓名至少需要2个字符';
+            }
+            if (name.trim().length > 10) {
+                return '姓名不能超过10个字符';
+            }
+            if (!/^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(name.trim())) {
+                return '姓名只能包含中文、英文字母和空格';
+            }
+            return null;
+        }
+
+        function validatePhone(phone) {
+            if (!phone) return null;
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                return '请输入正确的手机号格式';
+            }
+            return null;
+        }
+
+        function validateEmail(email) {
+            if (!email) return null;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return '请输入正确的邮箱格式';
+            }
+            return null;
+        }
+
+        function validatePassword(password) {
+            if (!password || password.length < 6) {
+                return '密码长度不能少于6位';
+            }
+            if (password.length > 20) {
+                return '密码长度不能超过20位';
+            }
+            return null;
+        }
+
+        function validateUsername(username) {
+            if (!username || username.trim().length < 3) {
+                return '用户名至少需要3个字符';
+            }
+            if (username.trim().length > 20) {
+                return '用户名不能超过20个字符';
+            }
+            if (!/^[a-zA-Z0-9_]+$/.test(username.trim())) {
+                return '用户名只能包含字母、数字和下划线';
+            }
+            return null;
+        }
+
+        function showValidationError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(fieldId + 'Error');
+            
+            if (field && errorDiv) {
+                field.classList.add('validation-error');
+                errorDiv.textContent = message;
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function clearValidationError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorDiv = document.getElementById(fieldId + 'Error');
+            
+            if (field && errorDiv) {
+                field.classList.remove('validation-error');
+                errorDiv.classList.add('hidden');
+            }
+        }
+
+        function clearAllValidationErrors(prefix = '') {
+            const errorIds = [
+                prefix + 'NameError', 
+                prefix + 'PhoneError', 
+                prefix + 'EmailError',
+                prefix + 'PasswordError',
+                prefix + 'PasswordConfirmError',
+                prefix + 'UsernameError',
+                prefix + 'RealNameError'
+            ];
+            
+            errorIds.forEach(id => {
+                const errorDiv = document.getElementById(id);
+                if (errorDiv) {
+                    errorDiv.classList.add('hidden');
+                }
+            });
+            
+            // 清除所有错误样式
+            document.querySelectorAll('.validation-error').forEach(field => {
+                field.classList.remove('validation-error');
+            });
+        }
+
         // 计算年龄函数
         function calculateAge(prefix) {
             const birthDateInput = document.getElementById(prefix + 'BirthDate');
@@ -1525,13 +1532,29 @@
             const preview = document.getElementById(prefix + 'PhotoPreview');
             
             if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // 验证文件大小（限制为2MB）
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('照片文件大小不能超过2MB', 'error');
+                    input.value = '';
+                    return;
+                }
+                
+                // 验证文件类型
+                if (!file.type.startsWith('image/')) {
+                    showToast('请选择有效的图片文件', 'error');
+                    input.value = '';
+                    return;
+                }
+                
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
                     preview.src = e.target.result;
                 };
                 
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -1661,7 +1684,7 @@
         // 显示提示信息
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
-            const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+            const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
             toast.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity`;
             toast.textContent = message;
             document.body.appendChild(toast);
@@ -1680,7 +1703,7 @@
          * VTS履历天数计算
          *********************/
         
-        // 计算VTS履历总天数（替代原来的值班时间计算）
+        // 计算VTS履历总天数
         function calculateDutyDays(vtsHistory) {
             if (!vtsHistory || vtsHistory.length === 0) return 0;
             
@@ -1737,10 +1760,12 @@
         }
 
         function showLoginForm() {
+            clearAllValidationErrors('reg');
             showPage('loginPage');
         }
 
         function showRegisterForm() {
+            clearAllValidationErrors('login');
             showPage('registerPage');
         }
 
@@ -1786,6 +1811,8 @@
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            clearAllValidationErrors('reg');
+            
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value;
             const passwordConfirm = document.getElementById('regPasswordConfirm').value;
@@ -1793,25 +1820,44 @@
             const organization = document.getElementById('regOrganization').value;
             const userType = document.getElementById('regUserType').value;
             
-            if (!username || !password || !realName || !organization) {
-                showToast('请填写完整的注册信息', 'error');
-                return;
+            let hasErrors = false;
+            
+            // 验证用户名
+            const usernameError = validateUsername(username);
+            if (usernameError) {
+                showValidationError('regUsername', usernameError);
+                hasErrors = true;
+            } else if (users.find(u => u.username === username)) {
+                showValidationError('regUsername', '用户名已存在');
+                hasErrors = true;
             }
             
+            // 验证密码
+            const passwordError = validatePassword(password);
+            if (passwordError) {
+                showValidationError('regPassword', passwordError);
+                hasErrors = true;
+            }
+            
+            // 验证确认密码
             if (password !== passwordConfirm) {
-                showToast('两次输入的密码不一致！', 'error');
-                return;
+                showValidationError('regPasswordConfirm', '两次输入的密码不一致');
+                hasErrors = true;
             }
             
-            if (password.length < 6) {
-                showToast('密码长度不能少于6位', 'error');
-                return;
+            // 验证真实姓名
+            const realNameError = validateName(realName);
+            if (realNameError) {
+                showValidationError('regRealName', realNameError);
+                hasErrors = true;
             }
             
-            if (users.find(u => u.username === username)) {
-                showToast('用户名已存在！', 'error');
-                return;
+            if (!organization) {
+                showToast('请选择所属单位', 'error');
+                hasErrors = true;
             }
+            
+            if (hasErrors) return;
             
             const newUser = {
                 id: Math.max(...users.map(u => u.id)) + 1,
@@ -1825,7 +1871,7 @@
             };
             
             users.push(newUser);
-            saveToLocalStorage(); // 保存到本地存储
+            saveToLocalStorage();
             
             if (userType === 'admin') {
                 showToast('管理员账号注册成功，等待审核批准后方可使用！', 'success');
@@ -1897,6 +1943,7 @@
                 localStorage.setItem('vtsManagementSystem', JSON.stringify(dataToSave));
             } catch (e) {
                 console.warn('无法保存数据到本地存储:', e);
+                showToast('数据保存失败，请检查浏览器存储权限', 'warning');
             }
         }
 
@@ -1915,6 +1962,7 @@
                 }
             } catch (e) {
                 console.warn('无法从本地存储加载数据:', e);
+                showToast('数据加载失败，将使用默认数据', 'warning');
             }
             return false;
         }
@@ -1975,12 +2023,12 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.realName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${user.organization}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.userType === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
+                        <span class="status-indicator ${user.userType === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
                             ${user.userType === 'admin' ? '管理员' : '普通用户'}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${statusColor}">
+                        <span class="status-indicator ${statusColor}">
                             ${statusText}
                         </span>
                     </td>
@@ -2003,7 +2051,7 @@
             const user = users.find(u => u.id === userId);
             if (user) {
                 user.status = 'active';
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast(`用户 ${user.realName} 已批准！`, 'success');
                 renderUserTable();
             }
@@ -2011,8 +2059,9 @@
 
         function rejectUser(userId) {
             if (confirm('确定要拒绝这个用户的注册申请吗？')) {
+                const user = users.find(u => u.id === userId);
                 users = users.filter(u => u.id !== userId);
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 renderUserTable();
                 showToast('用户申请已拒绝', 'info');
             }
@@ -2022,7 +2071,7 @@
             const user = users.find(u => u.id === userId);
             if (user && confirm(`确定要${user.status === 'active' ? '禁用' : '启用'}这个用户吗？`)) {
                 user.status = user.status === 'active' ? 'disabled' : 'active';
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 renderUserTable();
                 showToast(`用户状态已${user.status === 'active' ? '启用' : '禁用'}`, 'info');
             }
@@ -2032,15 +2081,17 @@
          * 员工管理功能
          *********************/
 
-        // 身份变化处理
+        // 身份变化处理（优化工作状态逻辑）
         function handleRoleChange(prefix) {
             const roleSelect = document.getElementById(prefix + 'Role');
             const workStatusSelect = document.getElementById(prefix + 'WorkStatus');
             
             if (roleSelect && workStatusSelect) {
+                // 见习和协管人员默认只能是VTS在岗状态
                 if (roleSelect.value === '见习' || roleSelect.value === '协管') {
-                    workStatusSelect.value = '在岗位';
-                    workStatusSelect.disabled = true;
+                    workStatusSelect.value = 'VTS在岗';
+                    // 移除限制，允许管理员灵活调整
+                    // workStatusSelect.disabled = true;
                 } else {
                     workStatusSelect.disabled = false;
                 }
@@ -2064,7 +2115,6 @@
                 case 'VTS在岗': return 'bg-green-100 text-green-800';
                 case '海事处': return 'bg-blue-100 text-blue-800';
                 case '机关': return 'bg-purple-100 text-purple-800';
-                case '在岗位': return 'bg-orange-100 text-orange-800';
                 default: return 'bg-gray-100 text-gray-800';
             }
         }
@@ -2138,12 +2188,12 @@
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
                         <div class="text-xs md:text-sm text-gray-900">${emp.unit.length > 15 ? emp.unit.substring(0, 12) + '...' : emp.unit}</div>
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(emp.role)}">
+                        <span class="status-indicator ${getRoleColor(emp.role)}">
                             ${emp.role}
                         </span>
                     </td>
                     <td class="px-3 md:px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(emp.workStatus)}">
+                        <span class="status-indicator ${getWorkStatusColor(emp.workStatus)}">
                             ${emp.workStatus}
                         </span>
                     </td>
@@ -2196,9 +2246,9 @@
             const nextPageMobileBtn = document.getElementById('nextPageMobile');
             
             prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = currentPage === totalPages;
+            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
             prevPageMobileBtn.disabled = currentPage === 1;
-            nextPageMobileBtn.disabled = currentPage === totalPages;
+            nextPageMobileBtn.disabled = currentPage === totalPages || totalPages === 0;
             
             const pageNumbers = document.getElementById('pageNumbers');
             pageNumbers.innerHTML = '';
@@ -2398,7 +2448,7 @@
                         <div class="text-center mb-6">
                             ${photoDisplay}
                             <h3 class="mt-4 text-xl font-bold text-gray-900">${employee.name}</h3>
-                            <span class="inline-flex px-3 py-1 mt-2 text-sm font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
+                            <span class="status-indicator ${getRoleColor(employee.role)} mt-2">${employee.role}</span>
                         </div>
                         
                         <div class="space-y-4">
@@ -2449,13 +2499,13 @@
                                 <div>
                                     <span class="text-sm font-medium text-gray-500">身份:</span>
                                     <div class="mt-1">
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleColor(employee.role)}">${employee.role}</span>
+                                        <span class="status-indicator ${getRoleColor(employee.role)}">${employee.role}</span>
                                     </div>
                                 </div>
                                 <div>
                                     <span class="text-sm font-medium text-gray-500">工作状态:</span>
                                     <div class="mt-1">
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getWorkStatusColor(employee.workStatus)}">${employee.workStatus}</span>
+                                        <span class="status-indicator ${getWorkStatusColor(employee.workStatus)}">${employee.workStatus}</span>
                                     </div>
                                 </div>
                             </div>
@@ -2475,7 +2525,7 @@
                             <div class="flex flex-wrap gap-2">
                                 ${employee.certificates && employee.certificates.length > 0 ? 
                                     employee.certificates.map(cert => 
-                                        `<span class="inline-flex px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">${cert}</span>`
+                                        `<span class="status-indicator bg-blue-100 text-blue-800">${cert}</span>`
                                     ).join('') : 
                                     '<div class="text-sm text-gray-400 italic">暂无证书信息</div>'
                                 }
@@ -2570,6 +2620,7 @@
             if (!employee) return;
             
             editingEmployeeId = id;
+            clearAllValidationErrors('edit');
             
             // 填充基本信息
             document.getElementById('editName').value = employee.name;
@@ -2622,10 +2673,12 @@
                     addVTSHistory('edit');
                     const historyItems = vtsContainer.querySelectorAll('.vts-history-item');
                     const currentItem = historyItems[index];
-                    currentItem.querySelector('input[name="editVTSStartDate[]"]').value = history.startDate || '';
-                    currentItem.querySelector('input[name="editVTSEndDate[]"]').value = history.endDate || '';
-                    currentItem.querySelector('select[name="editVTSPosition[]"]').value = history.position || '';
-                    currentItem.querySelector('input[name="editVTSLocation[]"]').value = history.location || '';
+                    if (currentItem) {
+                        currentItem.querySelector('input[name="editVTSStartDate[]"]').value = history.startDate || '';
+                        currentItem.querySelector('input[name="editVTSEndDate[]"]').value = history.endDate || '';
+                        currentItem.querySelector('select[name="editVTSPosition[]"]').value = history.position || '';
+                        currentItem.querySelector('input[name="editVTSLocation[]"]').value = history.location || '';
+                    }
                 });
             }
             
@@ -2637,16 +2690,18 @@
                     addTrainingRecord('edit');
                     const trainingItems = trainingContainer.querySelectorAll('.vts-history-item');
                     const currentItem = trainingItems[index];
-                    currentItem.querySelector('input[name="editTrainingStartDate[]"]').value = training.startDate || '';
-                    currentItem.querySelector('input[name="editTrainingEndDate[]"]').value = training.endDate || '';
-                    currentItem.querySelector('input[name="editTrainingCourse[]"]').value = training.course || '';
-                    currentItem.querySelector('input[name="editTrainingInstitution[]"]').value = training.institution || '';
+                    if (currentItem) {
+                        currentItem.querySelector('input[name="editTrainingStartDate[]"]').value = training.startDate || '';
+                        currentItem.querySelector('input[name="editTrainingEndDate[]"]').value = training.endDate || '';
+                        currentItem.querySelector('input[name="editTrainingCourse[]"]').value = training.course || '';
+                        currentItem.querySelector('input[name="editTrainingInstitution[]"]').value = training.institution || '';
+                    }
                 });
             }
             
             // 填充联系信息
-            document.getElementById('editPhone').value = employee.phone;
-            document.getElementById('editEmail').value = employee.email;
+            document.getElementById('editPhone').value = employee.phone || '';
+            document.getElementById('editEmail').value = employee.email || '';
             document.getElementById('editPerformance').value = employee.performance || '';
             
             handleRoleChange('edit');
@@ -2661,34 +2716,45 @@
         function hideEditModal() {
             document.getElementById('editModal').classList.remove('show');
             editingEmployeeId = null;
+            clearAllValidationErrors('edit');
         }
 
         function saveEditEmployee() {
             if (!editingEmployeeId) return;
             
+            clearAllValidationErrors('edit');
+            
             const empIndex = employees.findIndex(emp => emp.id === editingEmployeeId);
             if (empIndex === -1) return;
             
             const name = document.getElementById('editName').value.trim();
-            
-            if (!name) {
-                showToast('请填写姓名！', 'error');
-                return;
-            }
-
-            // 验证邮箱格式
-            const email = document.getElementById('editEmail').value.trim();
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showToast('邮箱格式不正确！', 'error');
-                return;
-            }
-
-            // 验证电话格式
             const phone = document.getElementById('editPhone').value.trim();
-            if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
-                showToast('手机号格式不正确！', 'error');
-                return;
+            const email = document.getElementById('editEmail').value.trim();
+            
+            let hasErrors = false;
+            
+            // 验证姓名
+            const nameError = validateName(name);
+            if (nameError) {
+                showValidationError('editName', nameError);
+                hasErrors = true;
             }
+            
+            // 验证电话
+            const phoneError = validatePhone(phone);
+            if (phoneError) {
+                showValidationError('editPhone', phoneError);
+                hasErrors = true;
+            }
+            
+            // 验证邮箱
+            const emailError = validateEmail(email);
+            if (emailError) {
+                showValidationError('editEmail', emailError);
+                hasErrors = true;
+            }
+            
+            if (hasErrors) return;
 
             // 获取证书
             const certificates = [];
@@ -2721,7 +2787,7 @@
                 const position = item.querySelector('select[name="editVTSPosition[]"]').value;
                 const location = item.querySelector('input[name="editVTSLocation[]"]').value;
                 
-                if (startDate || endDate || position || location) {
+                if (startDate && position && location) {
                     vtsHistory.push({ startDate, endDate, position, location });
                 }
             });
@@ -2736,7 +2802,7 @@
                 const course = item.querySelector('input[name="editTrainingCourse[]"]').value;
                 const institution = item.querySelector('input[name="editTrainingInstitution[]"]').value;
                 
-                if (startDate || endDate || course || institution) {
+                if (startDate && course && institution) {
                     trainingRecords.push({ startDate, endDate, course, institution });
                 }
             });
@@ -2775,7 +2841,7 @@
             updateFilters();
             updateStats();
             hideEditModal();
-            saveToLocalStorage(); // 保存到本地存储
+            saveToLocalStorage();
             showToast('员工信息更新成功！', 'success');
         }
 
@@ -2802,7 +2868,7 @@
                 
                 renderEmployeeTable();
                 updateStats();
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast('员工删除成功！', 'success');
             }
         }
@@ -2890,17 +2956,25 @@
             document.getElementById('dutyHistoryModal').classList.remove('show');
         }
 
-        // 添加新的VTS履历记录
+        // 添加新的VTS履历记录（优化验证）
         function addNewVTSRecord(id) {
             const startDate = prompt('请输入开始日期 (格式: YYYY-MM-DD):');
-            if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
-                if (startDate) showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+            if (!startDate) return;
+            
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || isNaN(Date.parse(startDate))) {
+                showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
                 return;
             }
 
             const endDate = prompt('请输入结束日期 (格式: YYYY-MM-DD，或留空表示至今):');
-            if (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+            if (endDate && (!/^\d{4}-\d{2}-\d{2}$/.test(endDate) || isNaN(Date.parse(endDate)))) {
                 showToast('结束日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
+            }
+
+            // 验证日期逻辑
+            if (endDate && new Date(endDate) <= new Date(startDate)) {
+                showToast('结束日期必须晚于开始日期', 'error');
                 return;
             }
 
@@ -2911,7 +2985,7 @@
             }
 
             const location = prompt('请输入工作地点:');
-            if (!location) {
+            if (!location || location.trim().length === 0) {
                 showToast('工作地点不能为空', 'error');
                 return;
             }
@@ -2926,7 +3000,7 @@
                     startDate: startDate,
                     endDate: endDate || '',
                     position: position,
-                    location: location
+                    location: location.trim()
                 });
                 
                 // 按开始日期排序
@@ -2939,7 +3013,7 @@
                 showDutyHistory(id);
                 renderEmployeeTable();
                 updateStats();
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast('VTS履历添加成功！', 'success');
             }
         }
@@ -2957,7 +3031,7 @@
                     showDutyHistory(id);
                     renderEmployeeTable();
                     updateStats();
-                    saveToLocalStorage(); // 保存到本地存储
+                    saveToLocalStorage();
                     showToast('VTS履历记录删除成功！', 'success');
                 }
             }
@@ -2974,6 +3048,7 @@
             }
             
             document.getElementById('addEmployeeForm').reset();
+            clearAllValidationErrors('new');
             
             // 清空容器
             document.getElementById('newVTSHistoryContainer').innerHTML = '';
@@ -3007,29 +3082,40 @@
 
         function hideAddModal() {
             document.getElementById('addModal').classList.remove('show');
+            clearAllValidationErrors('new');
         }
 
         function addEmployee() {
-            const name = document.getElementById('newName').value.trim();
+            clearAllValidationErrors('new');
             
-            if (!name) {
-                showToast('请填写姓名！', 'error');
-                return;
-            }
-
-            // 验证邮箱格式
-            const email = document.getElementById('newEmail').value.trim();
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showToast('邮箱格式不正确！', 'error');
-                return;
-            }
-
-            // 验证电话格式
+            const name = document.getElementById('newName').value.trim();
             const phone = document.getElementById('newPhone').value.trim();
-            if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
-                showToast('手机号格式不正确！', 'error');
-                return;
+            const email = document.getElementById('newEmail').value.trim();
+            
+            let hasErrors = false;
+            
+            // 验证姓名
+            const nameError = validateName(name);
+            if (nameError) {
+                showValidationError('newName', nameError);
+                hasErrors = true;
             }
+            
+            // 验证电话
+            const phoneError = validatePhone(phone);
+            if (phoneError) {
+                showValidationError('newPhone', phoneError);
+                hasErrors = true;
+            }
+            
+            // 验证邮箱
+            const emailError = validateEmail(email);
+            if (emailError) {
+                showValidationError('newEmail', emailError);
+                hasErrors = true;
+            }
+            
+            if (hasErrors) return;
 
             // 获取证书
             const certificates = [];
@@ -3062,7 +3148,7 @@
                 const position = item.querySelector('select[name="newVTSPosition[]"]').value;
                 const location = item.querySelector('input[name="newVTSLocation[]"]').value;
                 
-                if (startDate || endDate || position || location) {
+                if (startDate && position && location) {
                     vtsHistory.push({ startDate, endDate, position, location });
                 }
             });
@@ -3077,7 +3163,7 @@
                 const course = item.querySelector('input[name="newTrainingCourse[]"]').value;
                 const institution = item.querySelector('input[name="newTrainingInstitution[]"]').value;
                 
-                if (startDate || endDate || course || institution) {
+                if (startDate && course && institution) {
                     trainingRecords.push({ startDate, endDate, course, institution });
                 }
             });
@@ -3122,12 +3208,12 @@
                 updateStats();
                 hideAddModal();
                 hideLoading();
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast('员工添加成功！', 'success');
             }, 500);
         }
 
-        // 获取当前用户单位名称（简化版，不含VTS中心/分中心）
+        // 获取当前用户单位名称
         function getCurrentUserUnit() {
             if (!currentUser) return '';
             
@@ -3222,7 +3308,7 @@
                 renderEmployeeTable();
                 updateStats();
                 hideBulkModal();
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast(`已删除 ${selectedIds.length} 名员工`, 'success');
             }
         }
@@ -3234,8 +3320,8 @@
                 return;
             }
             
-            const newStatus = prompt('请输入新的工作状态：\n1. VTS在岗\n2. 海事处\n3. 机关\n4. 在岗位');
-            const statusOptions = ['VTS在岗', '海事处', '机关', '在岗位'];
+            const newStatus = prompt('请输入新的工作状态：\n1. VTS在岗\n2. 海事处\n3. 机关');
+            const statusOptions = ['VTS在岗', '海事处', '机关'];
             
             if (newStatus && statusOptions.includes(newStatus)) {
                 let updatedCount = 0;
@@ -3243,10 +3329,6 @@
                 selectedIds.forEach(id => {
                     const empIndex = employees.findIndex(emp => emp.id === id);
                     if (empIndex !== -1) {
-                        // 检查身份限制
-                        if ((employees[empIndex].role === '见习' || employees[empIndex].role === '协管') && newStatus !== '在岗位') {
-                            return;
-                        }
                         employees[empIndex].workStatus = newStatus;
                         updatedCount++;
                     }
@@ -3256,7 +3338,7 @@
                 renderEmployeeTable();
                 updateStats();
                 hideBulkModal();
-                saveToLocalStorage(); // 保存到本地存储
+                saveToLocalStorage();
                 showToast(`已更新 ${updatedCount} 名员工的工作状态`, 'success');
             } else if (newStatus) {
                 showToast('输入的工作状态不正确', 'error');
@@ -3283,14 +3365,21 @@
             }
             
             const startDate = prompt('请输入开始日期 (格式: YYYY-MM-DD):');
-            if (!startDate || !/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
-                if (startDate) showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+            if (!startDate) return;
+            
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate) || isNaN(Date.parse(startDate))) {
+                showToast('日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
                 return;
             }
 
             const endDate = prompt('请输入结束日期 (格式: YYYY-MM-DD，或留空表示至今):');
-            if (endDate && !/^\d{4}-\d{2}-\d{2}$/.test(endDate)) {
+            if (endDate && (!/^\d{4}-\d{2}-\d{2}$/.test(endDate) || isNaN(Date.parse(endDate)))) {
                 showToast('结束日期格式不正确，请使用 YYYY-MM-DD 格式', 'error');
+                return;
+            }
+
+            if (endDate && new Date(endDate) <= new Date(startDate)) {
+                showToast('结束日期必须晚于开始日期', 'error');
                 return;
             }
 
@@ -3301,7 +3390,7 @@
             }
 
             const location = prompt('请输入工作地点:');
-            if (!location) {
+            if (!location || location.trim().length === 0) {
                 showToast('工作地点不能为空', 'error');
                 return;
             }
@@ -3317,7 +3406,7 @@
                         startDate: startDate,
                         endDate: endDate || '',
                         position: position,
-                        location: location
+                        location: location.trim()
                     });
                     
                     // 按开始日期排序
@@ -3332,7 +3421,7 @@
             renderEmployeeTable();
             updateStats();
             hideBulkModal();
-            saveToLocalStorage(); // 保存到本地存储
+            saveToLocalStorage();
             showToast(`已为 ${selectedIds.length} 名员工添加VTS履历`, 'success');
         }
 
@@ -3517,6 +3606,7 @@
                         updateEmployeesByOrganization();
                         renderEmployeeTable();
                         updateStats();
+                        saveToLocalStorage();
                         showToast('VTS履历添加成功！', 'success');
                     }
                 },
@@ -4036,6 +4126,17 @@
             document.addEventListener('submit', function(e) {
                 if (e.target.id !== 'loginForm' && e.target.id !== 'registerForm') {
                     e.preventDefault();
+                }
+            });
+
+            // 添加实时验证监听器
+            ['newName', 'newPhone', 'newEmail', 'editName', 'editPhone', 'editEmail', 
+             'regUsername', 'regPassword', 'regPasswordConfirm', 'regRealName'].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', function() {
+                        clearValidationError(fieldId);
+                    });
                 }
             });
         }
